@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
+import org.hibernate.annotations.ColumnDefault;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -36,9 +37,11 @@ public class User implements UserDetails {
 	private String nickname;
 
 	@Column(name="rank", nullable = false)
+	@ColumnDefault("1")
 	private int rank;
 
 	@Column(name="point", nullable = false)
+	@ColumnDefault("0")
 	private int point;
 
 	@Column(name="email", nullable = false)
@@ -51,6 +54,7 @@ public class User implements UserDetails {
 	private String findPwQuestion;
 
 	@Column(name="isActive", nullable = false)
+	@ColumnDefault("true")
 	private Boolean isActive;
 
 	public User(LocalDateTime signUpDate) {
