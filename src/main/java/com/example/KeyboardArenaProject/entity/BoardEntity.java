@@ -1,17 +1,24 @@
 package com.example.KeyboardArenaProject.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDateTime;
 
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
 @Entity
 public class BoardEntity {
+
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "boardId")
     @Id
-    private String board_id;
+    private String boardId;
 
     @Column(nullable = false)
     private String id;
@@ -22,20 +29,20 @@ public class BoardEntity {
     @Column(nullable = false)
     private String content;
 
-    @Column(nullable = false)
-    private Integer board_type;
+    @Column(name = "board_type", nullable = false)
+    private Integer boardType;
     // 1 - 자유게시판 / 2 - 주간 랭크전 아레나 / 3- 일반 아레나
 
     @CreatedDate
-    @Column(nullable = false)
-    private LocalDateTime created_date;
+    @Column(name = "created_date",nullable = false)
+    private LocalDateTime createdDate;
 
     @LastModifiedDate
-    @Column
-    private LocalDateTime updated_date;
+    @Column(name = "updated_date")
+    private LocalDateTime updatedDate;
 
-    @Column(nullable = false)
-    private Integer board_rank;
+    @Column(name = "board_rank", nullable = false)
+    private Integer boardRank;
 
     @Column(nullable = false)
     private Integer like;
