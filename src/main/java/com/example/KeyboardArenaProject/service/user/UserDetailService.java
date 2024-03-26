@@ -8,10 +8,10 @@ import org.springframework.stereotype.Service;
 import com.example.KeyboardArenaProject.repository.UserRepository;
 
 @Service
-public class UserService implements UserDetailsService {
+public class UserDetailService implements UserDetailsService {
 	private UserRepository userRepository;
 
-	public UserService(UserRepository userRepository) {
+	public UserDetailService(UserRepository userRepository) {
 		this.userRepository = userRepository;
 	}
 
