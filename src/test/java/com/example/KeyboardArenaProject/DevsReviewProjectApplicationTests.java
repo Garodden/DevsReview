@@ -1,4 +1,4 @@
-package com.example.devsreviewproject;
+package com.example.KeyboardArenaProject;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
