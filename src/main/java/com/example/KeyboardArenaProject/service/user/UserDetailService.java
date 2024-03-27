@@ -16,8 +16,12 @@ public class UserDetailService implements UserDetailsService {
 	}
 
 	@Override
-	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-		return userRepository.findByEmail(email).orElseThrow(() -> new IllegalArgumentException(email));
+	public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
+		if (userId == null || userId.isEmpty()) {
+			throw new IllegalArgumentException("User ID cannot be null or empty");
+		}
+		return userRepository.findByUserId(userId)
+			.orElseThrow(() -> new UsernameNotFoundException("User not found with ID: " + userId));
 	}
 
 }
