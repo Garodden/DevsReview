@@ -3,6 +3,7 @@ package com.example.KeyboardArenaProject.entity;
 import com.example.KeyboardArenaProject.dto.freeBoard.FreeBoardResponse;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicInsert;
@@ -67,7 +68,7 @@ public class Board {
     @Builder
     public Board(String board_id, String id, String title, String content, Integer board_type,
                  Integer board_rank, Boolean active){
-        this.board_id=board_id;
+        this.boardId=board_id;
         this.id=id;
         this.title=title;
         this.content=content;
