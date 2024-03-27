@@ -10,5 +10,5 @@ import java.util.Optional;
 
 @Repository
 public interface FreeBoardRepository extends JpaRepository<Board,String> {
-    List<Board> findAllByBoardTypeOrderByLikeDesc(Integer boardType);
+    List<Board> findAllByBoardTypeOrderByLikesDesc(Integer boardType);
 }
