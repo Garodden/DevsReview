@@ -40,7 +40,7 @@ public class FreeBoardController {
 //        FreeBoardWriteRequest request;
 //        Board board;
 //        if(user!=null){
-//            request = new FreeBoardWriteRequest(user.getId(),recieveJson.getTitle(),recieveJson.getContent(), recieveJson.getBoard_rank());
+//            request = new FreeBoardWriteRequest(user.id,recieveJson.getTitle(),recieveJson.getContent(), recieveJson.getBoard_rank());
 //            board = request.toEntity();
 //            freeBoardService.writeFreeBoard(board);
 //        }else{
@@ -48,13 +48,13 @@ public class FreeBoardController {
 //            board = request.toEntity();
 //            freeBoardService.writeFreeBoard(board);
 //        }
-//        return ResponseEntity.ok(board.getBoard_id());
+//        return ResponseEntity.ok(board.getBoardId());
 //
 //    }
 
 //    @PutMapping("/board/{board_id}")
 //    public ResponseEntity<FreeBoardRecieveJson> updateFreeBoard(@RequestBody FreeBoardRecieveJson recieveJson,Principal principal){
-//        FreeBoardWriteRequest request = new FreeBoardWriteRequest(recieveJson.getTitle(), recieveJson.getContent(), recieveJson.getBoard_rank(),principal,freeBoardService);
+//        FreeBoardWriteRequest request = new FreeBoardWriteRequest(recieveJson.getTitle(), recieveJson.getContent(), recieveJson.getBoardRank(),principal,freeBoardService);
 //        return ResponseEntity.ok(recieveJson);
 //    }
 
@@ -77,23 +77,23 @@ public class FreeBoardController {
         return "redirect:/board";
     }
 
-    @ResponseBody
-    @PostMapping("/user")
-    public UserEntity signup(@RequestBody AddUserRequest request){   //폼데이터를 받을 때는 @RequestBody를 안 쓴다.
-        UserEntity userEntity = userService.saveg(request);
-        return userEntity;
-    }
-
-    @GetMapping("/login")
-    public String login(){
-        return "login";
-    }
-
-    @GetMapping("/signup")
-    public String signup(){
-        return "signup";
-    }
-
+//    @ResponseBody
+//    @PostMapping("/user")
+//    public UserEntity signup(@RequestBody AddUserRequest request){   //폼데이터를 받을 때는 @RequestBody를 안 쓴다.
+//        UserEntity userEntity = userService.saveg(request);
+//        return userEntity;
+//    }
+//
+//    @GetMapping("/login")
+//    public String login(){
+//        return "login";
+//    }
+//
+//    @GetMapping("/signup")
+//    public String signup(){
+//        return "signup";
+//    }
+//
 
 
 }

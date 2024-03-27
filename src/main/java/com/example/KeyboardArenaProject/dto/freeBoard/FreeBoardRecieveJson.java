@@ -11,5 +11,5 @@ import lombok.Setter;
 public class FreeBoardRecieveJson {
     private String title;
     private String content;
-    private Integer board_rank;
+    private Integer boardRank;
 }
