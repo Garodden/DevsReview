@@ -1,10 +1,12 @@
 package com.example.KeyboardArenaProject.entity;
 
+import com.example.KeyboardArenaProject.entity.compositeKey.UserBoardCompositeKey;
 import com.example.KeyboardArenaProject.utils.GenerateIdUtils;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
+
 import lombok.Builder;
 import lombok.NoArgsConstructor;
+
 
 import java.time.LocalDateTime;
 
@@ -13,20 +15,26 @@ import java.time.LocalDateTime;
 @Entity
 public class Like {
 
-    @Column(name = "board_id", nullable = false)
-    @Id
-    private String boardId;
-
-    @Column(name = "id", nullable = false)
-    private String id;
+    @EmbeddedId
+    private UserBoardCompositeKey compositeId;
 
     @Column(name = "if_like", nullable = false)
     private boolean ifLike;
 
-    @Builder Like(String boardId, String id, boolean ifLike){
-        this.boardId=GenerateIdUtils.generateBoardId(LocalDateTime.now());
-        this.id = GenerateIdUtils.generateUserId(LocalDateTime.now());
+    @Builder Like(String id, String boardId, boolean ifLike){
+        this.compositeId = new UserBoardCompositeKey(GenerateIdUtils.generateBoardId(LocalDateTime.now()), GenerateIdUtils.generateUserId(LocalDateTime.now()));
         this.ifLike = true;
+    }
+
+    public String getId(){
+        return compositeId.getId();
+    }
+
+    public String getBoardId(){
+        return compositeId.getId();
+    }
+    public boolean getIfLike(){
+        return ifLike;
     }
 
 }
