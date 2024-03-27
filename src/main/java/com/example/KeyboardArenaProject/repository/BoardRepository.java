@@ -1,5 +1,4 @@
 package com.example.KeyboardArenaProject.repository;
-
 import com.example.KeyboardArenaProject.entity.Board;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -22,3 +21,5 @@ public interface BoardRepository extends JpaRepository<Board, String> {
     // rest of the normal arena
     List<Board> findByBoardTypeOrderByCreatedDateDesc(int type);
 }
+
+
