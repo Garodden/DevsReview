@@ -1,12 +1,14 @@
 package com.example.KeyboardArenaProject.service.arena;
 
-import com.example.KeyboardArenaProject.entity.BoardEntity;
+import com.example.KeyboardArenaProject.entity.Board;
 import com.example.KeyboardArenaProject.repository.BoardRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -17,16 +19,19 @@ public class ArenaService {
         this.boardRepository = boardRepository;
     }
 
-    public List<BoardEntity> findAllRankArena(){
+    public List<Board> findAllRankArena(){
         return boardRepository.findAllByBoardType(2);
     }
 
-    public List<BoardEntity> findTop3ArenaOrderByLikes(){
-        return boardRepository.findTop3ArenaByOrderByLikeDesc();
+
+    public List<Board> findTop3ArenaOrderByLikes(){
+        Pageable topThree = PageRequest.of(0, 3);
+        return boardRepository.findArenasOrderByLikeDesc(topThree);
+
     }
 
-    public List<BoardEntity> findRestArenaOrderByDate(){
-        return boardRepository.findRestArenaOrderByCreatedDateDesc();
+    public List<Board> findNormalArenaOrderByCreatedDate(){
+        return boardRepository.findByBoardTypeOrderByCreatedDateDesc(2);
     }
 
     /*
@@ -44,7 +49,7 @@ public class ArenaService {
                           int view,
                           int comment
                           ){
-        BoardEntity board = new BoardEntity(id, boardId,
+        Board board = new Board(id, boardId,
                                             title,
                                             content,
                                             boardType,
