@@ -16,7 +16,7 @@ import java.util.Optional;
 @Service
 public class FreeBoardService {
     private final FreeBoardRepository freeBoardRepository;
-    private final UserRepository userRepository;
+//    private final UserRepository userRepository;
 
     public void writeFreeBoard(Board board){
         freeBoardRepository.save(board);
