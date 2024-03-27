@@ -1,4 +1,67 @@
 package com.example.KeyboardArenaProject.service.arena;
 
+import com.example.KeyboardArenaProject.entity.Board;
+import com.example.KeyboardArenaProject.repository.BoardRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
+
+
+import java.util.List;
+
+@Service
 public class ArenaService {
+    private BoardRepository boardRepository;
+
+    public ArenaService(BoardRepository boardRepository){
+        this.boardRepository = boardRepository;
+    }
+
+    public List<Board> findAllRankArena(){
+        return boardRepository.findAllByBoardType(2);
+    }
+
+
+    public List<Board> findTop3ArenaOrderByLikes(){
+        Pageable topThree = PageRequest.of(0, 3);
+        return boardRepository.findArenasOrderByLikeDesc(topThree);
+
+    }
+
+    public List<Board> findNormalArenaOrderByCreatedDate(){
+        return boardRepository.findByBoardTypeOrderByCreatedDateDesc(2);
+    }
+
+    /*
+    @Transactional
+    public void saveArena(String id,
+                          String boardId,
+                          String title,
+                          String content,
+                          int boardType,
+                          LocalDateTime created_date,
+                          LocalDateTime updated_date,
+                          int boardRank,
+                          int like,
+                          Boolean active,
+                          int view,
+                          int comment
+                          ){
+        Board board = new Board(id, boardId,
+                                            title,
+                                            content,
+                                            boardType,
+                                            created_date,
+                                            updated_date,
+                                            boardRank,
+                                            like,
+                                            active,
+                                            view,
+                                            comment);
+        boardRepository.save(board);
+    }
+     */
+
 }
