@@ -27,13 +27,13 @@
         <p th:if="${postStat.index} == 0">Top1</p>
         <p th:if="${postStat.index} == 1">Top2</p>
         <p th:if="${postStat.index} == 2">Top3</p>
-        <li><a th:text="${post.title}" th:href="@{/board/{board_id}(board_id=${post.board_id})}"></a></li>
+        <li><a th:text="${post.title}" th:href="@{/board/{board_id}(board_id=${post.boardId})}"></a></li>
         <li th:text="${post.createdDate}"></li>
         <li th:text="${post.view}"></li>
         <li th:text="${post.comment}"></li>
         <li th:text="${post.like}"></li>
     </ul>
 
-    </main>
+</main>
 </body>
 </html>

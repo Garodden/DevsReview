@@ -1,5 +1,6 @@
 package com.example.KeyboardArenaProject.entity;
 
+import com.example.KeyboardArenaProject.dto.freeBoard.FreeBoardResponse;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

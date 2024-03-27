@@ -14,9 +14,9 @@ import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
+//import org.springframework.security.core.annotation.AuthenticationPrincipal;
+//import org.springframework.security.core.context.SecurityContextHolder;
+//import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -67,15 +67,15 @@ public class FreeBoardController {
 
     @GetMapping("/board/{board_id}")
     public String viewOneFreeBoard(@PathVariable String board_id,Model model){
-//        model.addAttribute("writer",freeBoardService.findWriter(board_id));
+        model.addAttribute("writer",freeBoardService.findWriter(board_id));
         model.addAttribute("post",freeBoardService.findByBoardId(board_id));
         return "freeboardDetail";
     }
-    @GetMapping("/logout")
-    public String logout(HttpServletRequest request, HttpServletResponse response) {
-        new SecurityContextLogoutHandler().logout(request, response, SecurityContextHolder.getContext().getAuthentication());
-        return "redirect:/board";
-    }
+//    @GetMapping("/logout")
+//    public String logout(HttpServletRequest request, HttpServletResponse response) {
+//        new SecurityContextLogoutHandler().logout(request, response, SecurityContextHolder.getContext().getAuthentication());
+//        return "redirect:/board";
+//    }
 
 //    @ResponseBody
 //    @PostMapping("/user")
