@@ -1,19 +1,9 @@
 package com.example.KeyboardArenaProject.controller.freeBoard;
 
-import com.example.KeyboardArenaProject.dto.freeBoard.FreeBoardRecieveJson;
-import com.example.KeyboardArenaProject.dto.freeBoard.FreeBoardResponse;
-import com.example.KeyboardArenaProject.dto.freeBoard.FreeBoardWriteRequest;
-import com.example.KeyboardArenaProject.dto.user.AddUserRequest;
 import com.example.KeyboardArenaProject.entity.Board;
-import com.example.KeyboardArenaProject.entity.UserEntity;
 import com.example.KeyboardArenaProject.service.freeBoard.FreeBoardService;
 import com.example.KeyboardArenaProject.service.user.UserService;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import lombok.Builder;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 //import org.springframework.security.core.annotation.AuthenticationPrincipal;
 //import org.springframework.security.core.context.SecurityContextHolder;
 //import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
@@ -21,7 +11,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
 import java.util.List;
 
 @RequiredArgsConstructor
