@@ -35,13 +35,13 @@ public class FreeBoardService {
         return freeBoardRepository.findById(id).orElseThrow();
     }
 
-    public UserEntity findWriter(String boardId){
-        Board board = findByBoardId(boardId);
-        Optional<UserEntity> user = userRepository.findById(board.getId());
-
-        return user.orElseGet(() -> new UserEntity(".", ".", ".", "unknown", 1, 0, "@", ".", ".", false));
-
-
-    }
+//    public UserEntity findWriter(String boardId){
+//        Board board = findByBoardId(boardId);
+//        Optional<UserEntity> user = userRepository.findById(board.getId());
+//
+//        return user.orElseGet(() -> new UserEntity(".", ".", ".", "unknown", 1, 0, "@", ".", ".", false));
+//
+//
+//    }
 
 }

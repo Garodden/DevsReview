@@ -67,7 +67,7 @@ public class FreeBoardController {
 
     @GetMapping("/board/{board_id}")
     public String viewOneFreeBoard(@PathVariable String board_id,Model model){
-        model.addAttribute("writer",freeBoardService.findWriter(board_id));
+//        model.addAttribute("writer",freeBoardService.findWriter(board_id));
         model.addAttribute("post",freeBoardService.findByBoardId(board_id));
         return "freeboardDetail";
     }
