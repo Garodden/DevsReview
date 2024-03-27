@@ -45,9 +45,9 @@ public class Comment {
 
     @Builder Comment(String commentId,String boardId,String id,String content,LocalDateTime createdDate,LocalDateTime updatedDate){
         this.commentId = GenerateIdUtils.generateCommentId(LocalDateTime.now());
-        this.boardId = GenerateIdUtils.generateBoardId(LocalDateTime.now());
-        this.content = "empty content";
-        this.createdDate =LocalDateTime.now();
+        this.boardId = id;
+        this.content = content;
+        this.createdDate =updatedDate;
         this.updatedDate = null;
     }
 

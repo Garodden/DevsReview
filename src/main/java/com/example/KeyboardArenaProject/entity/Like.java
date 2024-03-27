@@ -1,7 +1,6 @@
 package com.example.KeyboardArenaProject.entity;
 
 import com.example.KeyboardArenaProject.entity.compositeKey.UserBoardCompositeKey;
-import com.example.KeyboardArenaProject.utils.GenerateIdUtils;
 import jakarta.persistence.*;
 
 import lombok.Builder;
@@ -11,7 +10,6 @@ import lombok.Setter;
 import org.hibernate.annotations.DynamicInsert;
 
 
-import java.time.LocalDateTime;
 @Entity
 @Getter
 @Setter
@@ -27,8 +25,8 @@ public class Like {
     private boolean ifLike;
 
     @Builder Like(String id, String boardId, boolean ifLike){
-        this.compositeId = new UserBoardCompositeKey(GenerateIdUtils.generateBoardId(LocalDateTime.now()), GenerateIdUtils.generateUserId(LocalDateTime.now()));
-        this.ifLike = true;
+        this.compositeId = new UserBoardCompositeKey(id,boardId);
+        this.ifLike = ifLike;
     }
 
     public String getId(){
@@ -38,8 +36,13 @@ public class Like {
     public String getBoardId(){
         return compositeId.getId();
     }
-    public boolean getIfLike(){
-        return ifLike;
+
+    public void setId(String id){
+        compositeId.setId(id);
+    }
+
+    public void setBoardId(String boardId){
+        compositeId.setBoardId(boardId);
     }
 
 }
