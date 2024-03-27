@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 
@@ -13,10 +14,11 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Getter
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 public class BoardEntity {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "boardId")
+    @Column(name = "board_Id")
     @Id
     private String boardId;
 
@@ -26,7 +28,7 @@ public class BoardEntity {
     @Column(nullable = false)
     private String title;
 
-    @Column(nullable = false)
+
     private String content;
 
     @Column(name = "board_type", nullable = false)
