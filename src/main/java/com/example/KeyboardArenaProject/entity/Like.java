@@ -5,14 +5,19 @@ import com.example.KeyboardArenaProject.utils.GenerateIdUtils;
 import jakarta.persistence.*;
 
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.hibernate.annotations.DynamicInsert;
 
 
 import java.time.LocalDateTime;
-
-@NoArgsConstructor
-@Table(name = "like_board")
 @Entity
+@Getter
+@Setter
+@NoArgsConstructor
+@DynamicInsert
+@Table(name = "like_board")
 public class Like {
 
     @EmbeddedId
