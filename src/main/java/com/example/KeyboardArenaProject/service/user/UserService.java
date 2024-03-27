@@ -18,16 +18,21 @@ public class UserService {
 	}
 
 	public User save(AddUserRequest dto) {
+		System.out.println(dto.getUserId());
+		System.out.println(dto.getPassword());
+		System.out.println(dto.getNickname());
+		System.out.println(dto.getEmail());
+		System.out.println(dto.getFindPw());
+		System.out.println(dto.getFindPwQuestion());
 		return userRepository.save(
-			//builder 패턴 적용 필요
-			// User.builder()
-			// 	.userId(dto.getUserId())
-			// 	.password(encoder.encode(dto.getPassword()))
-			// 	.nickname(dto.getNickname())
-			// 	.email(dto.getEmail())
-			// 	.findPw(dto.getFindPw())
-			// 	.findPwQuestion(dto.getFindPwQuestion())
-			// 	.build()
+			User.builder()
+				.userId(dto.getUserId())
+				.password(encoder.encode(dto.getPassword()))
+				.nickname(dto.getNickname())
+				.email(dto.getEmail())
+				.findPw(dto.getFindPw())
+				.findPwQuestion(dto.getFindPwQuestion())
+				.build()
 		);
 	}
 }

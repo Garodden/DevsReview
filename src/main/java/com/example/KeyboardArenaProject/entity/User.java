@@ -14,14 +14,18 @@ import com.example.KeyboardArenaProject.utils.GenerateIdUtils;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@Table(name = "user")
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User implements UserDetails {
 	@Id
 	@Column(name="id", updatable = false)
@@ -57,8 +61,15 @@ public class User implements UserDetails {
 	@ColumnDefault("true")
 	private Boolean isActive;
 
-	public User(LocalDateTime signUpDate) {
+	@Builder
+	public User(LocalDateTime signUpDate, String userId, String password, String nickname, String email, String findPw, String findPwQuestion, String auth) {
 		this.id = GenerateIdUtils.generateUserId(signUpDate);
+		this.userId = userId;
+		this.password = password;
+		this.nickname = nickname;
+		this.email = email;
+		this.findPw = findPw;
+		this.findPwQuestion = findPwQuestion;
 	}
 
 	@Override

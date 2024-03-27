@@ -1,5 +1,7 @@
 package com.example.KeyboardArenaProject.config;
 
+import static org.springframework.boot.autoconfigure.security.servlet.PathRequest.*;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -13,7 +15,11 @@ import com.example.KeyboardArenaProject.service.user.UserDetailService;
 @EnableWebSecurity
 @Configuration
 public class WebSecurityConfig {
-
+	@Bean
+	public WebSecurityCustomizer configure() {      // 스프링 시큐리티 기능 비활성화
+		return web -> web.ignoring().requestMatchers(toH2Console())
+			.requestMatchers("/static/**");
+	}
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
 		httpSecurity.authorizeHttpRequests(auth ->

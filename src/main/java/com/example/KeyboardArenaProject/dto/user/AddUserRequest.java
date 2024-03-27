@@ -12,5 +12,4 @@ public class AddUserRequest {
 	private String email;
 	private String findPw;
 	private String findPwQuestion;
-
 }
