@@ -18,12 +18,6 @@ public class UserService {
 	}
 
 	public User save(AddUserRequest dto) {
-		System.out.println(dto.getUserId());
-		System.out.println(dto.getPassword());
-		System.out.println(dto.getNickname());
-		System.out.println(dto.getEmail());
-		System.out.println(encoder.encode(dto.getPassword()));
-		System.out.println(dto.getFindPwQuestion());
 		return userRepository.save(
 			User.builder()
 				.userId(dto.getUserId())

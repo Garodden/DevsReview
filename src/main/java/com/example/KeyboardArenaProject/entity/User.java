@@ -10,6 +10,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.example.KeyboardArenaProject.dto.user.UserResponse;
 import com.example.KeyboardArenaProject.utils.GenerateIdUtils;
 
 import jakarta.persistence.Column;
@@ -33,7 +34,7 @@ public class User implements UserDetails {
 	@Column(name="id", updatable = false)
 	private String id;
 
-	@Column(name="userId", nullable = false)
+	@Column(name="user_id", nullable = false)
 	private String userId;
 
 	@Column(name="password", nullable = false)
@@ -42,7 +43,7 @@ public class User implements UserDetails {
 	@Column(name="nickname", nullable = false)
 	private String nickname;
 
-	@Column(name="userRank")
+	@Column(name="user_rank")
 	private int userRank;
 
 	@Column(name="point")
@@ -51,13 +52,13 @@ public class User implements UserDetails {
 	@Column(name="email", nullable = false)
 	private String email;
 
-	@Column(name="findPw", nullable = false)
+	@Column(name="find_pw", nullable = false)
 	private String findPw;
 
-	@Column(name="findPwQuestion", nullable = false)
+	@Column(name="find_pw_question", nullable = false)
 	private String findPwQuestion;
 
-	@Column(name="isActive")
+	@Column(name="is_active")
 	private Boolean isActive;
 
 	@Builder
@@ -66,9 +67,12 @@ public class User implements UserDetails {
 		this.userId = userId;
 		this.password = password;
 		this.nickname = nickname;
+		this.userRank = 1;
+		this.point = 0;
 		this.email = email;
 		this.findPw = findPw;
 		this.findPwQuestion = findPwQuestion;
+		this.isActive = true;
 	}
 
 	@Override
@@ -104,5 +108,20 @@ public class User implements UserDetails {
 	@Override
 	public boolean isEnabled() {
 		return true;
+	}
+
+	public UserResponse toResponse() {
+		return UserResponse.builder()
+			.id(id)
+			.userId(userId)
+			.password(password)
+			.nickname(nickname)
+			.userRank(userRank)
+			.point(point)
+			.email(email)
+			.findPw(findPw)
+			.findPwQuestion(findPwQuestion)
+			.isActive(isActive)
+			.build();
 	}
 }
