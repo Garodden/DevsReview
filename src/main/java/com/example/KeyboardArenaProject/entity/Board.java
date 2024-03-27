@@ -51,18 +51,18 @@ public class Board {
     @Column(name = "board_rank",nullable = false)
     private Integer boardRank;
 
-    @Column(name="\"like\"") //default 0
-    private Integer like;
+    @Column(name="likes") //default 0
+    private Integer likes;
 
-    @Column(name="\"active\"")  //default false
-    private Boolean active;
+    @Column(name="if_active")  //default false
+    private Boolean ifActive;
 
-    @Column(name="\"view\"")   //default 0
-    private Integer view;
+    @Column(name="views")   //default 0
+    private Integer views;
     //조회수
 
-    @Column(name="\"comment\"")   //default 0
-    private Integer comment;
+    @Column(name="comments")   //default 0
+    private Integer comments;
     //댓글 수
 
     @Builder
@@ -74,7 +74,7 @@ public class Board {
         this.content=content;
         this. boardType=board_type;
         this.boardRank=board_rank;
-        this.active=active;
+        this.ifActive =active;
     }
 
     public FreeBoardResponse toResponse(){
