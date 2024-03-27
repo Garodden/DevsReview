@@ -29,10 +29,11 @@
     <button id="signupBtn" type="button">회원가입</button>
 </form>
 
-<!--<script src="/static/js/signup.js"></script>-->
 <script>
     const signUpBtn = document.querySelector("#signupBtn");
+    console.log(signUpBtn);
     signUpBtn.addEventListener("click", () => {
+        console.log("clicked")
         signup();
     })
     function signup() {

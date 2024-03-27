@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
-import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

@@ -1,9 +1,6 @@
 package com.example.KeyboardArenaProject.dto.user;
 
 import com.example.KeyboardArenaProject.entity.User;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
