@@ -9,8 +9,8 @@ import com.example.KeyboardArenaProject.repository.UserRepository;
 
 @Service
 public class UserService {
-	private UserRepository userRepository;
-	private BCryptPasswordEncoder encoder;
+	private final UserRepository userRepository;
+	private final BCryptPasswordEncoder encoder;
 
 	public UserService(UserRepository userRepository, BCryptPasswordEncoder encoder) {
 		this.userRepository = userRepository;
@@ -22,7 +22,7 @@ public class UserService {
 		System.out.println(dto.getPassword());
 		System.out.println(dto.getNickname());
 		System.out.println(dto.getEmail());
-		System.out.println(dto.getFindPw());
+		System.out.println(encoder.encode(dto.getPassword()));
 		System.out.println(dto.getFindPwQuestion());
 		return userRepository.save(
 			User.builder()

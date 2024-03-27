@@ -1,7 +1,9 @@
 package com.example.KeyboardArenaProject.controller.user;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.example.KeyboardArenaProject.dto.user.AddUserRequest;
 import com.example.KeyboardArenaProject.service.user.UserService;

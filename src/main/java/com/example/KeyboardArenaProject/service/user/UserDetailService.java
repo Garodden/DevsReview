@@ -9,7 +9,7 @@ import com.example.KeyboardArenaProject.repository.UserRepository;
 
 @Service
 public class UserDetailService implements UserDetailsService {
-	private UserRepository userRepository;
+	private final UserRepository userRepository;
 
 	public UserDetailService(UserRepository userRepository) {
 		this.userRepository = userRepository;

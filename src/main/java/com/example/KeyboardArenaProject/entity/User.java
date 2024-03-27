@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -25,6 +26,7 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
+@DynamicInsert
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User implements UserDetails {
 	@Id
@@ -40,12 +42,10 @@ public class User implements UserDetails {
 	@Column(name="nickname", nullable = false)
 	private String nickname;
 
-	@Column(name="rank", nullable = false)
-	@ColumnDefault("1")
-	private int rank;
+	@Column(name="userRank")
+	private int userRank;
 
-	@Column(name="point", nullable = false)
-	@ColumnDefault("0")
+	@Column(name="point")
 	private int point;
 
 	@Column(name="email", nullable = false)
@@ -57,13 +57,12 @@ public class User implements UserDetails {
 	@Column(name="findPwQuestion", nullable = false)
 	private String findPwQuestion;
 
-	@Column(name="isActive", nullable = false)
-	@ColumnDefault("true")
+	@Column(name="isActive")
 	private Boolean isActive;
 
 	@Builder
-	public User(LocalDateTime signUpDate, String userId, String password, String nickname, String email, String findPw, String findPwQuestion, String auth) {
-		this.id = GenerateIdUtils.generateUserId(signUpDate);
+	public User(String userId, String password, String nickname, String email, String findPw, String findPwQuestion, String auth) {
+		this.id = GenerateIdUtils.generateUserId(LocalDateTime.now());
 		this.userId = userId;
 		this.password = password;
 		this.nickname = nickname;
@@ -79,7 +78,7 @@ public class User implements UserDetails {
 
 	@Override
 	public String getUsername() {
-		return nickname;
+		return email;
 	}
 
 	@Override
