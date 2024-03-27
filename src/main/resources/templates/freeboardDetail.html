@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title th:text="${post.title}"></title>
+</head>
+<body>
+<header>
+    <h1>Keyboard Arena</h1>
+    <button type="button" class="btn btn-secondary" onclick="location.href='/logout'">로그아웃</button>
+</header>
+<main>
+    <h2 th:text="${post.title}"></h2>
+    <p th:text="${writer.nickname}"></p>
+    <p th:text="${writer.rank}"></p>
+    <p th:if="${post.updatedDate} != null and ${post.updatedDate} != ${post.createdDate}">edited</p>
+    <p th:if="${post.updatedDate} != null and ${post.updatedDate} != ${post.createdDate}" th:text="${post.updatedDate}"></p>
+    <p th:if="${post.updatedDate} == null or ${post.updatedDate} == ${post.createdDate}" th:text="${post.createdDate}"></p>
+
+</main>
+</body>
+</html>
