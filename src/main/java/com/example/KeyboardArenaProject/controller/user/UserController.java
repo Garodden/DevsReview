@@ -56,6 +56,8 @@ public class UserController {
 	// 		.body(user.toResponse());
 	// }
 
+
+	// 테스트 용도
 	@GetMapping("/userinfo")
 	@ResponseBody
 	public ResponseEntity<UserResponse> getUserInfo() {
