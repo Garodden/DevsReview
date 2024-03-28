@@ -1,11 +1,9 @@
 package com.example.KeyboardArenaProject.service.arena;
 
 import com.example.KeyboardArenaProject.entity.Board;
-import com.example.KeyboardArenaProject.repository.BoardRepository;
-import org.springframework.data.domain.Page;
+import com.example.KeyboardArenaProject.repository.ArenaRepository;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 
@@ -13,9 +11,9 @@ import java.util.List;
 
 @Service
 public class ArenaService {
-    private BoardRepository boardRepository;
+    private ArenaRepository boardRepository;
 
-    public ArenaService(BoardRepository boardRepository){
+    public ArenaService(ArenaRepository boardRepository){
         this.boardRepository = boardRepository;
     }
 

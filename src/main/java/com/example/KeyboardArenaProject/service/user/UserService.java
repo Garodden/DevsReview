@@ -38,4 +38,7 @@ public class UserService {
 		UserDetails userDetails = (UserDetails)authentication.getPrincipal();
 		return (User) userDetails;
 	}
+
 }
+
+

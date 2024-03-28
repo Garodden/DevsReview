@@ -1,6 +1,6 @@
 package com.example.KeyboardArenaProject.controller.arena;
 
-import com.example.KeyboardArenaProject.dto.arena.ArenasResponse;
+import com.example.KeyboardArenaProject.dto.arena.ArenaResponse;
 import com.example.KeyboardArenaProject.entity.Board;
 import com.example.KeyboardArenaProject.service.arena.ArenaService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -15,14 +15,14 @@ public class ArenaController {
     private final ArenaService arenaService;
     public ArenaController(ArenaService arenaService){ this.arenaService = arenaService;}
     @GetMapping("/arenas")
-    public List<ArenasResponse> showArena() {
+    public List<ArenaResponse> showArena() {
 
         List<Board> arenaList = arenaService.findAllRankArena();
         arenaList.addAll(arenaService.findTop3ArenaOrderByLikes());
         arenaList.addAll(arenaService.findNormalArenaOrderByCreatedDate());
 
-        List<ArenasResponse> ArenaResponseList = arenaList.stream()
-                .map(ArenasResponse::new)
+        List<ArenaResponse> ArenaResponseList = arenaList.stream()
+                .map(ArenaResponse::new)
                 .toList();
 
         return ArenaResponseList;

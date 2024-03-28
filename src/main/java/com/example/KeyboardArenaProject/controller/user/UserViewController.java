@@ -29,4 +29,5 @@ public class UserViewController {
 		model.addAttribute("user", userService.getCurrentUserInfo());
 		return "home";
 	}
+
 }
