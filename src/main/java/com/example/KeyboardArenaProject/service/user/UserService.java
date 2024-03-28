@@ -39,6 +39,19 @@ public class UserService {
 		return (User) userDetails;
 	}
 
+	// 임시 유저 정보 접근용
+	public User getTemporalUserGet(){
+		return User.builder()
+				.userId("user_1111_1111")
+				.auth(" ")
+				.findPwQuestion("내가 다녔던 초등학교 는?")
+				.userId("1111")
+				.password("1111")
+				.email("ormy@ormy.com")
+				.nickname("오르미")
+				.findPw("상동초").build();
+	}
+
 }
 
 
