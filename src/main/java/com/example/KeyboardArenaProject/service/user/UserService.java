@@ -1,8 +1,9 @@
 package com.example.KeyboardArenaProject.service.user;
 
+import java.util.Optional;
+
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -33,9 +34,21 @@ public class UserService {
 		);
 	}
 
+	public Optional<User> getUserById(String userId) {
+		return userRepository.findByUserId(userId);
+	}
+
 	public User getCurrentUserInfo() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		User user = (User)authentication.getPrincipal();
 		return user;
 	}
+
+	public String getCurrentUserId() {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		User user = (User)authentication.getPrincipal();
+		return user.getUserId();
+	}
+
+
 }
