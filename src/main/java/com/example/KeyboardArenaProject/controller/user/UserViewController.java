@@ -30,4 +30,14 @@ public class UserViewController {
 		return "home";
 	}
 
+	@GetMapping("/findId")
+	public String findId() {
+		return "findId";
+	}
+
+	@GetMapping("/findPw")
+	public String findPw() {
+		return "findPw";
+	}
+
 }
