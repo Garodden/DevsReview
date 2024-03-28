@@ -42,12 +42,27 @@ public class UserController {
 		return "redirect:/login";
 	}
 
+	// @GetMapping("/test1")
+	// @ResponseBody
+	// public ResponseEntity<UserResponse> getUserInfo() {
+	// 	// Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+	// 	// String currentPrincipalName = authentication.getName();
+	// 	// System.out.println(currentPrincipalName);
+	// 	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+	// 	UserDetails userDetail = (UserDetails)authentication.getPrincipal();
+	// 	User user = (User)userDetail;
+	// 	return ResponseEntity.status(HttpStatus.OK)
+	// 		.body(user.toResponse());
+	// }
+
 	@GetMapping("/test1")
 	@ResponseBody
 	public Object getUserInfo() {
+		// Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		// String currentPrincipalName = authentication.getName();
+		// System.out.println(currentPrincipalName);
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		String currentPrincipalName = authentication.getName();
-		System.out.println(currentPrincipalName);
-		return currentPrincipalName;
+
+		return authentication;
 	}
 }
