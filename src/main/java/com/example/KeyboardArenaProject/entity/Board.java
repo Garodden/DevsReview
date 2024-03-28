@@ -63,6 +63,7 @@ public class Board {
 
     @Column(name="comments")   //default 0
     private Integer comments;
+
     //댓글 수
 
     @Builder

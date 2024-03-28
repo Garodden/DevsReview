@@ -5,7 +5,7 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>자유게시판 글 쓰기</title>
+    <title>자유게시판 수정하기</title>
 </head>
 <body>
 <header>
@@ -18,15 +18,16 @@
     </ul>
 </header>
 <main>
-    <form action="/board" method="post">
-        <input type="text" name="title" placeholder="title">
+    <form th:action="@{/board/{board_id}(board_id=${post.boardId})}" th:method="put">
+        <input type="hidden" name="_method" value="PUT">
+        <input type="text" name="title" placeholder="title" th:value="${post.title}">
         <label for="selectBoardRank">open to : </label>
         <select name="boardRank" id="selectBoardRank">
             <option th:each="num : ${#numbers.sequence(1,user.userRank)}" th:text="${numStat.count}" th:value="${numStat.count}"></option>
         </select>
         <span>이상</span>
-        <button type="submit">submit</button>
-        <textarea name="content" id="free-content" cols="100" rows="5"></textarea>
+        <button type="submit">수정</button>
+        <textarea name="content" id="free-content" cols="100" rows="5" th:text="${post.content}"></textarea>
     </form>
 </main>
 </body>

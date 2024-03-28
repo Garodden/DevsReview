@@ -1,21 +1,32 @@
 package com.example.KeyboardArenaProject.controller.freeBoard;
 
+import com.example.KeyboardArenaProject.dto.freeBoard.FreeBoardRecieveForm;
+import com.example.KeyboardArenaProject.dto.freeBoard.FreeBoardResponse;
+import com.example.KeyboardArenaProject.dto.freeBoard.FreeBoardWriteRequest;
+import com.example.KeyboardArenaProject.dto.user.AddUserRequest;
+import com.example.KeyboardArenaProject.dto.user.UserResponse;
 import com.example.KeyboardArenaProject.entity.Board;
+import com.example.KeyboardArenaProject.entity.User;
 import com.example.KeyboardArenaProject.service.freeBoard.FreeBoardService;
+
+import com.example.KeyboardArenaProject.service.user.UserDetailService;
 import com.example.KeyboardArenaProject.service.user.UserService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+
 import lombok.extern.slf4j.Slf4j;
-//import org.springframework.security.core.annotation.AuthenticationPrincipal;
-//import org.springframework.security.core.context.SecurityContextHolder;
-//import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
-import org.apache.catalina.User;
+import org.springframework.http.ResponseEntity;
+
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -23,39 +34,67 @@ import java.util.List;
 public class FreeBoardController {
     private final FreeBoardService freeBoardService;
     private final UserService userService;
+    private final UserDetailService userDetailService;
 
     @GetMapping("/")
     public String indexPage(Model model){
         return "index";
     }
 
-//    @PostMapping("/board")
-//    public ResponseEntity<String> writeFreeBoard(@RequestBody FreeBoardRecieveJson recieveJson, @AuthenticationPrincipal UserEntity user){
-//        FreeBoardWriteRequest request;
-//        Board board;
-//        if(user!=null){
-//            request = new FreeBoardWriteRequest(user.id,recieveJson.getTitle(),recieveJson.getContent(), recieveJson.getBoard_rank());
-//            board = request.toEntity();
-//            freeBoardService.writeFreeBoard(board);
-//        }else{
-//            request = new FreeBoardWriteRequest("unknown", recieveJson.getTitle(), recieveJson.getContent(), recieveJson.getBoard_rank());
-//            board = request.toEntity();
-//            freeBoardService.writeFreeBoard(board);
-//        }
-//        return ResponseEntity.ok(board.getBoardId());
+    @PostMapping("/board")
+    public String writeFreeBoard(@ModelAttribute FreeBoardRecieveForm recieveForm){
+        FreeBoardWriteRequest request;
+        Board board;
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User)authentication.getPrincipal();
+        log.error("유저정보 id{}",user.getId());
 //
-//    }
+        if(user == null){
+            request = new FreeBoardWriteRequest("unknown",recieveForm.getTitle(),recieveForm.getContent(),recieveForm.getBoardRank());
+        }else{
+            request = new FreeBoardWriteRequest(user.getId(),recieveForm.getTitle(),recieveForm.getContent(),recieveForm.getBoardRank());
+        }
+        board = request.toEntity();
+        freeBoardService.writeFreeBoard(board);
+        log.info("board is created id = {}",board.getBoardId());
+        return "redirect:/board";
 
-//    @PutMapping("/board/{board_id}")
-//    public ResponseEntity<FreeBoardRecieveJson> updateFreeBoard(@RequestBody FreeBoardRecieveJson recieveJson,Principal principal){
-//        FreeBoardWriteRequest request = new FreeBoardWriteRequest(recieveJson.getTitle(), recieveJson.getContent(), recieveJson.getBoardRank(),principal,freeBoardService);
-//        return ResponseEntity.ok(recieveJson);
-//    }
+    }
+    @GetMapping("/newFreeboard")
+    public String newFreeBoard(Model model){
+        model.addAttribute("user",userService.getCurrentUserInfo());
+//        if(boardId!=null){
+//            model.addAttribute("board",freeBoardService.findByBoardId(boardId));
+//
+//        }else{
+//            model.addAttribute("board",new Board());
+//        }
+        return "newFreeboard";
+    }
+
+    @PutMapping("/board/{board_id}")
+    public ResponseEntity<FreeBoardResponse> updateFreeBoard(@PathVariable String board_id,@ModelAttribute FreeBoardRecieveForm recieveForm){
+
+        freeBoardService.updateBoard(recieveForm.getTitle(),recieveForm.getContent(), recieveForm.getBoardRank(), board_id);
+        FreeBoardResponse response = freeBoardService.findByBoardId(board_id).toResponse();
+        return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping("/board/{board_id}")
+    public String deleteFreeBoard(@PathVariable String board_id){
+        freeBoardService.deleteBoard(board_id);
+        return "redirect:/board";
+    }
 
     @GetMapping("/board")
     public String viewAllFreeBoard(Model model){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User)authentication.getPrincipal();
+        log.error("유저정보 id{}",user.getId());
+
         List<Board> freeboard = freeBoardService.findAllSortedFreeBoard();
         model.addAttribute("freeboard",freeboard);
+
         return "index";
     }
 
@@ -65,29 +104,16 @@ public class FreeBoardController {
         model.addAttribute("post",freeBoardService.findByBoardId(board_id));
         return "freeboardDetail";
     }
-//    @GetMapping("/logout")
-//    public String logout(HttpServletRequest request, HttpServletResponse response) {
-//        new SecurityContextLogoutHandler().logout(request, response, SecurityContextHolder.getContext().getAuthentication());
-//        return "redirect:/board";
-//    }
 
-//    @ResponseBody
-//    @PostMapping("/user")
-//    public UserEntity signup(@RequestBody AddUserRequest request){   //폼데이터를 받을 때는 @RequestBody를 안 쓴다.
-//        UserEntity userEntity = userService.saveg(request);
-//        return userEntity;
-//    }
-//
-//    @GetMapping("/login")
-//    public String login(){
-//        return "login";
-//    }
-//
-//    @GetMapping("/signup")
-//    public String signup(){
-//        return "signup";
-//    }
-//
+    @GetMapping("/board/{board_id}/update")
+    public String updateOneFreeBoard(@PathVariable String board_id,Model model){
+        model.addAttribute("user",userService.getCurrentUserInfo());
+        model.addAttribute("post", freeBoardService.findByBoardId(board_id));
+        return "updateFreeboard";
+    }
+
+
+
 
 
 }

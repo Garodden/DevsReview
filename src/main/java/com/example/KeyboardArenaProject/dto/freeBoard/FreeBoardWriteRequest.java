@@ -25,7 +25,7 @@ public class FreeBoardWriteRequest {
 
 
     public Board toEntity(){
-        return Board.builder().board_id("board_"+ LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyMMdd"))+"_"
+        return Board.builder().board_id("board_"+ LocalDateTime.now().format(DateTimeFormatter.ofPattern("MMdd"))+"_"
                         +LocalDateTime.now().format(DateTimeFormatter.ofPattern("HHmmss")))
                 .id(id).title(title).content(content)
                 .board_type(1).board_rank(board_rank).active(true).build();
