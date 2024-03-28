@@ -40,7 +40,7 @@ public class UserService {
 	}
 
 	// 임시 유저 정보 접근용
-	public User getTemporalUserGet(){
+	public static User getTemporalUserGet(){
 		return User.builder()
 				.userId("user_1111_1111")
 				.auth(" ")
