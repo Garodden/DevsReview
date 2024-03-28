@@ -26,6 +26,7 @@ import jakarta.persistence.Table;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class User implements UserDetails {
+	@Getter
 	@Id
 	@Column(name="id", updatable = false)
 	private String id;
@@ -78,7 +79,7 @@ public class User implements UserDetails {
 
 	@Override
 	public String getUsername() {
-		return email;
+		return nickname;
 	}
 
 	@Override

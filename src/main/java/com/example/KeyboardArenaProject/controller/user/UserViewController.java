@@ -29,4 +29,14 @@ public class UserViewController {
 		model.addAttribute("user", userService.getCurrentUserInfo());
 		return "home";
 	}
+
+	@GetMapping("/findId")
+	public String findId() {
+		return "findId";
+	}
+
+	@GetMapping("/findPw")
+	public String findPw() {
+		return "findPw";
+	}
 }
