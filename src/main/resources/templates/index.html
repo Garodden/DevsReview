@@ -29,9 +29,9 @@
         <p th:if="${postStat.index} == 2">Top3</p>
         <li><a th:text="${post.title}" th:href="@{/board/{board_id}(board_id=${post.boardId})}"></a></li>
         <li th:text="${post.createdDate}"></li>
-        <li th:text="${post.view}"></li>
-        <li th:text="${post.comment}"></li>
-        <li th:text="${post.like}"></li>
+        <li th:text="${post.getViews}"></li>
+        <li th:text="${post.getComments}"></li>
+        <li th:text="${post.getLikes}"></li>
     </ul>
 
 </main>

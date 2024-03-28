@@ -25,8 +25,8 @@ public class ArenaResponse {
         boardRank = arenaEntity.getBoardRank();
         createdDate = arenaEntity.getCreatedDate();
         participates=0;
-        comments = arenaEntity.getComment();
-        likes = arenaEntity.getLike();
+        comments = arenaEntity.getComments();
+        likes = arenaEntity.getLikes();
         boardType =arenaEntity.getBoardType();
     }
 }
