@@ -2,12 +2,16 @@ package com.example.KeyboardArenaProject.controller.user;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.example.KeyboardArenaProject.dto.user.AddUserRequest;
 import com.example.KeyboardArenaProject.dto.user.UserResponse;
 import com.example.KeyboardArenaProject.entity.User;
@@ -36,5 +40,14 @@ public class UserController {
 		new SecurityContextLogoutHandler().logout(request, response,
 			SecurityContextHolder.getContext().getAuthentication());
 		return "redirect:/login";
+	}
+
+	@GetMapping("/test1")
+	@ResponseBody
+	public Object getUserInfo() {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		String currentPrincipalName = authentication.getName();
+		System.out.println(currentPrincipalName);
+		return currentPrincipalName;
 	}
 }

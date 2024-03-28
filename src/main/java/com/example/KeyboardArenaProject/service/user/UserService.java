@@ -35,7 +35,7 @@ public class UserService {
 
 	public User getCurrentUserInfo() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		UserDetails userDetails = (UserDetails)authentication.getPrincipal();
-		return (User) userDetails;
+		User user = (User)authentication.getPrincipal();
+		return user;
 	}
 }
