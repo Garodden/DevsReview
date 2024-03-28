@@ -13,7 +13,7 @@ public interface BoardRepository extends JpaRepository<Board, String> {
     List<Board> findAllByBoardType(int i);
 
     // top 3 liked normal arena
-    @Query("Select b FROM Board b where b.boardType = 3 order by b.like desc")
+    @Query("Select b FROM Board b where b.boardType = 3 order by b.likes desc")
     List<Board> findArenasOrderByLikeDesc(Pageable pageable);
     @Query("SELECT count(b) FROM Board b WHERE b.boardType = 3")
     int findNumberOfArenas();
