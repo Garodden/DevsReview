@@ -20,7 +20,7 @@ public class WebSecurityConfig {
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
 		httpSecurity.authorizeHttpRequests(auth ->
-				auth.requestMatchers("/login", "/signup", "/user")
+				auth.requestMatchers("/login", "/signup", "/user", "/findId", "/findPw")
 					.permitAll()
 					.anyRequest()
 					.authenticated())
