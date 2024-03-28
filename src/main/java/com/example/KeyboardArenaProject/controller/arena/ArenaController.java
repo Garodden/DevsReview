@@ -27,10 +27,12 @@ public class ArenaController {
     private final ArenaService arenaService;
     private final CleaerdService cleaerdService;
     private final CommentService commentService;
-    public ArenaController(ArenaService arenaService, CleaerdService cleaerdService, CommentService commentService){
+    private final UserService userService;
+    public ArenaController(ArenaService arenaService, CleaerdService cleaerdService, CommentService commentService, UserService userService){
         this.arenaService = arenaService;
         this.cleaerdService = cleaerdService;
         this.commentService =commentService;
+        this.userService = userService;
     }
 
     @Operation(summary = "아레나 전체 보기", description = "주간 랭킹 아레나, 좋아요 top 3 아레나, 그리고 나머지 일반 아레나들을 순서대로 보여주는 API")
@@ -66,6 +68,7 @@ public class ArenaController {
                                             .board(arenaRawInfo)
                                             .comment(commentService.findCommentsByBoardId(boardId))
                                             .participates(cleaerdService.findParticipatesByBoardId(boardId))
+                                            .writer(userService.getNickNameById(arenaRawInfo.getId()))
                                             .build();
         return arenaDetails;
     }

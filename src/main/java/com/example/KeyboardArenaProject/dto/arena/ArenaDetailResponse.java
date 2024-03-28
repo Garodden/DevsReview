@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 public class ArenaDetailResponse {
     UserTopBarInfo userTopBarInfo;
     String title;
+    String writer;
     int boardRank;
     LocalDateTime createdDate;
     int participates;
@@ -27,9 +28,10 @@ public class ArenaDetailResponse {
     List<CommentResponse> commentResponses;
 
     @Builder
-    ArenaDetailResponse(User user, Board board, List<Comment> comment, int participates){
+    ArenaDetailResponse(User user, Board board, List<Comment> comment, int participates, String writer){
         this.userTopBarInfo = new UserTopBarInfo(user);
         this.title = board.getTitle();
+        this.writer =writer;
         this.boardRank = board.getBoardRank();
         this.createdDate = board.getCreatedDate();
         this.participates = participates;
