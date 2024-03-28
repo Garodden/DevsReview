@@ -18,6 +18,8 @@ public interface ArenaRepository extends JpaRepository<Board, String> {
     @Query("SELECT count(b) FROM Board b WHERE b.boardType = 3")
     int findNumberOfArenas();
 
+    Board findByBoardId(String boardId);
+
     // rest of the normal arena
     List<Board> findByBoardTypeOrderByCreatedDateDesc(int type);
 }

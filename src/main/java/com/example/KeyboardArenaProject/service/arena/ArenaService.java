@@ -21,6 +21,9 @@ public class ArenaService {
         return boardRepository.findAllByBoardType(2);
     }
 
+    public Board findByBoardId(String boardId){
+        return boardRepository.findByBoardId( boardId);
+    }
 
     public List<Board> findTop3ArenaOrderByLikes(){
         Pageable topThree = PageRequest.of(0, 3);
