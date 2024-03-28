@@ -1,9 +1,16 @@
 package com.example.KeyboardArenaProject.dto;
 
 import com.example.KeyboardArenaProject.entity.Comment;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
+@Getter
+@Setter
+@NoArgsConstructor
 public class CommentResponse {
     String nickname;
     String content;
@@ -16,8 +23,8 @@ public class CommentResponse {
     }
 
     //
-    public CommentResponse(String nickname, Comment comment ){
-        this.nickname = nickname;
+    public CommentResponse(Comment comment ){
+        this.nickname = comment.getNickName();
         this.content = comment.getContent();
         this. createdTime = comment.getCreatedDate();
     }
