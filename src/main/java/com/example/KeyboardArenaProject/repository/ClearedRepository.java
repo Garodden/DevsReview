@@ -5,6 +5,10 @@ import com.example.KeyboardArenaProject.entity.compositeKey.UserBoardCompositeKe
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface ClearedRepository extends JpaRepository<Cleared, UserBoardCompositeKey> {
+    List<Cleared> findAllByCompositeId_BoardId(String boardId);
+
 }

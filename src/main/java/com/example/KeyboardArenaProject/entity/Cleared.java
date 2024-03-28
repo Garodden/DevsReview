@@ -24,6 +24,7 @@ public class Cleared {
     @EmbeddedId
     private UserBoardCompositeKey compositeId;
 
+
     @Column(name = "clear_time")
     private LocalTime clearTime;
 

@@ -32,6 +32,9 @@ public class Comment {
     @Column(name = "id", nullable = false)
     private String id;
 
+    @Column(name = "nickname", nullable = false)
+    private String nickName;
+
     @Column(name = "content", nullable = false)
     private String content;
 

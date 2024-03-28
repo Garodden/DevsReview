@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface BoardRepository extends JpaRepository<Board, String> {
+public interface ArenaRepository extends JpaRepository<Board, String> {
 
     List<Board> findAllByBoardType(int i);
 
@@ -17,6 +17,8 @@ public interface BoardRepository extends JpaRepository<Board, String> {
     List<Board> findArenasOrderByLikeDesc(Pageable pageable);
     @Query("SELECT count(b) FROM Board b WHERE b.boardType = 3")
     int findNumberOfArenas();
+
+    Board findByBoardId(String boardId);
 
     // rest of the normal arena
     List<Board> findByBoardTypeOrderByCreatedDateDesc(int type);
