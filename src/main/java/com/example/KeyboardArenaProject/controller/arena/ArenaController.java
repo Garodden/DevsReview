@@ -12,6 +12,7 @@ import com.example.KeyboardArenaProject.service.user.CleaerdService;
 import com.example.KeyboardArenaProject.service.user.UserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,6 +32,8 @@ public class ArenaController {
         this.cleaerdService = cleaerdService;
         this.commentService =commentService;
     }
+
+    @Operation(summary = "아레나 전체 보기", description = "주간 랭킹 아레나, 좋아요 top 3 아레나, 그리고 나머지 일반 아레나들을 순서대로 보여주는 API")
     @GetMapping("/arenas")
     public List<ArenaResponse> showArena() {
 
@@ -47,6 +50,7 @@ public class ArenaController {
         
     }
 
+    @Operation(summary = "개별 아레나 확인", description = " 유저 탑 네비게이션바, 아레나 정보, 아레나에 적힌 댓글들을 가져오는 API")
     @GetMapping("/arena/{boardId}")
     public ArenaDetailResponse showArenaDetails(@PathVariable String boardId) throws JsonProcessingException {
         Board arenaRawInfo = arenaService.findByBoardId(boardId);
