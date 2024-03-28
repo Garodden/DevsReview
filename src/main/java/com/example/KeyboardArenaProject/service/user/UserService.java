@@ -39,6 +39,11 @@ public class UserService {
 		return (User) userDetails;
 	}
 
+	//임시 유저 닉네임 제공 함수
+	public String getNickNameById(String id){
+		return (id+"nickname");
+	}
+
 	// 임시 유저 정보 접근용
 	public static User getTemporalUserGet(){
 		return User.builder()
