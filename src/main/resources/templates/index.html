@@ -13,7 +13,7 @@
     <button type="button" class="btn btn-secondary" onclick="location.href='/logout'">로그아웃</button>
 </header>
 <main>
-    <button onclick="location.href='../templates/newFreeboard.html'">게시판 글 쓰기</button>
+    <button th:onclick="|location.href='@{/newFreeboard}'|">게시판 글 쓰기</button>
     <button>투기장</button>
     <button onclick="location.href='/board'">자유게시판</button>
 

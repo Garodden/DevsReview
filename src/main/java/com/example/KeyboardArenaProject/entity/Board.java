@@ -51,17 +51,17 @@ public class Board {
     @Column(name = "board_rank",nullable = false)
     private Integer boardRank;
 
-    @Column(name="\"like\"") //default 0
+    @Column(name="\"likes\"") //default 0
     private Integer like;
 
-    @Column(name="\"active\"")  //default false
+    @Column(name="\"if_active\"")  //default false
     private Boolean active;
 
-    @Column(name="\"view\"")   //default 0
+    @Column(name="\"views\"")   //default 0
     private Integer view;
     //조회수
 
-    @Column(name="\"comment\"")   //default 0
+    @Column(name="\"comments\"")   //default 0
     private Integer comment;
     //댓글 수
 

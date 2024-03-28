@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,8 +34,8 @@ public class FreeBoardService {
         return freeBoardRepository.findAllByBoardTypeOrderByLikeDesc(1);
     }
 
-    public Board findByBoardId(String id){
-        return freeBoardRepository.findById(id).orElseThrow();
+    public Board findByBoardId(String boardId){
+        return freeBoardRepository.findById(boardId).orElseThrow();
     }
 
     public User findWriter(String boardId){
@@ -44,6 +45,15 @@ public class FreeBoardService {
         return user.orElseGet(() -> new User(".", ".", ".", "unknown", 1, 0, "@", ".", ".",false));
 
 
+    }
+
+    public void updateBoard(String title, String content, Integer boardRank, String boardId){
+        LocalDateTime localDateTime= LocalDateTime.now();
+        freeBoardRepository.updateBoard(title,content,boardRank,boardId,localDateTime);
+    }
+
+    public void deleteBoard(String boardId){
+        freeBoardRepository.deleteById(boardId);
     }
 
 }

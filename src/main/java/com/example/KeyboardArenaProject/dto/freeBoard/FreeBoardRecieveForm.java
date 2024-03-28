@@ -8,7 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class FreeBoardRecieveJson {
+public class FreeBoardRecieveForm {
     private String title;
     private String content;
     private Integer boardRank;
