@@ -30,7 +30,7 @@ public class FreeBoardService {
 ////        return userRepository.findByUser_id(user_id).orElseThrow().getId();
 //    }
     public List<Board> findAllSortedFreeBoard(){
-        return freeBoardRepository.findAllByBoardTypeOrderByLikeDesc(1);
+        return freeBoardRepository.findAllByBoardTypeOrderByLikesDesc(1);
     }
 
     public Board findByBoardId(String id){

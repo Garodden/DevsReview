@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Getter
 @Builder
-public class ArenaResponse {
+public class ArenasResponse {
     String title;
     int boardRank;
     LocalDateTime createdDate;
@@ -20,13 +20,13 @@ public class ArenaResponse {
     int comments;
     int likes;
     int boardType;
-    public ArenaResponse(Board arenaEntity){
+    public ArenasResponse(Board arenaEntity){
         title = arenaEntity.getTitle();
         boardRank = arenaEntity.getBoardRank();
         createdDate = arenaEntity.getCreatedDate();
         participates=0;
-        comments = arenaEntity.getComment();
-        likes = arenaEntity.getLike();
+        comments = arenaEntity.getComments();
+        likes = arenaEntity.getLikes();
         boardType =arenaEntity.getBoardType();
     }
 }
