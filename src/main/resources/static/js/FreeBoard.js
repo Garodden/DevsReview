@@ -7,3 +7,15 @@ if(deleteFreeButton){
                 location.replace('/board');});
     });
 }
+
+const likeButton = document.querySelector('.like-button');
+likeButton.addEventListener('click',()=>{
+    let board_id = document.getElementById("board-id").value;
+    let id = document.getElementById('logined-id').value;
+    if(id !== ""){
+        fetch(`/api/like?boardId=${board_id}&id=${id}`,{method:'POST'})
+            .then(()=>location.replace(`/board/${board_id}`));
+
+    }
+    console.log("포인트");
+})

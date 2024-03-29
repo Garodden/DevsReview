@@ -9,6 +9,7 @@ import com.example.KeyboardArenaProject.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -54,6 +55,11 @@ public class FreeBoardService {
 
     public void deleteBoard(String boardId){
         freeBoardRepository.deleteById(boardId);
+    }
+
+    @Transactional
+    public void updateBoardLikes(Integer likes,String boardId){
+        freeBoardRepository.updateBoardLikes(likes,boardId);
     }
 
 }
