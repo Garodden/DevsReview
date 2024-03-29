@@ -85,6 +85,12 @@ public class UserService {
 		return userRepository.existsByUserId(userId);
 	}
 
+	public boolean checkDuplicateEmail(String email) {
+		log.info("checkDuplicateEmail: 이메일 중복여부 체크중: {}", email);
+		log.info("checkDuplicateEmail: 이메일 중복여부: {}", userRepository.existsByEmail(email));
+		return userRepository.existsByEmail(email);
+	}
+
 
 	//임시 유저 닉네임 제공 함수
 	public String getNickNameById(String id){
