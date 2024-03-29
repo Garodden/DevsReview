@@ -14,6 +14,7 @@ import com.example.KeyboardArenaProject.service.freeBoard.FreeBoardService;
 
 import com.example.KeyboardArenaProject.service.user.UserDetailService;
 import com.example.KeyboardArenaProject.service.user.UserService;
+import io.micrometer.common.util.StringUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +27,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.security.Principal;
 import java.util.List;
@@ -77,11 +80,12 @@ public class FreeBoardController {
     }
 
     @PutMapping("/board/{board_id}")
-    public ResponseEntity<FreeBoardResponse> updateFreeBoard(@PathVariable String board_id,@ModelAttribute FreeBoardRecieveForm recieveForm){
+    public String updateFreeBoard(@PathVariable String board_id,@ModelAttribute FreeBoardRecieveForm recieveForm){
 
         freeBoardService.updateBoard(recieveForm.getTitle(),recieveForm.getContent(), recieveForm.getBoardRank(), board_id);
         FreeBoardResponse response = freeBoardService.findByBoardId(board_id).toResponse();
-        return ResponseEntity.ok(response);
+        log.info("/board/{board_id} response {}",response);
+        return "redirect:/board/"+board_id;
     }
 
     @DeleteMapping("/board/{board_id}")
@@ -100,7 +104,18 @@ public class FreeBoardController {
     }
 
     @GetMapping("/board/{board_id}")
-    public String viewOneFreeBoard(@PathVariable String board_id,Model model){
+    public String viewOneFreeBoard(@PathVariable String board_id,Model model,HttpServletRequest request){
+        //ip
+        String clientIp = request.getHeader("X-Forwarded-For");
+
+        if (clientIp == null) {
+            clientIp = request.getRemoteAddr();
+        }
+
+        if(!freeBoardService.isContainsIp(clientIp,board_id)){
+            freeBoardService.saveIp(clientIp,board_id);
+            freeBoardService.plusView(board_id);
+        }
         model.addAttribute("writer",freeBoardService.findWriter(board_id));
         model.addAttribute("post",freeBoardService.findByBoardId(board_id));
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

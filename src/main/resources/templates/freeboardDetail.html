@@ -27,11 +27,13 @@
     </div>
     <textarea name="content" id="" cols="100" rows="5" th:text="${post.content}" readonly></textarea>
 
-    <button class="like-button"><img src="/like.svg" alt="좋아요 클릭" width="42"></button>
+    <button class="like-button"><img src="/media/like.svg" alt="좋아요 클릭" width="42"></button>
 
     <span th:text="${post.likes}"></span>
     <input type="hidden" th:value="${loginedUserId}" id="logined-id">
 
+    <a href="/board">뒤로가기</a>
+    <h4 th:text="${clientIp}"></h4>
 </main>
 </body>
 </html>

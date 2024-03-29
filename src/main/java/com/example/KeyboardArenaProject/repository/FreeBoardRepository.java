@@ -28,5 +28,9 @@ public interface FreeBoardRepository extends JpaRepository<Board,String> {
     @Transactional
     void updateBoardLikes(Integer likes,String boardId);
 
+    @Query(value = "UPDATE board SET views=views+1 WHERE board_id=:boardId", nativeQuery = true)
+    @Modifying
+    @Transactional
+    void plusView(String boardId);
 
 }
