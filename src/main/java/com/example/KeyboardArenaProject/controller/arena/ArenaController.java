@@ -1,6 +1,7 @@
 package com.example.KeyboardArenaProject.controller.arena;
 
 import com.example.KeyboardArenaProject.dto.arena.*;
+import com.example.KeyboardArenaProject.dto.user.UserTopBarInfo;
 import com.example.KeyboardArenaProject.entity.Board;
 import com.example.KeyboardArenaProject.entity.User;
 import com.example.KeyboardArenaProject.service.CommentService;
@@ -61,7 +62,7 @@ public class ArenaController {
         String id = arenaRawInfo.getId();
 
         //임시유저. 현재 로그인돼있는 기존 유저를 사용하면 됨.
-        User user = UserService.getTemporalUserGet();
+        User user = userService.getCurrentUserInfo();
 
         ArenaDetailResponse arenaDetails = ArenaDetailResponse
                 .builder()
@@ -75,15 +76,24 @@ public class ArenaController {
         return "arenaDetail";
     }
 
+    @Operation(summary = "아레나 제작", description = "아레나 개장 페이지 get 메소드 API")
+    @GetMapping("/newArena")
+    public String typeNewArena(Model model) {
+        User currentUser = userService.getCurrentUserInfo();
+        model.addAttribute("userTopBarInfo", new UserTopBarInfo(currentUser));
+    return "newArena";
+    }
+
     @Operation(summary = "아레나 제작", description = "아레나 개장 Post 메소드 API")
     @PostMapping("/newArena")
-    public String addArena(@RequestBody ArenaReceiveForm request) {
+    public String addNewArena(@RequestBody ArenaReceiveForm request) {
         User currentUser = userService.getCurrentUserInfo();
         Board arena = Board.builder()
                 .id(currentUser.getId())
                 .title(request.getTitle())
                 .content(request.getContent())
                 .board_rank(currentUser.getUserRank())
+                .board_type(3)
                 .active(false)
                 .build();
 
