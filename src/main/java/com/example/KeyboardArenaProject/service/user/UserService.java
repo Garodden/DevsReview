@@ -11,6 +11,9 @@ import com.example.KeyboardArenaProject.dto.user.AddUserRequest;
 import com.example.KeyboardArenaProject.entity.User;
 import com.example.KeyboardArenaProject.repository.UserRepository;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Service
 public class UserService {
 	private final UserRepository userRepository;
@@ -48,6 +51,19 @@ public class UserService {
 	}
 
 
+	public String getUserId(String email) {
+		Optional<User> userOptional = userRepository.findByEmail(email);
+		log.info("service - getUserId 입력된 이메일: {}", email);
+		log.info("service - getUserId user: {}", userOptional);
+		if(userOptional.isPresent()) {
+			User user = userOptional.get();
+			log.info("service - getUserId userId: {}", user.getUserId());
+			return user.getUserId();
+		} else {
+			throw new UserNotFoundException("User not found with email: " + email);
+		}
+	}
+
 	//임시 유저 닉네임 제공 함수
 	public String getNickNameById(String id){
 		return (id+"nickname");
@@ -66,7 +82,11 @@ public class UserService {
 				.findPw("상동초").build();
 	}
 
-
+	public class UserNotFoundException extends RuntimeException {
+		public UserNotFoundException(String message) {
+			super(message);
+		}
+	}
 }
 
 
