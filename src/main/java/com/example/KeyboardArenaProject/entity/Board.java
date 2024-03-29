@@ -1,6 +1,8 @@
 package com.example.KeyboardArenaProject.entity;
 
+import com.example.KeyboardArenaProject.dto.arena.ArenaResponse;
 import com.example.KeyboardArenaProject.dto.freeBoard.FreeBoardResponse;
+import com.example.KeyboardArenaProject.utils.GenerateIdUtils;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -67,9 +69,9 @@ public class Board {
     //댓글 수
 
     @Builder
-    public Board(String board_id, String id, String title, String content, Integer board_type,
+    public Board(String id, String title, String content, Integer board_type,
                  Integer board_rank, Boolean active){
-        this.boardId=board_id;
+        this.boardId= GenerateIdUtils.generateBoardId(LocalDateTime.now());
         this.id=id;
         this.title=title;
         this.content=content;
