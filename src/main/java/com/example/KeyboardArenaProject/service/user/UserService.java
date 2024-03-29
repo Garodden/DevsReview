@@ -55,6 +55,7 @@ public class UserService {
 	}
 
 
+	// 이메일로 유저 아이디 확인
 	public String getUserId(String email) {
 		Optional<User> userOptional = userRepository.findByEmail(email);
 		log.info("service - getUserId 입력된 이메일: {}", email);
@@ -69,6 +70,7 @@ public class UserService {
 		}
 	}
 
+	// 이메일로 아이디 전송
 	public void sendUserIdByEmail(String email, String userId) {
 		SimpleMailMessage message = new SimpleMailMessage();
 		message.setSubject("[Keyboard Arena] 계정 아이디 확인"); // 메일 제목
@@ -77,6 +79,11 @@ public class UserService {
 		mailSender.send(message);
 	}
 
+	public boolean checkDuplicateUserId(String userId) {
+		log.info("checkDuplicateUserId: 아이디 중복여부 체크중: {}", userId);
+		log.info("checkDuplicateUserId: 아이디 중복여부: {}", userRepository.existsByUserId(userId));
+		return userRepository.existsByUserId(userId);
+	}
 
 
 	//임시 유저 닉네임 제공 함수

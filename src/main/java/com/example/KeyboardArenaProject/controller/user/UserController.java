@@ -47,6 +47,13 @@ public class UserController {
 		return "redirect:/login";
 	}
 
+	@GetMapping("/user/find/id")
+	public ResponseEntity<Boolean> checkDuplicateUserId(@RequestParam String userId) {
+		log.info("checkDuplicateUserId: 아이디 중복여부 체크중: {}", userId);
+		log.info("checkDuplicateUserId: 아이디 중복여부 반환 {}", userService.checkDuplicateUserId(userId));
+		return ResponseEntity.status(HttpStatus.OK).body(userService.checkDuplicateUserId(userId));
+	}
+
 	@PostMapping("/user/find/id")
 	public ResponseEntity<String> getUserIdByEmail(@RequestParam String email) {
 		String userId;
