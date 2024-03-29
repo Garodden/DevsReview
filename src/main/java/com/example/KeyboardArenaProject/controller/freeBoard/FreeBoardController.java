@@ -6,7 +6,10 @@ import com.example.KeyboardArenaProject.dto.freeBoard.FreeBoardWriteRequest;
 import com.example.KeyboardArenaProject.dto.user.AddUserRequest;
 import com.example.KeyboardArenaProject.dto.user.UserResponse;
 import com.example.KeyboardArenaProject.entity.Board;
+import com.example.KeyboardArenaProject.entity.Like;
 import com.example.KeyboardArenaProject.entity.User;
+import com.example.KeyboardArenaProject.entity.compositeKey.UserBoardCompositeKey;
+import com.example.KeyboardArenaProject.service.LikeService;
 import com.example.KeyboardArenaProject.service.freeBoard.FreeBoardService;
 
 import com.example.KeyboardArenaProject.service.user.UserDetailService;
@@ -34,10 +37,11 @@ import java.util.Optional;
 public class FreeBoardController {
     private final FreeBoardService freeBoardService;
     private final UserService userService;
-    private final UserDetailService userDetailService;
+    private final LikeService likeService;
 
     @GetMapping("/")
     public String indexPage(Model model){
+
         return "index";
     }
 
@@ -47,8 +51,8 @@ public class FreeBoardController {
         Board board;
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = (User)authentication.getPrincipal();
-        log.error("유저정보 id{}",user.getId());
-//
+        log.warn("유저정보 id {}",user.getId());
+
         if(user == null){
             request = new FreeBoardWriteRequest("unknown",recieveForm.getTitle(),recieveForm.getContent(),recieveForm.getBoardRank());
         }else{
@@ -88,9 +92,6 @@ public class FreeBoardController {
 
     @GetMapping("/board")
     public String viewAllFreeBoard(Model model){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = (User)authentication.getPrincipal();
-        log.error("유저정보 id{}",user.getId());
 
         List<Board> freeboard = freeBoardService.findAllSortedFreeBoard();
         model.addAttribute("freeboard",freeboard);
@@ -102,6 +103,12 @@ public class FreeBoardController {
     public String viewOneFreeBoard(@PathVariable String board_id,Model model){
         model.addAttribute("writer",freeBoardService.findWriter(board_id));
         model.addAttribute("post",freeBoardService.findByBoardId(board_id));
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(!authentication.getPrincipal().equals("anonymousUser")) {
+            model.addAttribute("loginedUserId",userService.getCurrentUserId());
+        }else{
+            model.addAttribute("loginedUserId","");
+        }
         return "freeboardDetail";
     }
 
@@ -112,8 +119,27 @@ public class FreeBoardController {
         return "updateFreeboard";
     }
 
+    //좋아요
+    @ResponseBody
+    @PostMapping("/api/like")
+    public void like(@RequestParam String boardId,@RequestParam String id){
+        UserBoardCompositeKey userBoardCompositeKey = new UserBoardCompositeKey(id, boardId);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(!authentication.getPrincipal().equals("anonymousUser")) {
+            int likes;
+            if(likeService.findById(userBoardCompositeKey)!=null){
+                if(!likeService.findById(userBoardCompositeKey).isIfLike()){
+                    likes = likeService.clickLikeOne(userBoardCompositeKey);
 
+                }else{
+                    likes = likeService.clickLikeTwo(userBoardCompositeKey);
+                }
 
-
+            }else{
+                likes = likeService.save(userBoardCompositeKey);
+            }
+            freeBoardService.updateBoardLikes(likes, userBoardCompositeKey.getBoardId());
+        }
+    }
 
 }
