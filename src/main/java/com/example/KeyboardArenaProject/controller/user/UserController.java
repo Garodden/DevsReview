@@ -1,7 +1,5 @@
 package com.example.KeyboardArenaProject.controller.user;
 
-import org.apache.coyote.Response;
-import org.hibernate.NonUniqueResultException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -27,7 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Controller
 public class UserController {
-	private UserService userService;
+	private final UserService userService;
 
 	public UserController(UserService userService) {
 		this.userService = userService;
@@ -47,12 +45,26 @@ public class UserController {
 		return "redirect:/login";
 	}
 
+	@GetMapping("/user/find/id")
+	public ResponseEntity<Boolean> checkDuplicateUserId(@RequestParam String userId) {
+		log.info("checkDuplicateUserId: 아이디 중복여부 체크중: {}", userId);
+		log.info("checkDuplicateUserId: 아이디 중복여부 반환 {}", userService.checkDuplicateUserId(userId));
+		return ResponseEntity.status(HttpStatus.OK).body(userService.checkDuplicateUserId(userId));
+	}
+
+	@GetMapping("/user/find/email")
+	public ResponseEntity<Boolean> checkDuplicateEmail(@RequestParam String email) {
+		log.info("checkDuplicateEmail: 이메일 중복여부 체크중: {}", email);
+		log.info("checkDuplicateEmail: 이메일 중복여부 반환 {}", userService.checkDuplicateEmail(email));
+		return ResponseEntity.status(HttpStatus.OK).body(userService.checkDuplicateEmail(email));
+	}
+
 	@PostMapping("/user/find/id")
 	public ResponseEntity<String> getUserIdByEmail(@RequestParam String email) {
 		String userId;
 		try {
 			userId = userService.getUserId(email);
-			log.info("getUserIdByEmail - 이메일 주소, 아이디: {}", email, userId);
+			log.info("getUserIdByEmail - 이메일 주소, 아이디: {}, {}", email, userId);
 			log.info("getUserIdByEmail : 해당 이메일 주소로 아이디를 찾았습니다. ");
 			return ResponseEntity.status(HttpStatus.OK).body(userId);
 		} catch (UserNotFoundException e) {
