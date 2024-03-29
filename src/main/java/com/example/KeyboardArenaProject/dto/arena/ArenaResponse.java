@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 @Builder
 public class ArenaResponse {
     String title;
+    String boardId;
     int boardRank;
     LocalDateTime createdDate;
     int participates;
@@ -21,6 +22,7 @@ public class ArenaResponse {
     int likes;
     int boardType;
     public ArenaResponse(Board arenaEntity){
+        boardId = arenaEntity.getBoardId();
         title = arenaEntity.getTitle();
         boardRank = arenaEntity.getBoardRank();
         createdDate = arenaEntity.getCreatedDate();
