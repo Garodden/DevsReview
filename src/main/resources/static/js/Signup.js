@@ -1,5 +1,6 @@
 const signUpBtn = document.querySelector("#signupBtn");
 const duplicateIdCheckButton = document.querySelector("#duplicateIdCheckButton");
+const duplicateEmailCheckButton = document.querySelector("#duplicateEmailCheckButton");
 signUpBtn.addEventListener("click", () => {
     console.log("clicked")
     signup();
@@ -36,6 +37,36 @@ duplicateIdCheckButton.addEventListener("click", async () => {
     }
 });
 
+duplicateEmailCheckButton.addEventListener("click", async () => {
+    var email = document.getElementById("email").value.trim();
+    console.log("email:", email)
+    try {
+        const response = await fetch('/user/find/email?email=' + email, {
+            method: 'GET'
+        });
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        const data = await response.json(); // JSON 데이터를 가져오기 위해 await 사용
+
+        console.log("data: ", data);
+
+        if (data === true) {
+            alert("입력하신 이메일은 이미 사용중입니다.");
+            // 중복된 이메일이 있으므로 회원가입 버튼 비활성화
+            document.getElementById('signupBtn').disabled = true;
+        } else {
+            alert("입력하신 이메일은 사용 가능합니다.");
+            // 중복된 이메일가 없으므로 회원가입 버튼 활성화
+            document.getElementById('signupBtn').disabled = false;
+        }
+    } catch (error) {
+        console.error('Error checking duplicate email:', error);
+        alert("중복 확인에 실패했습니다. 다시 시도해주세요.");
+    }
+});
 function signup() {
     var formData = {
         userId: document.getElementById("userId").value,
