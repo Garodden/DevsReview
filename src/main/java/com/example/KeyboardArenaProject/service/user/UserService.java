@@ -44,8 +44,7 @@ public class UserService {
 	// 현재 로그인한 유저 정보 조회
 	public User getCurrentUserInfo() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		User user = (User)authentication.getPrincipal();
-		return user;
+		return (User)authentication.getPrincipal();
 	}
 
 	public String getCurrentUserId() {
