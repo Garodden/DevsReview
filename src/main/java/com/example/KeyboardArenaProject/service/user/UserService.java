@@ -2,6 +2,8 @@ package com.example.KeyboardArenaProject.service.user;
 
 import java.util.Optional;
 
+import org.springframework.mail.MailSender;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -11,14 +13,19 @@ import com.example.KeyboardArenaProject.dto.user.AddUserRequest;
 import com.example.KeyboardArenaProject.entity.User;
 import com.example.KeyboardArenaProject.repository.UserRepository;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Service
 public class UserService {
 	private final UserRepository userRepository;
 	private final BCryptPasswordEncoder encoder;
+	private final MailSender mailSender;
 
-	public UserService(UserRepository userRepository, BCryptPasswordEncoder encoder) {
+	public UserService(UserRepository userRepository, BCryptPasswordEncoder encoder, MailSender mailSender) {
 		this.userRepository = userRepository;
 		this.encoder = encoder;
+		this.mailSender = mailSender;
 	}
 
 	public User save(AddUserRequest dto) {
@@ -48,6 +55,30 @@ public class UserService {
 	}
 
 
+	public String getUserId(String email) {
+		Optional<User> userOptional = userRepository.findByEmail(email);
+		log.info("service - getUserId 입력된 이메일: {}", email);
+		log.info("service - getUserId user: {}", userOptional);
+		if(userOptional.isPresent()) {
+			User user = userOptional.get();
+			log.info("service - getUserId userId: {}", user.getUserId());
+			sendUserIdByEmail(user.getEmail(), user.getUserId());
+			return user.getUserId();
+		} else {
+			throw new UserNotFoundException("User not found with email: " + email);
+		}
+	}
+
+	public void sendUserIdByEmail(String email, String userId) {
+		SimpleMailMessage message = new SimpleMailMessage();
+		message.setSubject("[Keyboard Arena] 계정 아이디 확인"); // 메일 제목
+		message.setTo(email);
+		message.setText("회원님의 계정 아이디는 " + userId + "입니다.");
+		mailSender.send(message);
+	}
+
+
+
 	//임시 유저 닉네임 제공 함수
 	public String getNickNameById(String id){
 		return (id+"nickname");
@@ -66,7 +97,11 @@ public class UserService {
 				.findPw("상동초").build();
 	}
 
-
+	public class UserNotFoundException extends RuntimeException {
+		public UserNotFoundException(String message) {
+			super(message);
+		}
+	}
 }
 
 

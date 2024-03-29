@@ -15,12 +15,12 @@ public class WebSecurityConfig {
 	@Bean
 	public WebSecurityCustomizer configure() {      // 스프링 시큐리티 기능 비활성화
 		return web -> web.ignoring().requestMatchers(toH2Console())
-			.requestMatchers("/static/**", "/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html");
+			.requestMatchers("/static/**","/css/**", "/js/**", "/media/**", "/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html", "/user/find/id");
 	}
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
 		httpSecurity.authorizeHttpRequests(auth ->
-				auth.requestMatchers("/login", "/signup", "/user", "/findId", "/findPw","/")
+				auth.requestMatchers("/login", "/signup", "/user","/user/find/id", "/findId", "/findPw")
 					.permitAll()
 					.anyRequest()
 					.authenticated())
