@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.KeyboardArenaProject.dto.user.AddUserRequest;
+import com.example.KeyboardArenaProject.dto.user.ResetPwRequest;
 import com.example.KeyboardArenaProject.dto.user.UserResponse;
 import com.example.KeyboardArenaProject.entity.User;
 import com.example.KeyboardArenaProject.service.user.UserService;
@@ -74,6 +75,21 @@ public class UserController {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to send user ID");
 		}
 	}
+
+	@PostMapping("/user/find/pw")
+	public ResponseEntity<String> resetPassword(@RequestBody ResetPwRequest resetPwRequest) {
+		try {
+			String newPassword = userService.resetPassword(resetPwRequest.getUserId(),
+				resetPwRequest.getFindPwQuestion(), resetPwRequest.getFindPw());
+			return ResponseEntity.status(HttpStatus.OK).body(newPassword);
+		} catch(UserNotFoundException e) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("회원정보를 조회할 수 없습니다.");
+		} catch(Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("비밀번호 찾기 중 오류가 발생했습니다.");
+		}
+
+	}
+
 
 	// 테스트 용도
 	@GetMapping("/userinfo")
