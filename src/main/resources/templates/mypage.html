@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>마이페이지</title>
+</head>
+<body>
+<h1>Keyboard Arena</h1>
+<h2>MyPage</h2>
+<div>
+    <p>User ID: <span th:text="${userInfo.userId}"></span></p>
+    <p>Nickname: <span th:text="${userInfo.nickname}"></span></p>
+    <p>User Rank: <span th:text="${userInfo.userRank}"></span></p>
+    <p>Point: <span th:text="${userInfo.point}"></span></p>
+    <p>Email: <span th:text="${userInfo.email}"></span></p>
+</div>
+</body>
+</html>
