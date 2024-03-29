@@ -7,11 +7,12 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title th:text="${post.title}"></title>
     <script defer src="/js/FreeBoard.js"></script>
+    <script defer src="/js/LogoutBtn.js"></script>
 </head>
 <body>
 <header>
     <h1>Keyboard Arena</h1>
-    <button type="button" class="btn btn-secondary" onclick="location.href='/logout'">로그아웃</button>
+    <button type="button" id="logoutButton">로그아웃</button>
 </header>
 <main>
     <h2 th:text="${post.title}"></h2>
