@@ -55,7 +55,7 @@ public class ArenaController {
 
 
     @Operation(summary = "개별 아레나 확인", description = " 유저 탑 네비게이션바, 아레나 정보, 아레나에 적힌 댓글들을 가져오는 API")
-    @GetMapping("/arena/{boardId}")
+    @GetMapping("/arenas/{boardId}")
     public String showArenaDetails(@PathVariable String boardId, Model model) throws JsonProcessingException {
         Board arenaRawInfo = arenaService.findByBoardId(boardId);
 
