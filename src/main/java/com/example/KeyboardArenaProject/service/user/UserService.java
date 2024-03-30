@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import com.example.KeyboardArenaProject.dto.user.AddUserRequest;
 import com.example.KeyboardArenaProject.entity.User;
 import com.example.KeyboardArenaProject.repository.UserRepository;
+import com.example.KeyboardArenaProject.utils.GeneratePwUtils;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -90,6 +91,24 @@ public class UserService {
 		return userRepository.existsByEmail(email);
 	}
 
+	public String resetPassword(String userId, String question, String answer) {
+		Optional<User> userOptional = userRepository.findByUserIdAndFindPwQuestionAndFindPw(userId, question, answer);
+		if(userOptional.isPresent()) {
+			User user = userOptional.get();
+			log.info("service - resetPassword 찾은 userId: {}", user.getUserId());
+			String newPassword = GeneratePwUtils.generateNewPassword();
+
+			String encryptedPassword = encoder.encode(newPassword);
+			log.info("userService - encryptedPassword: {}", encryptedPassword);
+			user.setPassword(encryptedPassword);
+			userRepository.save(user);
+			log.info("userService - user's new password: {}", user.getPassword());
+			return newPassword;
+		} else {
+			log.info("service - resetPassword : UserNotFoundException");
+			throw new UserNotFoundException("User not found with userId:" + userId + ", question: " + question + ", answer: " + answer);
+		}
+	}
 
 	//임시 유저 닉네임 제공 함수
 	public String getNickNameById(String id){
@@ -114,6 +133,12 @@ public class UserService {
 			super(message);
 		}
 	}
+
+	// public class InCorrectAnswerException extends RuntimeException {
+	// 	public InCorrectAnswerException(String message) {
+	// 		super(message);
+	// 	}
+	// }
 }
 
 

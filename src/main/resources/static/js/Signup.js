@@ -68,12 +68,25 @@ duplicateEmailCheckButton.addEventListener("click", async () => {
     }
 });
 function signup() {
+    var select = document.getElementById("findPwQuestion").value;
+    switch (select) {
+        case "place":
+            select = "기억에 남는 추억의 장소는?";
+            break;
+        case "treasure":
+            select = "자신의 보물 제1호는?";
+            break;
+        case "elementary":
+            select = "자신의 출신 초등학교는?";
+            break;
+    }
+    console.log("select: ", select);
     var formData = {
         userId: document.getElementById("userId").value,
         password: document.getElementById("password").value,
         nickname: document.getElementById("nickname").value,
         email: document.getElementById("email").value,
-        findPwQuestion: document.getElementById("findPwQuestion").value,
+        findPwQuestion: select,
         findPw: document.getElementById("findPw").value
     };
 
