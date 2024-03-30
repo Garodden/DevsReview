@@ -3,7 +3,9 @@ const duplicateIdCheckButton = document.querySelector("#duplicateIdCheckButton")
 const duplicateEmailCheckButton = document.querySelector("#duplicateEmailCheckButton");
 signUpBtn.addEventListener("click", () => {
     console.log("clicked")
-    signup();
+    if (validateForm()) {
+        signup();
+    }
 })
 
 duplicateIdCheckButton.addEventListener("click", async () => {
@@ -67,6 +69,22 @@ duplicateEmailCheckButton.addEventListener("click", async () => {
         alert("중복 확인에 실패했습니다. 다시 시도해주세요.");
     }
 });
+
+function validateForm() {
+    const userId = document.getElementById("userId").value.trim();
+    const password = document.getElementById("password").value.trim();
+    const nickname = document.getElementById("nickname").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const findPw = document.getElementById("findPw").value.trim();
+    const findPwQuestion = document.getElementById("findPwQuestion").value;
+
+    if (!userId || !password || !nickname || !email || !findPw || !findPwQuestion) {
+        alert("모든 항목은 필수입니다.");
+        return false;
+    }
+
+    return true;
+}
 function signup() {
     var select = document.getElementById("findPwQuestion").value;
     switch (select) {
@@ -80,7 +98,6 @@ function signup() {
             select = "자신의 출신 초등학교는?";
             break;
     }
-    console.log("select: ", select);
     var formData = {
         userId: document.getElementById("userId").value,
         password: document.getElementById("password").value,
@@ -90,6 +107,14 @@ function signup() {
         findPw: document.getElementById("findPw").value
     };
 
+    console.log(formData.userId);
+    console.log(formData.password);
+    console.log(formData.nickname);
+    console.log(formData.email);
+    console.log(formData.findPwQuestion);
+    console.log(formData.findPw);
+
+
     fetch('/user', {
         method: 'POST',
         headers: {
@@ -98,6 +123,7 @@ function signup() {
         body: JSON.stringify(formData)
     })
         .then(response => {
+            console.log(response);
             if (response.ok) {
                 alert('회원가입이 완료되었습니다.');
                 window.location.href = '/login'; // 회원가입 완료 후 로그인 페이지로 이동

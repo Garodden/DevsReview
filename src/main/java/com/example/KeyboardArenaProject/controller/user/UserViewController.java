@@ -3,7 +3,6 @@ package com.example.KeyboardArenaProject.controller.user;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-
 import com.example.KeyboardArenaProject.service.user.UserService;
 
 @Controller

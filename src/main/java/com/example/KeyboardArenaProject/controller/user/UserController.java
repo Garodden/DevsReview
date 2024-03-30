@@ -6,7 +6,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -33,7 +37,12 @@ public class UserController {
 	}
 
 	@PostMapping("/user")
-	public ResponseEntity<UserResponse> signup(@RequestBody AddUserRequest request) {
+	public ResponseEntity<?> signup(@Validated @RequestBody AddUserRequest request, BindingResult bindingResult) {
+		if (bindingResult.hasErrors()) {
+			// 바인딩 오류가 발생한 경우, 오류 메시지를 클라이언트로 반환
+			log.info("errors = \n{}", bindingResult);
+			return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
+		}
 		User user = userService.save(request);
 		return ResponseEntity.status(HttpStatus.CREATED)
 			.body(user.toResponse());
