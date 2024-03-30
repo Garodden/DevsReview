@@ -15,7 +15,7 @@ document.getElementById('findPwForm').addEventListener('submit', function (event
     var formData = {
         userId: document.getElementById('userId').value,
         findPwQuestion: select,
-        findPw: document.getElementById('findPwAnswer').value,
+        findPw: document.getElementById('findPwAnswer').value.trim(),
     };
 
     console.log(formData.userId);
