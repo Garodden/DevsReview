@@ -41,7 +41,8 @@ public class FreeBoardController {
 
     @GetMapping("/")
     public String indexPage(Model model){
-
+        User user = userService.getCurrentUserInfo();
+        log.info("FreeBoardController-indexPage-현재 로그인한 유저 userId: {}", user.getUserId());
         return "index";
     }
 

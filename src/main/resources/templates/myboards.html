@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Keyboard Arena</title>
+</head>
+<body>
+<h1>My Page</h1>
+<h2>내가 쓴 게시물</h2>
+<div th:unless="${myBoards}">
+    <p th:text="${errorMessage}"></p>
+</div>
+<table th:if="${myBoards}">
+    <thead>
+        <tr>
+            <th>번호</th>
+            <th>제목</th>
+            <th>작성일</th>
+            <th>좋아요 개수</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr th:each="board, index : ${myBoards}">
+            <td th:text="${index.index + 1}"></td>
+            <td th:text="${board.title}"></td>
+            <td th:text="${board.createdDate}"></td>
+<!--            <td th:text="${#dates.format(board.createdDate, 'yyyy.MM.dd')}"></td>-->
+            <td th:text="${board.likes}"></td>
+        </tr>
+    </tbody>
+</table>
+</body>
+</html>
