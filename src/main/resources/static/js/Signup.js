@@ -1,11 +1,23 @@
 const signUpBtn = document.querySelector("#signupBtn");
 const duplicateIdCheckButton = document.querySelector("#duplicateIdCheckButton");
 const duplicateEmailCheckButton = document.querySelector("#duplicateEmailCheckButton");
+
+let isIdChecked = false;
+let isEmailChecked = false;
+
 signUpBtn.addEventListener("click", () => {
-    console.log("clicked")
-    if (validateForm()) {
+
+    if (validateForm() && isIdChecked && isEmailChecked) {
         signup();
+        console.log("isIdChecked: ", isIdChecked, "isEmailChecked: ", isEmailChecked)
     }
+    if (!validateForm()) {
+        alert("모든 항목은 필수로 입력해야 합니다. ");
+    } else if(validateForm() && (!isIdChecked || !isEmailChecked)) {
+        alert("중복확인을 진행해주세요");
+    }
+    console.log("isIdChecked: ", isIdChecked, "isEmailChecked: ", isEmailChecked)
+
 })
 
 duplicateIdCheckButton.addEventListener("click", async () => {
@@ -28,14 +40,17 @@ duplicateIdCheckButton.addEventListener("click", async () => {
             alert("입력하신 아이디는 이미 사용중입니다.");
             // 중복된 아이디가 있으므로 회원가입 버튼 비활성화
             document.getElementById('signupBtn').disabled = true;
+            isIdChecked = false;
         } else {
             alert("입력하신 아이디는 사용 가능합니다.");
             // 중복된 아이디가 없으므로 회원가입 버튼 활성화
             document.getElementById('signupBtn').disabled = false;
+            isIdChecked = true;
         }
     } catch (error) {
         console.error('Error checking duplicate ID:', error);
         alert("중복 확인에 실패했습니다. 다시 시도해주세요.");
+        isIdChecked = false;
     }
 });
 
@@ -59,14 +74,17 @@ duplicateEmailCheckButton.addEventListener("click", async () => {
             alert("입력하신 이메일은 이미 사용중입니다.");
             // 중복된 이메일이 있으므로 회원가입 버튼 비활성화
             document.getElementById('signupBtn').disabled = true;
+            isEmailChecked = false;
         } else {
             alert("입력하신 이메일은 사용 가능합니다.");
             // 중복된 이메일가 없으므로 회원가입 버튼 활성화
             document.getElementById('signupBtn').disabled = false;
+            isEmailChecked = true;
         }
     } catch (error) {
         console.error('Error checking duplicate email:', error);
         alert("중복 확인에 실패했습니다. 다시 시도해주세요.");
+        isEmailChecked = false;
     }
 });
 
@@ -79,10 +97,8 @@ function validateForm() {
     const findPwQuestion = document.getElementById("findPwQuestion").value;
 
     if (!userId || !password || !nickname || !email || !findPw || !findPwQuestion) {
-        alert("모든 항목은 필수입니다.");
         return false;
     }
-
     return true;
 }
 function signup() {
