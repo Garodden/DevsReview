@@ -78,9 +78,13 @@ public class UserController {
 
 	@PostMapping("/user/find/pw")
 	public ResponseEntity<String> resetPassword(@RequestBody ResetPwRequest resetPwRequest) {
+		log.info("UserController - resetPassword: {}, {}, {}", resetPwRequest.getUserId(),
+			resetPwRequest.getFindPwQuestion(),
+			resetPwRequest.getFindPw());
 		try {
 			String newPassword = userService.resetPassword(resetPwRequest.getUserId(),
 				resetPwRequest.getFindPwQuestion(), resetPwRequest.getFindPw());
+			log.info("newPassword: {}", newPassword);
 			return ResponseEntity.status(HttpStatus.OK).body(newPassword);
 		} catch(UserNotFoundException e) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("회원정보를 조회할 수 없습니다.");

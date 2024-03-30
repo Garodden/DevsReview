@@ -99,10 +99,13 @@ public class UserService {
 			String newPassword = GeneratePwUtils.generateNewPassword();
 
 			String encryptedPassword = encoder.encode(newPassword);
+			log.info("userService - encryptedPassword: {}", encryptedPassword);
 			user.setPassword(encryptedPassword);
 			userRepository.save(user);
+			log.info("userService - user's new password: {}", user.getPassword());
 			return newPassword;
 		} else {
+			log.info("service - resetPassword : UserNotFoundException");
 			throw new UserNotFoundException("User not found with userId:" + userId + ", question: " + question + ", answer: " + answer);
 		}
 	}
