@@ -4,9 +4,12 @@ const duplicateEmailCheckButton = document.querySelector("#duplicateEmailCheckBu
 
 let isIdChecked = false;
 let isEmailChecked = false;
+let isFieldChecked = false;
 
 signUpBtn.addEventListener("click", () => {
-
+    if(!validateFields()) {
+        document.getElementById('signupBtn').disabled = true;
+    }
     if (validateForm() && isIdChecked && isEmailChecked) {
         signup();
         console.log("isIdChecked: ", isIdChecked, "isEmailChecked: ", isEmailChecked)
@@ -154,3 +157,59 @@ function signup() {
         });
 }
 
+function validateFields(){
+    let userId = document.getElementById("userId").value;
+    let password = document.getElementById("password").value;
+    let nickname = document.getElementById("nickname").value;
+    let email = document.getElementById("email").value;
+
+    if (!validateUserId(userId)) {
+        document.getElementById("userId-error").innerText = "아이디는 6~12자 이내의 영문 또는 숫자 형식으로 입력해주세요.";
+    } else {
+        document.getElementById("userId-error").innerText = "";
+        isFieldChecked = true;
+    }
+    if (!validatePassword(password)) {
+        document.getElementById("password-error").innerText = "비밀번호는 8~16자 이내의 영문, 숫자 또는 기호 형식으로 입력해주세요.";
+    } else {
+        document.getElementById("password-error").innerText = "";
+        isFieldChecked = true;
+    }
+    if (!validateUsername(nickname)) {
+        document.getElementById("nickname-error").innerText = "유저네임은 3~12자 이내의 영문, 한글 또는 숫자 형식으로 입력해주세요.";
+        isFieldChecked = true;
+    } else {
+        document.getElementById("nickname-error").innerText = "";
+    }
+    if (!validateEmail(email)) {
+        document.getElementById("email-error").innerText = "이메일 형식으로 입력해주세요.";
+        isFieldChecked = true;
+    } else {
+        document.getElementById("email-error").innerText = "";
+    }
+    return isFieldChecked;
+}
+
+function validateUserId(userId) {
+    // 6~12자 이내 영문 또는 숫자 형식
+    const regex = /^[a-zA-Z0-9]{6,12}$/;
+    return regex.test(userId);
+}
+
+function validatePassword(password) {
+    // 8~16자 이내의 영문, 숫자 또는 기호 형식
+    const regex = /^[a-zA-Z0-9!@#$%^&*()\-_=+[\]{};:'",.<>/?]{8,20}$/;
+    return regex.test(password);
+}
+
+function validateUsername(username) {
+    // 3~12자 이내의 문자 또는 숫자 형식
+    const regex = /^[a-zA-Z0-9가-힣]{3,12}$/;
+    return regex.test(username);
+}
+
+function validateEmail(email) {
+    // 이메일 형식
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(email);
+}
