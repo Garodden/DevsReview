@@ -1,0 +1,10 @@
+input[type="text"],
+input[type="password"],
+select {
+    width: 300px; /* 원하는 너비로 설정하세요 */
+}
+
+.error-message {
+    color: red;
+    font-size: 12px;
+}
