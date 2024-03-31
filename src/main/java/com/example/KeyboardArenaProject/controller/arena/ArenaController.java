@@ -14,25 +14,24 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 @Tag(name = "아레나 CRUD")
 @Controller
 public class ArenaController {
     private final ArenaService arenaService;
-    private final ClearedService cleardService;
+    private final ClearedService clearedService;
     private final CommentService commentService;
     private final UserService userService;
     public ArenaController(ArenaService arenaService, ClearedService cleardService, CommentService commentService, UserService userService){
         this.arenaService = arenaService;
-        this.cleardService = cleardService;
+        this.clearedService = cleardService;
         this.commentService =commentService;
         this.userService = userService;
     }
@@ -70,18 +69,18 @@ public class ArenaController {
                 .user(user)
                 .board(arenaRawInfo)
                 .comment(commentService.findCommentsByBoardId(boardId))
-                .participates(cleardService.findParticipatesByBoardId(boardId))
+                .participates(clearedService.findParticipatesByBoardId(boardId))
                 .writer(userService.getNickNameById(arenaRawInfo.getId()))
                 .build();
         model.addAttribute("arena", arenaDetails);
 
-        UserBoardCompositeKey curUsersClearRecord = new UserBoardCompositeKey(user.getId(), boardId);
+        UserBoardCompositeKey curUsersClearRecord = UserBoardCompositeKey.builder().id(user.getId()).boardId(boardId).build();
 
         //클리어 보드에 현재 시작한 시간을 기록
         //만약 클리어 기록이 존재하면 해당 기록에서 시간 기록 시작
         //아니라면 새로운 기록 생성, 시간 기록 시작
-        if(cleardService.findIfUserClearDataExists(curUsersClearRecord)){
-            cleardService.update(curUsersClearRecord);
+        if(clearedService.findIfUserClearDataExists(curUsersClearRecord)){
+            clearedService.updateStartTime(curUsersClearRecord);
         }
         else {
             Cleared cleared = Cleared.builder()
@@ -89,17 +88,49 @@ public class ArenaController {
                     .id(user.getId())
                     .startTime(LocalDateTime.now())
                     .build();
-            cleardService.saveClearStartTime(cleared);
+            clearedService.saveClearStartTime(cleared);
         }
 
         return "arenaDetail";
     }
 
-    @Operation(summary = "개별 아레나 참전.", description = "개별 아레나에 참전. 시작 시간과 비교하여 시간이 얼마나 걸렸는지 확인하기.")
+    @Operation(summary = "개별 아레나 참전.", description = "개별 아레나에 참전. 시작 시간과 비교하여 시간이 얼마나 걸렸는지 알려줌" +
+            "팝업 출력용 문자열 json으로 리턴.")
     @PostMapping("/arenas/{boardId}")
-    public String checkArenaResult(@PathVariable String boardId, @RequestBody String userTypedContent){
+    @ResponseBody
+    public String checkArenaResult(@PathVariable String boardId, @RequestBody String userTypedText){
+
+        Board curBoard = arenaService.findByBoardId(boardId);
+        User curUser = userService.getCurrentUserInfo();
+        UserBoardCompositeKey curKey = UserBoardCompositeKey.builder()
+                .id(curUser.getId())
+                .boardId(boardId)
+                .build();
+
+        String originalContent = curBoard.getContent();
+        String userTypedContent= userTypedText.trim();
+
+        ArenaResultResponse result = new ArenaResultResponse();
+
+        if(!originalContent.equals(userTypedContent)){
+            return result.resultPopupText(false);
+        }
+        else {
+
+            List<Cleared> participantList = clearedService.findAllByBoardId(boardId);
+            Long participantSize = (long) participantList.size();
+            Long ranking = (long) clearedService.findRanking(participantList, curUser.getId());
+            LocalTime newClearTime= clearedService.updateClearTime(curKey);
 
 
+            result.setTitle(curBoard.getTitle());
+            result.setParticipants(participantSize);
+            result.setNthPlace(ranking);
+            result.setTime(newClearTime);
+            result.setPercentage((double) ranking/participantSize);
+
+            return result.resultPopupText(true);
+        }
     }
 
     @Operation(summary = "아레나 제작", description = "아레나 개장 페이지 get 메소드 API")
