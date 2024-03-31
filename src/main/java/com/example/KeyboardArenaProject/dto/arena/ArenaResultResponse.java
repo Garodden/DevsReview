@@ -14,11 +14,11 @@ import java.time.LocalTime;
 public class ArenaResultResponse {
     String title;
     LocalTime time;
-    Integer participants;
-    Integer nthPlace;
+    Long participants;
+    Long nthPlace;
     Double percentage;
 
-    @Builder ArenaResultResponse(String title, int participants, LocalTime time, int nthPlace) {
+    @Builder ArenaResultResponse(String title, Long participants, LocalTime time, Long nthPlace) {
         this.title = title;
         this.time = time;
         this.participants = participants;
