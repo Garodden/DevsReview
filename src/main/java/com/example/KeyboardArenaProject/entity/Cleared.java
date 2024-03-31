@@ -35,11 +35,15 @@ public class Cleared {
     private LocalDateTime startTime;
 
     @Builder
-    Cleared(String id, String boardId, LocalTime clearTime, int tries, LocalDateTime startTime){
+    Cleared(String id, String boardId, int tries, LocalDateTime startTime){
         this.compositeId = new UserBoardCompositeKey(id, boardId);
-        this.clearTime = clearTime;
+        this.clearTime = null;
         this.tries = tries;
         this.startTime = startTime;
+    }
+
+    public void updateStartTime(){
+        startTime = LocalDateTime.now();
     }
 
     public String getId(){
