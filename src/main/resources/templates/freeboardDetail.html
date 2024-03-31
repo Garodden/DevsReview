@@ -20,9 +20,10 @@
     <p th:if="${post.updatedDate} != null and ${post.updatedDate} != ${post.createdDate}">edited</p>
     <p th:if="${post.updatedDate} != null and ${post.updatedDate} != ${post.createdDate}" th:text="${post.updatedDate}"></p>
     <p th:if="${post.updatedDate} == null or ${post.updatedDate} == ${post.createdDate}" th:text="${post.createdDate}"></p>
+    <input type="hidden" th:value="${loginedUserId}" id="logined-id">
     <div>
-        <button th:onclick="|location.href='@{/board/{board_id}/update(board_id=${post.boardId})}'|">edit</button>
-        <button id="delete-freeboard-button">delete</button>
+        <button th:if="${loginedUserId}==${writer.userId}" th:onclick="|location.href='@{/board/{board_id}/update(board_id=${post.boardId})}'|">edit</button>
+        <button th:if="${loginedUserId}==${writer.userId}" id="delete-freeboard-button">delete</button>
         <input type="hidden" id="board-id" th:value="${post.boardId}">
     </div>
     <textarea name="content" id="" cols="100" rows="5" th:text="${post.content}" readonly></textarea>
@@ -30,7 +31,6 @@
     <button class="like-button"><img src="/media/like.svg" alt="좋아요 클릭" width="42"></button>
 
     <span th:text="${post.likes}"></span>
-    <input type="hidden" th:value="${loginedUserId}" id="logined-id">
 
     <a href="/board">뒤로가기</a>
 
