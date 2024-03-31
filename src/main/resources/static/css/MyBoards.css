@@ -1,0 +1,18 @@
+table {
+    border-collapse: collapse;
+    width: 70vw;
+}
+
+th, td {
+    border: 1px solid #dddddd;
+    text-align: center;
+    padding: 8px;
+}
+
+tbody tr:hover {
+    background-color: #dddddd;
+}
+
+.clickable-row {
+    cursor: pointer;
+}

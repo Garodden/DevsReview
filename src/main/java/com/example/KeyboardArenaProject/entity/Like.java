@@ -25,7 +25,7 @@ public class Like {
     private boolean ifLike;
 
     @Builder Like(String id, String boardId, boolean ifLike){
-        this.compositeId = new UserBoardCompositeKey(id,boardId);
+        this.compositeId = UserBoardCompositeKey.builder().id(id).boardId(boardId).build();
         this.ifLike = ifLike;
     }
 

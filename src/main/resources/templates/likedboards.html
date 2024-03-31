@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Keyboard Arena</title>
+    <link rel="stylesheet" type="text/css" href="/css/MyPageBoards.css" th:href="@{/css/MyPageBoards.css}">
+    <script defer src="/js/MyPageGetBoardDetails.js"></script>
+</head>
+<body>
+<h1>Keyboard Arena</h1>
+<h2>My Page</h2>
+<h3>좋아요 누른 게시물</h3>
+<div th:unless="${likedBoards}">
+    <p th:text="${errorMessage}"></p>
+</div>
+<table th:if="${likedBoards}">
+    <thead>
+        <tr>
+            <th>번호</th>
+            <th>제목</th>
+            <th>작성자</th>
+            <th>작성일</th>
+            <th>좋아요</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr th:each="board, index : ${likedBoards}" class="clickable-row" th:attr="board-id=${board.getBoardId()}, board-type=${board.boardType}">
+            <td th:text="${index.index + 1}"></td>
+            <td th:text="${board.title}"></td>
+            <td th:text="${board.id}"></td>
+            <td th:text="${#temporals.format(board.createdDate, 'yyyy.MM.dd')}"></td>
+            <td th:text="${board.likes}"></td>
+        </tr>
+    </tbody>
+</table>
+</body>
+</html>

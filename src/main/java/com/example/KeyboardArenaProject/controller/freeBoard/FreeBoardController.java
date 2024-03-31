@@ -41,7 +41,8 @@ public class FreeBoardController {
 
     @GetMapping("/")
     public String indexPage(Model model){
-
+        User user = userService.getCurrentUserInfo();
+        log.info("FreeBoardController-indexPage-현재 로그인한 유저 userId: {}", user.getUserId());
         return "index";
     }
 
@@ -123,7 +124,7 @@ public class FreeBoardController {
     @ResponseBody
     @PostMapping("/api/like")
     public void like(@RequestParam String boardId,@RequestParam String id){
-        UserBoardCompositeKey userBoardCompositeKey = new UserBoardCompositeKey(id, boardId);
+        UserBoardCompositeKey userBoardCompositeKey = UserBoardCompositeKey.builder().id(id).boardId(boardId).build();
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(!authentication.getPrincipal().equals("anonymousUser")) {
             int likes;
