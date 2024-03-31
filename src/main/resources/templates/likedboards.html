@@ -25,8 +25,7 @@
             <td th:text="${index.index + 1}"></td>
             <td th:text="${board.title}"></td>
             <td th:text="${board.id}"></td>
-            <td th:text="${board.createdDate}"></td>
-            <!--            <td th:text="${#dates.format(board.createdDate, 'yyyy.MM.dd')}"></td>-->
+            <td th:text="${#temporals.format(board.createdDate, 'yyyy.MM.dd')}"></td>
             <td th:text="${board.likes}"></td>
         </tr>
     </tbody>
