@@ -14,6 +14,9 @@
     <p>Point: <span th:text="${userInfo.point}"></span></p>
     <p>Email: <span th:text="${userInfo.email}"></span></p>
 </div>
+    <form action="/mypage/changePassword" method="get">
+        <button type="submit">비밀번호 변경</button>
+    </form>
 <div>
     <a href="/mypage/boards">내가 쓴 게시물</a>
     <a href="/mypage/boards/liked">좋아요 누른 게시물</a>
