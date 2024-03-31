@@ -98,7 +98,7 @@ public class ArenaController {
             "팝업 출력용 문자열 json으로 리턴.")
     @PostMapping("/arenas/{boardId}")
     @ResponseBody
-    public String checkArenaResult(@PathVariable String boardId, @RequestBody String userTypedText){
+    public String checkArenaResult(@PathVariable String boardId, @RequestParam String userTypedText){
 
         Board curBoard = arenaService.findByBoardId(boardId);
         User curUser = userService.getCurrentUserInfo();
@@ -107,7 +107,7 @@ public class ArenaController {
                 .boardId(boardId)
                 .build();
 
-        String originalContent = curBoard.getContent();
+        String originalContent = curBoard.getContent().trim();
         String userTypedContent= userTypedText.trim();
 
         ArenaResultResponse result = new ArenaResultResponse();
