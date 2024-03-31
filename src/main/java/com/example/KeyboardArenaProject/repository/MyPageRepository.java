@@ -9,4 +9,5 @@ import java.util.Optional;
 
 public interface MyPageRepository extends JpaRepository<Board, String> {
     List<Board> findAllById(String id);
+    List<Board> findAllByBoardIdInOrderByCreatedDateDesc(List<String> boardIds);
 }

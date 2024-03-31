@@ -5,13 +5,17 @@ import java.util.stream.Collectors;
 
 import com.example.KeyboardArenaProject.dto.user.MyPageInformation;
 import com.example.KeyboardArenaProject.entity.Board;
+import com.example.KeyboardArenaProject.entity.Like;
 import com.example.KeyboardArenaProject.entity.User;
 import com.example.KeyboardArenaProject.service.user.MyPageService;
 import com.example.KeyboardArenaProject.service.user.UserService;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+@Slf4j
 @Controller
 public class MyPageController {
     private final MyPageService myPageService;
@@ -58,4 +62,29 @@ public class MyPageController {
         }
 
     }
+
+    @GetMapping("/mypage/boards/liked")
+    public String getLikedBoards(Model model) {
+        User user = userService.getCurrentUserInfo();
+        String userId = user.getUserId();
+        try {
+            List<Like> likes = myPageService.getMyLikes(userId);
+            for(Like like : likes) {
+                log.info("MyPageController - getLikedBoards: 좋아요 boardId는 {}, id는 {}", like.getCompositeId().getBoardId(), like.getCompositeId().getId());
+            }
+            List<Board> likedBoards = myPageService.getMyLikedBoards(likes);
+            for(Board board: likedBoards) {
+                log.info("MyPageController - getLikedBoards: 좋아요 누른 게시글 boardId는 {}, id는 {}", board.getBoardId(), board.getId());
+            }
+            model.addAttribute("likedBoards", likedBoards);
+            return "likedboards";
+        } catch(MyPageService.MyLikeNotFoundExcpetion e) {
+            log.info("here........ㅠㅠ");
+            String errorMessage = "좋아요를 누른 게시글이 없습니다";
+            model.addAttribute("errorMessage", errorMessage);
+            return "likedboards";
+        }
+
+    }
+
 }

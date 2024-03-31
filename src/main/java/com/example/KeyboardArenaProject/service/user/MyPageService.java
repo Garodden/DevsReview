@@ -2,7 +2,9 @@ package com.example.KeyboardArenaProject.service.user;
 
 import com.example.KeyboardArenaProject.dto.user.MyPageInformation;
 import com.example.KeyboardArenaProject.entity.Board;
+import com.example.KeyboardArenaProject.entity.Like;
 import com.example.KeyboardArenaProject.entity.User;
+import com.example.KeyboardArenaProject.repository.LikeRepository;
 import com.example.KeyboardArenaProject.repository.MyPageRepository;
 import com.example.KeyboardArenaProject.repository.UserRepository;
 
@@ -13,18 +15,21 @@ import org.springframework.ui.Model;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
 public class MyPageService {
     private final UserRepository userRepository;
+    private final LikeRepository likeRepository;
     private final MyPageRepository myPageRepository;
     private final UserService userService;
     private final PasswordEncoder encoder;
 
-    public MyPageService(UserRepository userRepository, MyPageRepository myPageRepository, UserService userService, PasswordEncoder encoder) {
-		this.userRepository = userRepository;
-		this.myPageRepository = myPageRepository;
+    public MyPageService(UserRepository userRepository, LikeRepository likeRepository, MyPageRepository myPageRepository, UserService userService, PasswordEncoder encoder) {
+        this.userRepository = userRepository;
+        this.likeRepository = likeRepository;
+        this.myPageRepository = myPageRepository;
         this.userService = userService;
         this.encoder = encoder;
     }
@@ -72,6 +77,22 @@ public class MyPageService {
         return myBoards;
     }
 
+    public List<Like> getMyLikes(String userId) {
+        List<Like> myLikes = likeRepository.findByCompositeId_Id(userId);
+        if(myLikes.isEmpty()) {
+            log.info("here.....");
+            throw new MyLikeNotFoundExcpetion("좋아요를 누른 게시글이 없습니다");
+        }
+        return likeRepository.findByCompositeId_Id(userId);
+    }
+
+    public List<Board> getMyLikedBoards(List<Like> likes) {
+        List<String> boardIds = likes.stream()
+                .map(like -> like.getBoardId()).
+                collect(Collectors.toList());
+        return myPageRepository.findAllByBoardIdInOrderByCreatedDateDesc(boardIds);
+    }
+
 
     public class MyPageUserNotFoundException extends RuntimeException {
         public MyPageUserNotFoundException(String message) {
@@ -93,6 +114,12 @@ public class MyPageService {
 
     public class MyBoardNotFoundException extends RuntimeException {
         public MyBoardNotFoundException(String message) {
+            super(message);
+        }
+    }
+
+    public class MyLikeNotFoundExcpetion extends RuntimeException {
+        public MyLikeNotFoundExcpetion(String message) {
             super(message);
         }
     }
