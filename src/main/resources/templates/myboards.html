@@ -3,10 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <title>Keyboard Arena</title>
+    <link rel="stylesheet" type="text/css" href="/css/MyPageBoards.css" th:href="@{/css/MyPageBoards.css}">
+    <script defer src="/js/MyPageGetBoardDetails.js"></script>
 </head>
 <body>
-<h1>My Page</h1>
-<h2>내가 쓴 게시물</h2>
+<h1>Keyboard Arena</h1>
+<h2>My Page</h2>
+<h3>내가 쓴 게시물</h3>
 <div th:unless="${myBoards}">
     <p th:text="${errorMessage}"></p>
 </div>
@@ -20,7 +23,7 @@
         </tr>
     </thead>
     <tbody>
-        <tr th:each="board, index : ${myBoards}">
+        <tr th:each="board, index : ${myBoards}" class="clickable-row" th:attr="board-id=${board.getBoardId()}, board-type=${board.boardType}">
             <td th:text="${index.index + 1}"></td>
             <td th:text="${board.title}"></td>
             <td th:text="${#temporals.format(board.createdDate, 'yyyy.MM.dd')}"></td>
