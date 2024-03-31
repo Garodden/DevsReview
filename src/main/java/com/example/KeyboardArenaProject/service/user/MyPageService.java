@@ -41,10 +41,10 @@ public class MyPageService {
     }
 
     // 비밀번호 변경
-    public void changePassword(String currentPassword, String newPassword, String confirmPassword) {
+    public void changePassword(String currentPassword, String newPassword, String confirmNewPassword) {
         // 현재 로그인한 사용자 정보
         User currentUser = userService.getCurrentUserInfo();
-        log.info("비밀번호 변경을 시도하는 사용자 정보 - {}", currentUser);
+        log.info("비밀번호 변경을 시도하는 사용자ID - {}", currentUser.getUserId());
 
         // 현재 비밀번호 확인
         if (!encoder.matches(currentPassword, currentUser.getPassword())) {
@@ -53,13 +53,14 @@ public class MyPageService {
         }
 
         // 새로운 비밀번호 확인
-        if (!newPassword.equals(confirmPassword)) {
+        if (!newPassword.equals(confirmNewPassword)) {
             log.warn("새로운 비밀번호와 새로운 비밀번호 확인 비밀번호가 일치하지 않습니다.");
             throw new NewPasswordMismatchException("새로운 비밀번호와 새로운 비밀번호 확인 비밀번호가 일치하지 않습니다.");
         }
         // 새로운 비밀번호 변경
         currentUser.setPassword(encoder.encode(newPassword));
-
+        userRepository.save(currentUser);
+        log.info("사용자 {}의 비밀번호가 성공적으로 변경되었습니다!", currentUser.getUserId());
     }
 
     public List<Board> getMyBoards(String userId) {
