@@ -14,4 +14,5 @@ import java.io.Serializable;
 public class IpCompositeKey implements Serializable {
     private String ip;
     private String boardId;
+    private String id;
 }

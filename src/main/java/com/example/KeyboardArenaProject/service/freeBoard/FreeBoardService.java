@@ -65,13 +65,13 @@ public class FreeBoardService {
         freeBoardRepository.plusView(boardId);
     }
 
-    public boolean isContainsIp(String ip,String boardId){
-        IpCompositeKey compositeKey = new IpCompositeKey(ip, boardId);
+    public boolean isContainsIpAndId(String ip,String boardId,String id){
+        IpCompositeKey compositeKey = new IpCompositeKey(ip, boardId,id);
         return ipRepository.findById(compositeKey).orElse(null) != null;
     }
 
-    public void saveIp(String ip,String boardId){
-        IpCompositeKey compositeKey = new IpCompositeKey(ip,boardId);
+    public void saveIpAndId(String ip,String boardId,String id){
+        IpCompositeKey compositeKey = new IpCompositeKey(ip,boardId,id);
         ipRepository.save(new IP(compositeKey));
     }
 

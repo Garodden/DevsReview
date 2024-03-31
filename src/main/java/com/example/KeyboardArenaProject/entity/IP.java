@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@Table(name = "visit_ip")
+@Table(name = "visit")
 @AllArgsConstructor
 @NoArgsConstructor
 public class IP {

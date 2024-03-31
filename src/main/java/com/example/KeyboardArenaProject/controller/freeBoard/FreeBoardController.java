@@ -112,8 +112,8 @@ public class FreeBoardController {
             clientIp = request.getRemoteAddr();
         }
 
-        if(!freeBoardService.isContainsIp(clientIp,board_id)){
-            freeBoardService.saveIp(clientIp,board_id);
+        if(!freeBoardService.isContainsIpAndId(clientIp,board_id,userService.getCurrentUserId())){
+            freeBoardService.saveIpAndId(clientIp,board_id,userService.getCurrentUserId());
             freeBoardService.plusView(board_id);
         }
         model.addAttribute("writer",freeBoardService.findWriter(board_id));
