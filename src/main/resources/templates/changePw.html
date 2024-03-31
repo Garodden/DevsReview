@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>비밀번호 변경</title>
+    <script defer src="/js/ChangePw.js"></script>
+</head>
+<body>
+
+<header>
+    <h1>Keyboard Arena</h1>
+    <h2>MyPage</h2>
+</header>
+
+<main>
+    <h2>비밀번호 변경</h2>
+    <form id ="changePasswordForm" action="/mypage/changePassword" method="post">
+        <div>
+            <label for="currentPassword">현재 비밀번호:</label>
+            <input type="password" id="currentPassword" name="currentPassword" required>
+        </div>
+        <div>
+            <label for="newPassword">새로운 비밀번호:</label>
+            <input type="password" id="newPassword" name="newPassword" required>
+        </div>
+        <div>
+            <label for="confirmNewPassword">새로운 비밀번호 확인:</label>
+            <input type="password" id="confirmNewPassword" name="confirmNewPassword" required>
+        </div>
+        <button type="submit">변경</button>
+    </form>
+</main>
+
+</body>
+</html>
