@@ -2,6 +2,7 @@ package com.example.KeyboardArenaProject.controller.user;
 
 import java.util.List;
 
+import com.example.KeyboardArenaProject.dto.user.ChangePwRequest;
 import com.example.KeyboardArenaProject.dto.user.MyPageInformation;
 import com.example.KeyboardArenaProject.entity.Board;
 import com.example.KeyboardArenaProject.entity.Like;
@@ -9,10 +10,15 @@ import com.example.KeyboardArenaProject.entity.User;
 import com.example.KeyboardArenaProject.service.user.MyPageService;
 import com.example.KeyboardArenaProject.service.user.UserService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Slf4j
 @Controller
@@ -42,6 +48,25 @@ public class MyPageController {
         MyPageInformation userInfo = myPageService.getUserInfo(currentUserId);
         model.addAttribute("userInfo", userInfo);
         return "mypage";
+    }
+
+    @GetMapping("/mypage/changePassword")
+    public String showChangePasswordForm() {
+        return "changePw";
+    }
+
+    @PostMapping("/mypage/changePassword")
+    @ResponseBody
+    public ResponseEntity<String> changePassword(@RequestBody ChangePwRequest changePwRequest) {
+        try {
+            myPageService.changePassword(changePwRequest.getCurrentPassword(), changePwRequest.getNewPassword(), changePwRequest.getConfirmNewPassword());
+            log.info("비밀번호가 성공적으로 변경되었습니다.");
+            return ResponseEntity.ok("비밀번호가 성공적으로 변경되었습니다.");
+        } catch (MyPageService.CurrentPasswordMismatchException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("현재 비밀번호가 일치하지 않습니다.");
+        } catch (MyPageService.NewPasswordMismatchException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("새로운 비밀번호와 새로운 비밀번호 확인 비밀번호가 일치하지 않습니다.");
+        }
     }
 
     @GetMapping("/mypage/boards")
