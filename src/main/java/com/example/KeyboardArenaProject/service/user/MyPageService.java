@@ -88,8 +88,12 @@ public class MyPageService {
 
     public List<Board> getMyLikedBoards(List<Like> likes) {
         List<String> boardIds = likes.stream()
-                .map(like -> like.getBoardId()).
+                .map(like -> like.getCompositeId().getBoardId()).
                 collect(Collectors.toList());
+        List<Board> myLikedBoards = myPageRepository.findAllByBoardIdInOrderByCreatedDateDesc(boardIds);
+        for (Board likedBoard : myLikedBoards) {
+            log.info("MyPageService - getMyLikedBoards: 작성일자 내림차순으로 조회한 좋아요 누른 게시물의 작성일자 : {}", likedBoard.getCreatedDate());
+        }
         return myPageRepository.findAllByBoardIdInOrderByCreatedDateDesc(boardIds);
     }
 
