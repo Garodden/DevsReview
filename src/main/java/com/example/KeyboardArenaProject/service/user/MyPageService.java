@@ -1,5 +1,4 @@
 package com.example.KeyboardArenaProject.service.user;
-
 import com.example.KeyboardArenaProject.dto.user.MyPageInformation;
 import com.example.KeyboardArenaProject.entity.Board;
 import com.example.KeyboardArenaProject.entity.Like;
@@ -7,12 +6,9 @@ import com.example.KeyboardArenaProject.entity.User;
 import com.example.KeyboardArenaProject.repository.LikeRepository;
 import com.example.KeyboardArenaProject.repository.MyPageRepository;
 import com.example.KeyboardArenaProject.repository.UserRepository;
-
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.Model;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -67,7 +63,7 @@ public class MyPageService {
     }
 
     public List<Board> getMyBoards(String userId) {
-        List<Board> myBoards = myPageRepository.findAllById(userId);
+        List<Board> myBoards = myPageRepository.findAllByIdOrderByCreatedDateDesc(userId);
         if (myBoards.isEmpty()) {
             throw new MyBoardNotFoundException("작성한 게시글이 없습니다");
         }
@@ -80,7 +76,6 @@ public class MyPageService {
     public List<Like> getMyLikes(String userId) {
         List<Like> myLikes = likeRepository.findByCompositeId_Id(userId);
         if(myLikes.isEmpty()) {
-            log.info("here.....");
             throw new MyLikeNotFoundExcpetion("좋아요를 누른 게시글이 없습니다");
         }
         return likeRepository.findByCompositeId_Id(userId);

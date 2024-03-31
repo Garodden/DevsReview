@@ -1,7 +1,6 @@
 package com.example.KeyboardArenaProject.controller.user;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import com.example.KeyboardArenaProject.dto.user.MyPageInformation;
 import com.example.KeyboardArenaProject.entity.Board;
@@ -79,7 +78,6 @@ public class MyPageController {
             model.addAttribute("likedBoards", likedBoards);
             return "likedboards";
         } catch(MyPageService.MyLikeNotFoundExcpetion e) {
-            log.info("here........ㅠㅠ");
             String errorMessage = "좋아요를 누른 게시글이 없습니다";
             model.addAttribute("errorMessage", errorMessage);
             return "likedboards";
