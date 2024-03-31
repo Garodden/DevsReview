@@ -8,8 +8,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.DynamicInsert;
+import org.springframework.cglib.core.Local;
 
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
@@ -36,7 +38,7 @@ public class Cleared {
 
     @Builder
     Cleared(String id, String boardId, int tries, LocalDateTime startTime){
-        this.compositeId = new UserBoardCompositeKey(id, boardId);
+        this.compositeId = UserBoardCompositeKey.builder().id(id).boardId(boardId).build();
         this.clearTime = null;
         this.tries = tries;
         this.startTime = startTime;
@@ -44,6 +46,14 @@ public class Cleared {
 
     public void updateStartTime(){
         startTime = LocalDateTime.now();
+    }
+
+    public LocalTime updateClearTime(){
+        Duration duration = Duration.between(startTime, LocalDateTime.now());
+        long seconds = duration.getSeconds();
+        this.clearTime = LocalTime.ofSecondOfDay(seconds % (24 * 3600));
+        this.tries+=1;
+        return clearTime;
     }
 
     public String getId(){

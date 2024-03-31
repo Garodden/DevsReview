@@ -6,6 +6,11 @@ import com.example.KeyboardArenaProject.repository.ClearedRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalTime;
+import java.util.List;
+import java.util.OptionalInt;
+import java.util.stream.IntStream;
+
 @Service
 public class ClearedService {
     ClearedRepository clearedRepository;
@@ -25,9 +30,36 @@ public class ClearedService {
         clearedRepository.save(cleared);
     }
 
+
+    public List<Cleared> findAllByBoardId(String boardId){
+        return clearedRepository.findAllByCompositeId_BoardIdOrderByClearTimeAsc(boardId);
+    }
+
+    public int findRanking(List<Cleared> clearedList, String id){
+        OptionalInt indexOptional = IntStream.range(0, clearedList.size())
+                .filter(i -> clearedList.get(i).getId().equals(id))
+                .findFirst();
+        if (indexOptional.isPresent()){
+            return indexOptional.getAsInt()+1;
+        }
+        else{
+            return 0;
+        }
+    }
+
     @Transactional
-    public void update(UserBoardCompositeKey curUsersClearRecord) {
+    public void updateStartTime(UserBoardCompositeKey curUsersClearRecord) {
         Cleared clearedData = clearedRepository.findByCompositeId(curUsersClearRecord);
         clearedData.updateStartTime();
+    }
+
+    @Transactional
+    public LocalTime updateClearTime(UserBoardCompositeKey curUsersClearRecord){
+        Cleared clearedData = clearedRepository.findByCompositeId(curUsersClearRecord);
+        return clearedData.updateClearTime();
+    }
+
+    public Cleared findByCompositeId(UserBoardCompositeKey id) {
+        return clearedRepository.findByCompositeId(id);
     }
 }
