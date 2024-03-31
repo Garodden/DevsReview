@@ -95,6 +95,13 @@ public class ArenaController {
         return "arenaDetail";
     }
 
+    @Operation(summary = "개별 아레나 참전.", description = "개별 아레나에 참전. 시작 시간과 비교하여 시간이 얼마나 걸렸는지 확인하기.")
+    @PostMapping("/arenas/{boardId}")
+    public String checkArenaResult(@PathVariable String boardId, @RequestBody String userTypedContent){
+
+
+    }
+
     @Operation(summary = "아레나 제작", description = "아레나 개장 페이지 get 메소드 API")
     @GetMapping("/newArena")
     public String typeNewArena(Model model) {
@@ -106,11 +113,16 @@ public class ArenaController {
     @Operation(summary = "아레나 제작", description = "아레나 개장 Post 메소드 API")
     @PostMapping("/newArena")
     public String addNewArena(@RequestBody ArenaReceiveForm request) {
+
         User currentUser = userService.getCurrentUserInfo();
+
+        //콘텐트 양 옆의 whitespace 문자 제거.
+        String strippedContent = request.getContent().strip();
+
         Board arena = Board.builder()
                 .id(currentUser.getId())
                 .title(request.getTitle())
-                .content(request.getContent())
+                .content(strippedContent)
                 .board_rank(currentUser.getUserRank())
                 .board_type(3)
                 .active(false)
