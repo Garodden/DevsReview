@@ -17,3 +17,15 @@ if (createButton) {
         })
     })
 }
+
+document.addEventListener('copy', function(e) {
+    e.preventDefault(); // 복사 이벤트를 막음
+});
+
+document.addEventListener('cut', function(e) {
+    e.preventDefault(); // 잘라내기 이벤트를 막음
+});
+
+document.addEventListener('paste', function(e) {
+    e.preventDefault(); // 붙여넣기 이벤트를 막음
+});
