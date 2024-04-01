@@ -2,10 +2,10 @@ package com.example.KeyboardArenaProject.controller.user;
 
 import java.util.List;
 
+import com.example.KeyboardArenaProject.dto.mypage.MyArenaResponse;
 import com.example.KeyboardArenaProject.dto.user.ChangePwRequest;
 import com.example.KeyboardArenaProject.dto.user.MyPageInformation;
 import com.example.KeyboardArenaProject.entity.Board;
-import com.example.KeyboardArenaProject.entity.Cleared;
 import com.example.KeyboardArenaProject.entity.Like;
 import com.example.KeyboardArenaProject.entity.User;
 import com.example.KeyboardArenaProject.service.user.MyPageService;
@@ -13,7 +13,6 @@ import com.example.KeyboardArenaProject.service.user.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -76,9 +75,6 @@ public class MyPageController {
         User user = userService.getCurrentUserInfo();
         try {
             List<Board> myBoards = myPageService.getMyBoards(user.getId());
-            // List<String> formattedDates = myBoards.stream()
-            //     .map(board -> formatDate(board.getCreatedDate()))
-            //     .collect(Collectors.toList());
             model.addAttribute("myBoards", myBoards);
             return "myboards";
         } catch (MyPageService.MyBoardNotFoundException e) {
@@ -117,10 +113,11 @@ public class MyPageController {
     public String getMyArenas(Model model) {
         User user = userService.getCurrentUserInfo();
         String id = user.getId();
-        List<String> myArenasFromCleared = myPageService.getMyArenasFromCleared(id);
-        List<Board> myArenasFromBoard = myPageService.getMyArenasFromBoard(myArenasFromCleared);
-        for(Board arena: myArenasFromBoard) {
-            log.info("MyPageController - getMyArenas: 내가 참전한 아레나 조회 boardId {}, id {}, title {}", arena.getBoardId(), arena.getId(), arena.getTitle());
+        List<String> boardIdsFromCleared = myPageService.getMyArenasFromCleared(id);
+        List<MyArenaResponse> myArenasFromBoard = myPageService.getMyArenaDetailsFromBoard(boardIdsFromCleared);
+        for(MyArenaResponse arena: myArenasFromBoard) {
+            log.info("MyPageController - getMyArenas: 내가 참전한 아레나 조회 title {}, rank {}, createdDate {}, participates {}, comments {}, likes {}",
+                arena.getTitle(), arena.getBoardRank(), arena.getCreatedDate(), arena.getParticipates(), arena.getComments(), arena.getLikes());
         }
         model.addAttribute("myArenas", myArenasFromBoard);
         return "myArenas";

@@ -1,4 +1,5 @@
 package com.example.KeyboardArenaProject.service.user;
+import com.example.KeyboardArenaProject.dto.mypage.MyArenaResponse;
 import com.example.KeyboardArenaProject.dto.user.MyPageInformation;
 import com.example.KeyboardArenaProject.entity.Board;
 import com.example.KeyboardArenaProject.entity.Cleared;
@@ -11,6 +12,7 @@ import com.example.KeyboardArenaProject.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -23,16 +25,19 @@ public class MyPageService {
     private final ClearedRepository clearedRepository;
     private final MyPageRepository myPageRepository;
     private final UserService userService;
+    private final ClearedService clearedService;
     private final PasswordEncoder encoder;
 
     public MyPageService(UserRepository userRepository, LikeRepository likeRepository,
-		ClearedRepository clearedRepository, MyPageRepository myPageRepository, UserService userService, PasswordEncoder encoder) {
+		ClearedRepository clearedRepository, MyPageRepository myPageRepository, UserService userService,
+		ClearedService clearedService, PasswordEncoder encoder) {
         this.userRepository = userRepository;
         this.likeRepository = likeRepository;
 		this.clearedRepository = clearedRepository;
 		this.myPageRepository = myPageRepository;
         this.userService = userService;
-        this.encoder = encoder;
+		this.clearedService = clearedService;
+		this.encoder = encoder;
     }
 
     public MyPageInformation getUserInfo(String userId) {
@@ -104,23 +109,23 @@ public class MyPageService {
             .map(myArena -> myArena.getCompositeId().getBoardId())
             .collect(Collectors.toList());
         for (Cleared myArena : myArenas) {
-            log.info("MyPageService - getMyArenas: 내가 참전한 아레나 참전 시작일시 내림차순으로 조회 -> {}, {}, {}", myArena.getCompositeId().getBoardId(),
+            log.info("MyPageService - getMyArenas: 내가 참전한 아레나를 Cleared에서 참전 시작일시 내림차순으로 조회 -> {}, {}, {}", myArena.getCompositeId().getBoardId(),
                 myArena.getId(), myArena.getStartTime());
         }
         return boardIds;
     }
 
-    public List<Board> getMyArenasFromBoard(List<String> boardIds) {
+    public List<MyArenaResponse> getMyArenaDetailsFromBoard(List<String> boardIds) {
         List<Board> myArenasFromBoard = myPageRepository.findAllById(boardIds);
-        for (Board myArena : myArenasFromBoard) {
-            log.info("MyPageService - getMyArenasFromBoard: 내가 참전한 아레나 보드에서 다시 조회, 참전 시작일시 내림차순으로 조회 -> {}, {}, {}, {}",
-                myArena.getBoardId(), myArena.getId(), myArena.getBoardRank(), myArena.getBoardType());
-        }
-        return myArenasFromBoard;
+
+        return myArenasFromBoard.stream()
+            .map(myArena -> MyArenaResponse.builder()
+                .board(myArena)
+                .participates(clearedService.findParticipatesByBoardId(myArena.getBoardId()))
+                .build())
+            .collect(Collectors.toList());
+
     }
-
-
-
 
     public class MyPageUserNotFoundException extends RuntimeException {
         public MyPageUserNotFoundException(String message) {
