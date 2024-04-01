@@ -3,6 +3,7 @@ package com.example.KeyboardArenaProject.controller.user;
 import java.util.List;
 
 import com.example.KeyboardArenaProject.dto.mypage.MyArenaResponse;
+import com.example.KeyboardArenaProject.dto.mypage.MyCommentedBoardsResponse;
 import com.example.KeyboardArenaProject.dto.user.ChangePwRequest;
 import com.example.KeyboardArenaProject.dto.user.MyPageInformation;
 import com.example.KeyboardArenaProject.entity.Board;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.server.ResponseStatusException;
 
 @Slf4j
 @Controller
@@ -109,6 +111,20 @@ public class MyPageController {
         }
     }
 
+    @GetMapping("/mypage/boards/commented")
+    public String getMyCommentedBoards(Model model) {
+        User user = userService.getCurrentUserInfo();
+        String id = user.getId();
+        try {
+            List<MyCommentedBoardsResponse> myCommentedBoards = myPageService.getMyCommentedBoards(id);
+            model.addAttribute("myCommentedBoards", myCommentedBoards);
+        } catch(MyPageService.MyCommentNotFoundException e) {
+            model.addAttribute("errorMessage", e.getMessage());
+        } catch (MyPageService.AuthorNotFoundException e) {
+            model.addAttribute("errorMessage", e.getMessage());
+        }
+        return "commentBoards";
+    }
     @GetMapping("/mypage/arenas")
     public String getMyArenas(Model model) {
         User user = userService.getCurrentUserInfo();
@@ -116,5 +132,5 @@ public class MyPageController {
         List<MyArenaResponse> myArenaDetails = myPageService.getMyArenaDetails(id);
         model.addAttribute("myArenas", myArenaDetails);
         return "myArenas";
-    }
+	}
 }

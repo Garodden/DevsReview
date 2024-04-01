@@ -116,6 +116,9 @@ public class UserService {
 	}
 
 
+	public Optional<User> findOptionalUserById(String id) {
+		return userRepository.findOptionalUserById(id);
+	}
 	public User findById(String id){
 		return userRepository.findById(id).orElse(null);
 	}
@@ -133,7 +136,7 @@ public class UserService {
 				.findPw("상동초").build();
 	}
 
-	public class UserNotFoundException extends RuntimeException {
+	public static class UserNotFoundException extends RuntimeException {
 		public UserNotFoundException(String message) {
 			super(message);
 		}
