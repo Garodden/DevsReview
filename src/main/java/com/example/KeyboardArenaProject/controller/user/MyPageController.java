@@ -113,13 +113,8 @@ public class MyPageController {
     public String getMyArenas(Model model) {
         User user = userService.getCurrentUserInfo();
         String id = user.getId();
-        List<String> boardIdsFromCleared = myPageService.getMyArenasFromCleared(id);
-        List<MyArenaResponse> myArenasFromBoard = myPageService.getMyArenaDetailsFromBoard(boardIdsFromCleared);
-        for(MyArenaResponse arena: myArenasFromBoard) {
-            log.info("MyPageController - getMyArenas: 내가 참전한 아레나 조회 title {}, rank {}, createdDate {}, participates {}, comments {}, likes {}",
-                arena.getTitle(), arena.getBoardRank(), arena.getCreatedDate(), arena.getParticipates(), arena.getComments(), arena.getLikes());
-        }
-        model.addAttribute("myArenas", myArenasFromBoard);
+        List<MyArenaResponse> myArenaDetails = myPageService.getMyArenaDetails(id);
+        model.addAttribute("myArenas", myArenaDetails);
         return "myArenas";
     }
 }

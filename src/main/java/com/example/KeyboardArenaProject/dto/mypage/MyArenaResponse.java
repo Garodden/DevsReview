@@ -17,9 +17,10 @@ public class MyArenaResponse {
 	int participates;
 	int comments;
 	int likes;
+	double percentage;
 
 	@Builder
-	MyArenaResponse(Board board, int participates) {
+	MyArenaResponse(Board board, int participates, double percentage) {
 		this.boardId = board.getBoardId();
 		this.boardType = board.getBoardType();
 		this.title = board.getTitle();
@@ -28,5 +29,6 @@ public class MyArenaResponse {
 		this.participates = participates;
 		this.comments =board.getComments();
 		this.likes = board.getLikes();
+		this.percentage = percentage;
 	}
 }

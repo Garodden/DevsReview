@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -103,29 +104,38 @@ public class MyPageService {
         return myPageRepository.findAllByBoardIdInOrderByCreatedDateDesc(boardIds);
     }
 
-    public List<String> getMyArenasFromCleared(String id) {
+    public List<MyArenaResponse> getMyArenaDetails(String id) {
+        // 아레나 정보를 담을 리스트
+        List<MyArenaResponse> myArenaDetails = new ArrayList<>();
+
+        // 유저가 클리어한 기록을 참전 시작일시 기준으로 내림차순 조회
         List<Cleared> myArenas = clearedRepository.findAllByCompositeId_idOrderByStartTimeDesc(id);
+        // boardId만 모은 리스트
         List<String> boardIds = myArenas.stream()
             .map(myArena -> myArena.getCompositeId().getBoardId())
             .collect(Collectors.toList());
-        for (Cleared myArena : myArenas) {
-            log.info("MyPageService - getMyArenas: 내가 참전한 아레나를 Cleared에서 참전 시작일시 내림차순으로 조회 -> {}, {}, {}", myArena.getCompositeId().getBoardId(),
-                myArena.getId(), myArena.getStartTime());
-        }
-        return boardIds;
-    }
-
-    public List<MyArenaResponse> getMyArenaDetailsFromBoard(List<String> boardIds) {
+        // 유저가 클리어한 아레나를 Board 테이블에서 다시 조회
         List<Board> myArenasFromBoard = myPageRepository.findAllById(boardIds);
 
-        return myArenasFromBoard.stream()
-            .map(myArena -> MyArenaResponse.builder()
+        for(Board myArena: myArenasFromBoard) {
+            // 유저가 클리어한 아레나에 참전한 기록 전체를 조회
+            List<Cleared> participantList = clearedService.findAllByBoardId(myArena.getBoardId());
+            // 유저가 클리어한 아레나에 참전한 인원 수
+            long participantSize = participantList.size();
+            // 전체 참전인원 수 중에서 유저의 등수 계산
+            long myRank = clearedService.findRanking(participantList, id);
+            MyArenaResponse myArenaDetail = MyArenaResponse
+                .builder()
                 .board(myArena)
                 .participates(clearedService.findParticipatesByBoardId(myArena.getBoardId()))
-                .build())
-            .collect(Collectors.toList());
+                .percentage(((double) myRank / participantSize) * 100) // 등수를 전체 참전 인원 수로 나누어 퍼센티지 계산
+                .build();
+            myArenaDetails.add(myArenaDetail);
+        }
+        return myArenaDetails;
 
     }
+
 
     public class MyPageUserNotFoundException extends RuntimeException {
         public MyPageUserNotFoundException(String message) {

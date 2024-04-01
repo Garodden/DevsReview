@@ -20,9 +20,10 @@
         <th>Arena 제목</th>
         <th>랭크</th>
         <th>작성일</th>
-        <th>참가자 수</th>
+        <th>참가자</th>
         <th>댓글</th>
         <th>좋아요</th>
+        <th>N%</th>
     </tr>
     </thead>
     <tbody>
@@ -34,6 +35,7 @@
         <td th:text="${arena.participates}"></td>
         <td th:text="${arena.comments}"></td>
         <td th:text="${arena.likes}"></td>
+        <td th:text="${arena.percentage + '%'}"></td>
     </tr>
     </tbody>
 </table>
