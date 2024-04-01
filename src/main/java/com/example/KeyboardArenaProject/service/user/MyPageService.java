@@ -1,17 +1,23 @@
 package com.example.KeyboardArenaProject.service.user;
 import com.example.KeyboardArenaProject.dto.mypage.MyArenaResponse;
+import com.example.KeyboardArenaProject.dto.mypage.MyCommentedBoardsResponse;
 import com.example.KeyboardArenaProject.dto.user.MyPageInformation;
 import com.example.KeyboardArenaProject.entity.Board;
 import com.example.KeyboardArenaProject.entity.Cleared;
+import com.example.KeyboardArenaProject.entity.Comment;
 import com.example.KeyboardArenaProject.entity.Like;
 import com.example.KeyboardArenaProject.entity.User;
 import com.example.KeyboardArenaProject.repository.ClearedRepository;
+import com.example.KeyboardArenaProject.repository.CommentRepository;
 import com.example.KeyboardArenaProject.repository.LikeRepository;
 import com.example.KeyboardArenaProject.repository.MyPageRepository;
 import com.example.KeyboardArenaProject.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,17 +30,19 @@ public class MyPageService {
     private final UserRepository userRepository;
     private final LikeRepository likeRepository;
     private final ClearedRepository clearedRepository;
+    private final CommentRepository commentRepository;
     private final MyPageRepository myPageRepository;
     private final UserService userService;
     private final ClearedService clearedService;
     private final PasswordEncoder encoder;
 
     public MyPageService(UserRepository userRepository, LikeRepository likeRepository,
-		ClearedRepository clearedRepository, MyPageRepository myPageRepository, UserService userService,
+		ClearedRepository clearedRepository, CommentRepository commentRepository, MyPageRepository myPageRepository, UserService userService,
 		ClearedService clearedService, PasswordEncoder encoder) {
         this.userRepository = userRepository;
         this.likeRepository = likeRepository;
 		this.clearedRepository = clearedRepository;
+		this.commentRepository = commentRepository;
 		this.myPageRepository = myPageRepository;
         this.userService = userService;
 		this.clearedService = clearedService;
@@ -101,7 +109,7 @@ public class MyPageService {
         for (Board likedBoard : myLikedBoards) {
             log.info("MyPageService - getMyLikedBoards: 작성일자 내림차순으로 조회한 좋아요 누른 게시물의 작성일자 : {}", likedBoard.getCreatedDate());
         }
-        return myPageRepository.findAllByBoardIdInOrderByCreatedDateDesc(boardIds);
+        return myLikedBoards;
     }
 
     public List<MyArenaResponse> getMyArenaDetails(String id) {
@@ -133,7 +141,36 @@ public class MyPageService {
             myArenaDetails.add(myArenaDetail);
         }
         return myArenaDetails;
+    }
 
+    public List<MyCommentedBoardsResponse> getMyCommentedBoards(String id) {
+        List<Comment> myComments = commentRepository.findAllByIdOrderByCreatedDateDesc(id);
+        if(myComments.isEmpty()) {
+            throw new MyCommentNotFoundException("댓글 작성 이력을 조회하지 못했습니다.");
+        }
+
+        List<String> boardIds = myComments.stream()
+            .map(comment -> comment.getBoardId())
+            .collect(Collectors.toList());
+
+        List<Board> myCommentedBoards = myPageRepository.findAllByBoardIdInOrderByCreatedDateDesc(boardIds);
+
+        List<MyCommentedBoardsResponse> myCommentedBoardsResponse = new ArrayList<>();
+
+        for (Board board : myCommentedBoards) {
+            User user = userService.findById(board.getId());
+            String nickname = user.getNickname();
+            if(nickname.isBlank()) {
+                throw new AuthorNotFoundException("게시물의 작성자를 조회하지 못했습니다.");
+            }
+            MyCommentedBoardsResponse response = MyCommentedBoardsResponse
+                .builder()
+                .board(board)
+                .author(nickname)
+                .build();
+            myCommentedBoardsResponse.add(response);
+        }
+        return myCommentedBoardsResponse;
     }
 
 
@@ -154,7 +191,11 @@ public class MyPageService {
             super(message);
         }
     }
-
+    public class MyCommentNotFoundException extends RuntimeException {
+        public MyCommentNotFoundException(String message) {
+            super(message);
+        }
+    }
     public class MyBoardNotFoundException extends RuntimeException {
         public MyBoardNotFoundException(String message) {
             super(message);
@@ -163,6 +204,12 @@ public class MyPageService {
 
     public class MyLikeNotFoundExcpetion extends RuntimeException {
         public MyLikeNotFoundExcpetion(String message) {
+            super(message);
+        }
+    }
+
+    public class AuthorNotFoundException extends RuntimeException {
+        public AuthorNotFoundException(String message) {
             super(message);
         }
     }

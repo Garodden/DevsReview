@@ -9,4 +9,6 @@ import java.util.List;
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, String> {
     List<Comment> findAllByBoardIdOrderByCreatedDateDesc(String BoardId);
+
+    List<Comment> findAllByIdOrderByCreatedDateDesc(String id);
 }
