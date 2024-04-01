@@ -40,6 +40,9 @@ public class ArenaService {
         boardRepository.save(Arena);
     }
 
-
-
+    @Transactional
+    public void updateActive(String boardId) {
+        Board board = boardRepository.findByBoardId(boardId);
+        board.updateToActive();
+    }
 }

@@ -7,19 +7,35 @@ if (createButton) {
             headers: {
                 "Content-Type": "application/json"
             },
-            body : JSON.stringify({
+            body: JSON.stringify({
                 title: document.getElementById('title').value,
                 content: document.getElementById('content').value
             }),
-        }).then(() => {
-            alert('등록 완료되었습니다');
-            location.replace("/arenas");
         })
-    })
+            .then(response => response.text()) // 응답을 텍스트로 변환하여 boardId 추출
+            .then(boardId => {
+                if(boardId) { // 성공적으로 boardId를 받았다면
+                    alert('예비 등록이 완료됐습니다!\n'+
+                        '아레나를 게시판에 등록하기 위해서는 본인이 생성한 아레나를 2분 이내로 클리어하여야 합니다\n ' +
+                        '등록에 실패하더라도 [마이페이지->내가 생성한 아레나] 페이지에서 재시도 할 수 있습니다');
+                    console.log(boardId);
+                    window.location.href = `/arena/${boardId}/verify`; // boardId를 사용하여 리다이렉트
+
+                } else {
+                    // boardId가 없거나 잘못된 응답을 받았을 경우
+                    console.log(boardId);
+                    alert('등록 과정에 문제가 발생했습니다. 다시 시도해 주세요.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('오류가 발생했습니다. 다시 시도해주세요.');
+            });
+    });
 }
 
 
-
+//시작 버튼 작동 로직
 document.addEventListener('DOMContentLoaded', function() {
     const startButton = document.getElementById('start-button');
     const retryButton = document.getElementById('retry-button');
@@ -32,7 +48,7 @@ document.addEventListener('DOMContentLoaded', function() {
         fetch(`/arenas/${boardId}/start`)
             .then(response => response.json()) // 서버로부터 받은 JSON 응답을 파싱
             .then(data => {
-                // 'start-time' 요소에 시작 시간을 표시
+                // start-time 요소에 시작 시간을 표시
                 startTimeElement.innerText = `Start time: ${data.startTime}`;
                 startTimeElement.style.display = 'block';
             })
@@ -52,7 +68,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-
+//post 작동 로직
 document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('user-typed-content'); // 폼의 ID를 사용합니다.
     const contentInput = document.getElementById('contentInput'); // 사용자가 입력한 텍스트를 가져올 요소의 ID입니다.

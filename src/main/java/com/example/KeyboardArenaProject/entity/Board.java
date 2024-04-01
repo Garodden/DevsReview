@@ -84,5 +84,9 @@ public class Board {
         return new FreeBoardResponse(id,title,content,boardType,createdDate,updatedDate,boardRank);
     }
 
+    public void updateToActive(){
+        this.ifActive = true;
+    }
+
 
 }
