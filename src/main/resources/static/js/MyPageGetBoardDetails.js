@@ -8,6 +8,7 @@ rows.forEach(row => {
             window.location.href = `/board/${boardId}`;
         } else if (boardType === "2" || boardType === "3") {
             window.location.href = `/arenas/${boardId}`;
+            console.log(window.location.href);
         }
     })
 })
