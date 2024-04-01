@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>Arena 상세보기</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
-ㄹ    <noscript>
+    <noscript>
         <meta http-equiv="refresh" content="/arenas" />
     </noscript>
 
@@ -34,10 +34,16 @@
     <h5 th:text="'작성자: ' + ${arena.writer}"></h5>
     <h6 th:text="'작성일: ' + ${arena.createdDate}"></h6>
     <h6 th:text="'게시판 랭킹: ' + ${arena.boardRank}"></h6>
+
     <p th:text="${arena.content}"></p>
 
+    <button th:if="${arena.ifFirstTry} ==true" type="button" id="start-button" class="btn btn-primary btn-sm">시작</button>
+    <button th:if="${arena.ifFirstTry} == false" type="button" id="retry-button" class="btn btn-primary btn-sm">재시도</button>
+    <p id="start-time" style="display: none;"></p>
     <!-- 콘텐트 입력창 -->
-    <form th:action="@{/arenas/{boardId}(boardId=${arena.boardId})}" method="post">
+
+
+    <form id="user-typed-content" style="display:none;">
         <div class="form-group">
             <label for="contentInput">내용 입력</label>
             <textarea class="form-control" id="contentInput" name="userTypedText" rows="3"></textarea>
@@ -65,7 +71,11 @@
     </div>
 </div>
 
+<script th:inline="javascript">
+    var boardId = [[${arena.boardId}]];
+</script>
 <script src="/js/Arena.js"></script>
+
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>

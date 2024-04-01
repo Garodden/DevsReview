@@ -13,8 +13,8 @@ import java.util.List;
 public interface ClearedRepository extends JpaRepository<Cleared, UserBoardCompositeKey> {
     List<Cleared> findAllByCompositeId_BoardId(String boardId);
 
-    @Query("SELECT CASE WHEN COUNT(e) > 0 THEN true ELSE false END FROM Cleared e WHERE e.compositeId = :id")
-    boolean ifClearedById(UserBoardCompositeKey id);
+    @Query("SELECT CASE WHEN e.clearTime is NULL then false ELSE true END FROM Cleared  e where e.compositeId =:id")
+    Boolean ifClearedById(UserBoardCompositeKey id);
 
     Long countByCompositeId_BoardId(String boardId);
 

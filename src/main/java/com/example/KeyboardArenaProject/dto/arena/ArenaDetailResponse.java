@@ -23,6 +23,7 @@ public class ArenaDetailResponse {
     String writer;
     int boardRank;
     LocalDateTime createdDate;
+    boolean ifFirstTry;
     int participates;
     int comments;
     int likes;
@@ -30,11 +31,12 @@ public class ArenaDetailResponse {
     List<CommentResponse> commentResponses;
 
     @Builder
-    ArenaDetailResponse(User user, Board board, List<Comment> comment, int participates, String writer){
+    ArenaDetailResponse(User user, Board board, List<Comment> comment, int participates,boolean ifFirstTry, String writer){
         this.userTopBarInfo = new UserTopBarInfo(user);
         this.boardId = board.getBoardId();
         this.title = board.getTitle();
         this.content = board.getContent();
+        this.ifFirstTry = ifFirstTry;
         this.writer =writer;
         this.boardRank = board.getBoardRank();
         this.createdDate = board.getCreatedDate();
