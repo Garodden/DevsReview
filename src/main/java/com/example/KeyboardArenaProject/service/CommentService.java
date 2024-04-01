@@ -19,4 +19,16 @@ public class CommentService {
         return commentRepository.findAllByBoardIdOrderByCreatedDateDesc(BoardId);
     }
 
+    public void saveComment(Comment comment){
+        commentRepository.save(comment);
+    }
+
+    public void deleteComment(String commentId) {
+        commentRepository.deleteById(commentId);
+    }
+
+    public Comment findCommentById(String commentId){
+        return commentRepository.findById(commentId).orElseThrow();
+    }
+
 }
