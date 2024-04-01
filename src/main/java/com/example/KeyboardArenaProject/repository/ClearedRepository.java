@@ -13,8 +13,11 @@ import java.util.List;
 public interface ClearedRepository extends JpaRepository<Cleared, UserBoardCompositeKey> {
     List<Cleared> findAllByCompositeId_BoardId(String boardId);
 
+    //클리어 데이터가 있는지
     @Query("SELECT CASE WHEN e.clearTime is NULL then false ELSE true END FROM Cleared  e where e.compositeId =:id")
     Boolean ifClearedById(UserBoardCompositeKey id);
+
+    //유저 데이터가 있는지
 
     Long countByCompositeId_BoardId(String boardId);
 
