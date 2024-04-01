@@ -12,5 +12,4 @@ import java.time.LocalDateTime;
 @Getter
 public class ArenaStartTimeResponse {
     LocalDateTime startTime;
-
 }
