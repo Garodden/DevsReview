@@ -17,7 +17,9 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 public class ArenaDetailResponse {
     UserTopBarInfo userTopBarInfo;
+    String boardId;
     String title;
+    String content;
     String writer;
     int boardRank;
     LocalDateTime createdDate;
@@ -30,7 +32,9 @@ public class ArenaDetailResponse {
     @Builder
     ArenaDetailResponse(User user, Board board, List<Comment> comment, int participates, String writer){
         this.userTopBarInfo = new UserTopBarInfo(user);
+        this.boardId = board.getBoardId();
         this.title = board.getTitle();
+        this.content = board.getContent();
         this.writer =writer;
         this.boardRank = board.getBoardRank();
         this.createdDate = board.getCreatedDate();

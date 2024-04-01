@@ -2,14 +2,11 @@ package com.example.KeyboardArenaProject.entity.compositeKey;
 
 
 import jakarta.persistence.Embeddable;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.io.Serializable;
 
-@AllArgsConstructor
+
 @NoArgsConstructor
 @Getter
 @Setter
@@ -17,4 +14,9 @@ import java.io.Serializable;
 public class UserBoardCompositeKey implements Serializable {
     private String id;
     private String boardId;
+
+    @Builder UserBoardCompositeKey(String id, String boardId){
+        this.id =id;
+        this.boardId = boardId;
+    }
 }

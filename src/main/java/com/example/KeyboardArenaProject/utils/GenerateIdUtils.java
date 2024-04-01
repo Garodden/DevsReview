@@ -25,6 +25,6 @@ public class GenerateIdUtils {
 		DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HHmmss");
 		String date = signUpDate.format(dateFormatter);
 		String time = signUpDate.format(timeFormatter);
-		return "Commnet_" + date + "_" + time;
+		return "Comment_" + date + "_" + time;
 	}
 }

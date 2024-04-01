@@ -6,17 +6,18 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>자유게시판</title>
+    <script defer src="/js/LogoutBtn.js"></script>
 </head>
 <body>
 <header>
     <h1>Keyboard Arena</h1>
-    <button type="button" class="btn btn-secondary" onclick="location.href='/logout'">로그아웃</button>
+    <button type="button" id="logoutButton">로그아웃</button>
 </header>
 <main>
     <button th:onclick="|location.href='@{/newFreeboard}'|">게시판 글 쓰기</button>
     <button>투기장</button>
     <button onclick="location.href='/board'">자유게시판</button>
-    <button onclick="location.href='/mypage/admin'">마이페이지</button>
+    <button onclick="location.href='/mypage'">마이페이지</button>
 
     <p>title</p>
     <p>created date</p>

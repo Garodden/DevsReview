@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import com.example.KeyboardArenaProject.dto.user.AddUserRequest;
 import com.example.KeyboardArenaProject.entity.User;
 import com.example.KeyboardArenaProject.repository.UserRepository;
+import com.example.KeyboardArenaProject.utils.GeneratePwUtils;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -44,8 +45,7 @@ public class UserService {
 	// 현재 로그인한 유저 정보 조회
 	public User getCurrentUserInfo() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		User user = (User)authentication.getPrincipal();
-		return user;
+		return (User)authentication.getPrincipal();
 	}
 
 	public String getCurrentUserId() {
@@ -55,6 +55,7 @@ public class UserService {
 	}
 
 
+	// 이메일로 유저 아이디 확인
 	public String getUserId(String email) {
 		Optional<User> userOptional = userRepository.findByEmail(email);
 		log.info("service - getUserId 입력된 이메일: {}", email);
@@ -69,6 +70,7 @@ public class UserService {
 		}
 	}
 
+	// 이메일로 아이디 전송
 	public void sendUserIdByEmail(String email, String userId) {
 		SimpleMailMessage message = new SimpleMailMessage();
 		message.setSubject("[Keyboard Arena] 계정 아이디 확인"); // 메일 제목
@@ -77,11 +79,45 @@ public class UserService {
 		mailSender.send(message);
 	}
 
+	public boolean checkDuplicateUserId(String userId) {
+		log.info("checkDuplicateUserId: 아이디 중복여부 체크중: {}", userId);
+		log.info("checkDuplicateUserId: 아이디 중복여부: {}", userRepository.existsByUserId(userId));
+		return userRepository.existsByUserId(userId);
+	}
 
+	public boolean checkDuplicateEmail(String email) {
+		log.info("checkDuplicateEmail: 이메일 중복여부 체크중: {}", email);
+		log.info("checkDuplicateEmail: 이메일 중복여부: {}", userRepository.existsByEmail(email));
+		return userRepository.existsByEmail(email);
+	}
+
+	public String resetPassword(String userId, String question, String answer) {
+		Optional<User> userOptional = userRepository.findByUserIdAndFindPwQuestionAndFindPw(userId, question, answer);
+		if(userOptional.isPresent()) {
+			User user = userOptional.get();
+			log.info("service - resetPassword 찾은 userId: {}", user.getUserId());
+			String newPassword = GeneratePwUtils.generateNewPassword();
+
+			String encryptedPassword = encoder.encode(newPassword);
+			log.info("userService - encryptedPassword: {}", encryptedPassword);
+			user.setPassword(encryptedPassword);
+			userRepository.save(user);
+			log.info("userService - user's new password: {}", user.getPassword());
+			return newPassword;
+		} else {
+			log.info("service - resetPassword : UserNotFoundException");
+			throw new UserNotFoundException("User not found with userId:" + userId + ", question: " + question + ", answer: " + answer);
+		}
+	}
 
 	//임시 유저 닉네임 제공 함수
 	public String getNickNameById(String id){
 		return (id+"nickname");
+	}
+
+
+	public User findById(String id){
+		return userRepository.findById(id).orElse(null);
 	}
 
 	// 임시 유저 정보 접근용
@@ -102,6 +138,12 @@ public class UserService {
 			super(message);
 		}
 	}
+
+	// public class InCorrectAnswerException extends RuntimeException {
+	// 	public InCorrectAnswerException(String message) {
+	// 		super(message);
+	// 	}
+	// }
 }
 
 

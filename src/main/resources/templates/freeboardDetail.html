@@ -7,11 +7,12 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title th:text="${post.title}"></title>
     <script defer src="/js/FreeBoard.js"></script>
+    <script defer src="/js/LogoutBtn.js"></script>
 </head>
 <body>
 <header>
     <h1>Keyboard Arena</h1>
-    <button type="button" class="btn btn-secondary" onclick="location.href='/logout'">로그아웃</button>
+    <button type="button" id="logoutButton">로그아웃</button>
 </header>
 <main>
     <h2 th:text="${post.title}"></h2>
@@ -33,6 +34,19 @@
     <span th:text="${post.likes}"></span>
 
     <a href="/board">뒤로가기</a>
+
+    <details>
+        <summary>댓글</summary>
+        <ul th:each="comment,commentStat : ${comments}">
+            <li th:text="|${comment.nickName}/ ${commentWritersRanks.get(commentStat.index)}
+            ${comment.createdDate} ${comment.content}|"></li>
+            <input type="hidden" th:value="${comment.commentId}" id="comment-id">
+            <button th:if="${loginedId}==${comment.id}" id="delete-comment">댓글삭제</button>
+        </ul>
+        <textarea name="writeComment" id="write-comment" cols="20" rows="5"></textarea>
+        <button id="commit-comment">댓글등록</button>
+
+    </details>
 
 </main>
 </body>

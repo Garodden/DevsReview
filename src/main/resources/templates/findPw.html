@@ -3,8 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <title>Keyboard Arena</title>
+    <script defer src="/js/FindPw.js"></script>
 </head>
 <body>
-findPw
+<header>
+    <h1>Keyboard Arena</h1>
+</header>
+<main>
+    <div>
+        <h2>비밀번호 찾기</h2>
+        <form id="findPwForm">
+            회원 아이디와 함께 회원가입시 등록한 질문과 답변을 입력하세요. 입력한 정보가 일치할 경우 비밀번호를 초기화합니다.<br><br>
+            <label for="userId">아이디</label><br><br>
+            <input id="userId" name="userId" required><br><br>
+            <label for="findPwQuestion">비밀번호 확인 질문</label><br><br>
+            <select name="questions" id="findPwQuestion" required>
+                <option value="place">기억에 남는 추억의 장소는?</option>
+                <option value="treasure">자신의 보물 제1호는?</option>
+                <option value="elementary">자신의 출신 초등학교는?</option>
+            </select><br><br>
+            <label for="findPwAnswer">비밀번호 확인 답변</label><br><br>
+            <input id="findPwAnswer" name="findPwAnswer" required>
+            <button id="resetPwButton" type="submit">확인</button>
+        </form>
+        <div id="resetPwResult"></div>
+    </div>
+</main>
 </body>
 </html>

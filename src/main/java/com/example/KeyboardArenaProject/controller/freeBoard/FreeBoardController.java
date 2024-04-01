@@ -6,9 +6,11 @@ import com.example.KeyboardArenaProject.dto.freeBoard.FreeBoardWriteRequest;
 import com.example.KeyboardArenaProject.dto.user.AddUserRequest;
 import com.example.KeyboardArenaProject.dto.user.UserResponse;
 import com.example.KeyboardArenaProject.entity.Board;
+import com.example.KeyboardArenaProject.entity.Comment;
 import com.example.KeyboardArenaProject.entity.Like;
 import com.example.KeyboardArenaProject.entity.User;
 import com.example.KeyboardArenaProject.entity.compositeKey.UserBoardCompositeKey;
+import com.example.KeyboardArenaProject.service.CommentService;
 import com.example.KeyboardArenaProject.service.LikeService;
 import com.example.KeyboardArenaProject.service.freeBoard.FreeBoardService;
 
@@ -31,7 +33,9 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Slf4j
@@ -41,10 +45,12 @@ public class FreeBoardController {
     private final FreeBoardService freeBoardService;
     private final UserService userService;
     private final LikeService likeService;
+    private final CommentService commentService;
 
     @GetMapping("/")
     public String indexPage(Model model){
-
+        User user = userService.getCurrentUserInfo();
+        log.info("FreeBoardController-indexPage-현재 로그인한 유저 userId: {}", user.getUserId());
         return "index";
     }
 
@@ -118,6 +124,14 @@ public class FreeBoardController {
         }
         model.addAttribute("writer",freeBoardService.findWriter(board_id));
         model.addAttribute("post",freeBoardService.findByBoardId(board_id));
+        model.addAttribute("comments",commentService.findCommentsByBoardId(board_id));
+        model.addAttribute("loginedId",userService.getCurrentUserInfo().getId());
+        List<Integer> commentWriters = new ArrayList<>();
+        for (int i = 0; i < commentService.findCommentsByBoardId(board_id).size(); i++) {
+            commentWriters.add(userService.findById(commentService.findCommentsByBoardId(board_id).get(i).getId()).getUserRank());
+        }
+        model.addAttribute("commentWritersRanks",commentWriters);
+
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(!authentication.getPrincipal().equals("anonymousUser")) {
             model.addAttribute("loginedUserId",userService.getCurrentUserId());
@@ -138,7 +152,7 @@ public class FreeBoardController {
     @ResponseBody
     @PostMapping("/api/like")
     public void like(@RequestParam String boardId,@RequestParam String id){
-        UserBoardCompositeKey userBoardCompositeKey = new UserBoardCompositeKey(id, boardId);
+        UserBoardCompositeKey userBoardCompositeKey = UserBoardCompositeKey.builder().id(id).boardId(boardId).build();
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(!authentication.getPrincipal().equals("anonymousUser")) {
             int likes;
@@ -155,6 +169,21 @@ public class FreeBoardController {
             }
             freeBoardService.updateBoardLikes(likes, userBoardCompositeKey.getBoardId());
         }
+    }
+
+    //댓글
+    @PostMapping("/comments/{board_id}")
+    public String saveComment(@PathVariable String board_id,@RequestBody Map<String,String> content){
+        Comment comment = new Comment(board_id,content.get("content"), userService.getCurrentUserInfo().getId(),userService.getCurrentUserInfo().getNickname());
+        commentService.saveComment(comment);
+        return "redirect:/board/"+board_id;
+    }
+
+    @DeleteMapping("/comments/{comment_id}")
+    public String deleteComment(@PathVariable String comment_id){
+        String boardId = commentService.findCommentById(comment_id).getBoardId();
+        commentService.deleteComment(comment_id);
+        return "redirect:/board/"+boardId;
     }
 
 }
