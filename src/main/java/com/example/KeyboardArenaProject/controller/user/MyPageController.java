@@ -5,6 +5,7 @@ import java.util.List;
 import com.example.KeyboardArenaProject.dto.user.ChangePwRequest;
 import com.example.KeyboardArenaProject.dto.user.MyPageInformation;
 import com.example.KeyboardArenaProject.entity.Board;
+import com.example.KeyboardArenaProject.entity.Cleared;
 import com.example.KeyboardArenaProject.entity.Like;
 import com.example.KeyboardArenaProject.entity.User;
 import com.example.KeyboardArenaProject.service.user.MyPageService;
@@ -59,7 +60,8 @@ public class MyPageController {
     @ResponseBody
     public ResponseEntity<String> changePassword(@RequestBody ChangePwRequest changePwRequest) {
         try {
-            myPageService.changePassword(changePwRequest.getCurrentPassword(), changePwRequest.getNewPassword(), changePwRequest.getConfirmNewPassword());
+            myPageService.changePassword(changePwRequest.getCurrentPassword(), changePwRequest.getNewPassword(),
+                changePwRequest.getConfirmNewPassword());
             log.info("비밀번호가 성공적으로 변경되었습니다.");
             return ResponseEntity.ok("비밀번호가 성공적으로 변경되었습니다.");
         } catch (MyPageService.CurrentPasswordMismatchException e) {
@@ -79,7 +81,7 @@ public class MyPageController {
             //     .collect(Collectors.toList());
             model.addAttribute("myBoards", myBoards);
             return "myboards";
-        } catch(MyPageService.MyBoardNotFoundException e) {
+        } catch (MyPageService.MyBoardNotFoundException e) {
             String errorMessage = "작성한 게시글이 없습니다";
             model.addAttribute("errorMessage", errorMessage);
             return "myboards";
@@ -93,21 +95,34 @@ public class MyPageController {
         String userId = user.getUserId();
         try {
             List<Like> likes = myPageService.getMyLikes(userId);
-            for(Like like : likes) {
-                log.info("MyPageController - getLikedBoards: 좋아요 boardId는 {}, id는 {}", like.getCompositeId().getBoardId(), like.getCompositeId().getId());
+            for (Like like : likes) {
+                log.info("MyPageController - getLikedBoards: 좋아요 boardId는 {}, id는 {}",
+                    like.getCompositeId().getBoardId(), like.getCompositeId().getId());
             }
             List<Board> likedBoards = myPageService.getMyLikedBoards(likes);
-            for(Board board: likedBoards) {
-                log.info("MyPageController - getLikedBoards: 좋아요 누른 게시글 boardId는 {}, id는 {}", board.getBoardId(), board.getId());
+            for (Board board : likedBoards) {
+                log.info("MyPageController - getLikedBoards: 좋아요 누른 게시글 boardId는 {}, id는 {}", board.getBoardId(),
+                    board.getId());
             }
             model.addAttribute("likedBoards", likedBoards);
             return "likedboards";
-        } catch(MyPageService.MyLikeNotFoundExcpetion e) {
+        } catch (MyPageService.MyLikeNotFoundExcpetion e) {
             String errorMessage = "좋아요를 누른 게시글이 없습니다";
             model.addAttribute("errorMessage", errorMessage);
             return "likedboards";
         }
-
     }
 
+    @GetMapping("/mypage/arenas")
+    public String getMyArenas(Model model) {
+        User user = userService.getCurrentUserInfo();
+        String id = user.getId();
+        List<String> myArenasFromCleared = myPageService.getMyArenasFromCleared(id);
+        List<Board> myArenasFromBoard = myPageService.getMyArenasFromBoard(myArenasFromCleared);
+        for(Board arena: myArenasFromBoard) {
+            log.info("MyPageController - getMyArenas: 내가 참전한 아레나 조회 boardId {}, id {}, title {}", arena.getBoardId(), arena.getId(), arena.getTitle());
+        }
+        model.addAttribute("myArenas", myArenasFromBoard);
+        return "myArenas";
+    }
 }

@@ -1,8 +1,10 @@
 package com.example.KeyboardArenaProject.service.user;
 import com.example.KeyboardArenaProject.dto.user.MyPageInformation;
 import com.example.KeyboardArenaProject.entity.Board;
+import com.example.KeyboardArenaProject.entity.Cleared;
 import com.example.KeyboardArenaProject.entity.Like;
 import com.example.KeyboardArenaProject.entity.User;
+import com.example.KeyboardArenaProject.repository.ClearedRepository;
 import com.example.KeyboardArenaProject.repository.LikeRepository;
 import com.example.KeyboardArenaProject.repository.MyPageRepository;
 import com.example.KeyboardArenaProject.repository.UserRepository;
@@ -18,14 +20,17 @@ import java.util.stream.Collectors;
 public class MyPageService {
     private final UserRepository userRepository;
     private final LikeRepository likeRepository;
+    private final ClearedRepository clearedRepository;
     private final MyPageRepository myPageRepository;
     private final UserService userService;
     private final PasswordEncoder encoder;
 
-    public MyPageService(UserRepository userRepository, LikeRepository likeRepository, MyPageRepository myPageRepository, UserService userService, PasswordEncoder encoder) {
+    public MyPageService(UserRepository userRepository, LikeRepository likeRepository,
+		ClearedRepository clearedRepository, MyPageRepository myPageRepository, UserService userService, PasswordEncoder encoder) {
         this.userRepository = userRepository;
         this.likeRepository = likeRepository;
-        this.myPageRepository = myPageRepository;
+		this.clearedRepository = clearedRepository;
+		this.myPageRepository = myPageRepository;
         this.userService = userService;
         this.encoder = encoder;
     }
@@ -84,14 +89,37 @@ public class MyPageService {
 
     public List<Board> getMyLikedBoards(List<Like> likes) {
         List<String> boardIds = likes.stream()
-                .map(like -> like.getCompositeId().getBoardId()).
-                collect(Collectors.toList());
+            .map(like -> like.getCompositeId().getBoardId())
+            .collect(Collectors.toList());
         List<Board> myLikedBoards = myPageRepository.findAllByBoardIdInOrderByCreatedDateDesc(boardIds);
         for (Board likedBoard : myLikedBoards) {
             log.info("MyPageService - getMyLikedBoards: 작성일자 내림차순으로 조회한 좋아요 누른 게시물의 작성일자 : {}", likedBoard.getCreatedDate());
         }
         return myPageRepository.findAllByBoardIdInOrderByCreatedDateDesc(boardIds);
     }
+
+    public List<String> getMyArenasFromCleared(String id) {
+        List<Cleared> myArenas = clearedRepository.findAllByCompositeId_idOrderByStartTimeDesc(id);
+        List<String> boardIds = myArenas.stream()
+            .map(myArena -> myArena.getCompositeId().getBoardId())
+            .collect(Collectors.toList());
+        for (Cleared myArena : myArenas) {
+            log.info("MyPageService - getMyArenas: 내가 참전한 아레나 참전 시작일시 내림차순으로 조회 -> {}, {}, {}", myArena.getCompositeId().getBoardId(),
+                myArena.getId(), myArena.getStartTime());
+        }
+        return boardIds;
+    }
+
+    public List<Board> getMyArenasFromBoard(List<String> boardIds) {
+        List<Board> myArenasFromBoard = myPageRepository.findAllById(boardIds);
+        for (Board myArena : myArenasFromBoard) {
+            log.info("MyPageService - getMyArenasFromBoard: 내가 참전한 아레나 보드에서 다시 조회, 참전 시작일시 내림차순으로 조회 -> {}, {}, {}, {}",
+                myArena.getBoardId(), myArena.getId(), myArena.getBoardRank(), myArena.getBoardType());
+        }
+        return myArenasFromBoard;
+    }
+
+
 
 
     public class MyPageUserNotFoundException extends RuntimeException {

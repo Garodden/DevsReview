@@ -23,5 +23,5 @@ public interface ClearedRepository extends JpaRepository<Cleared, UserBoardCompo
 
     Cleared findByCompositeId(UserBoardCompositeKey curUsersClearRecord);
 
-
+    List<Cleared> findAllByCompositeId_idOrderByStartTimeDesc(String id);
 }
