@@ -14,6 +14,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -61,26 +62,41 @@ public class ArenaController {
     public String showArenaDetails(@PathVariable String boardId, Model model) throws JsonProcessingException {
 
         Board arenaRawInfo = arenaService.findByBoardId(boardId);
-
         User user = userService.getCurrentUserInfo();
+        boolean ifFirstTry = !clearedService.findIfUserClearDataExists(UserBoardCompositeKey
+                .builder()
+                .id(user.getId())
+                .boardId(arenaRawInfo.getBoardId())
+                .build());
+
 
         ArenaDetailResponse arenaDetails = ArenaDetailResponse
                 .builder()
                 .user(user)
                 .board(arenaRawInfo)
+                .ifFirstTry(ifFirstTry)
                 .comment(commentService.findCommentsByBoardId(boardId))
                 .participates(clearedService.findParticipatesByBoardId(boardId))
                 .writer(userService.getNickNameById(arenaRawInfo.getId()))
                 .build();
         model.addAttribute("arena", arenaDetails);
 
-        UserBoardCompositeKey curUsersClearRecord = UserBoardCompositeKey.builder().id(user.getId()).boardId(boardId).build();
+        return "arenaDetail";
+    }
 
+    @Operation(summary = "시작 시간 기록", description = "챌린지 시작 시간을 기록하는 용도, 시작 시간을 기록함")
+    @GetMapping("/arenas/{boardId}/start")
+    @ResponseBody
+    public ResponseEntity<ArenaStartTimeResponse> markArenaStartTime(@PathVariable String boardId){
+
+        User user = userService.getCurrentUserInfo();
+        UserBoardCompositeKey curUsersClearRecord = UserBoardCompositeKey.builder().id(user.getId()).boardId(boardId).build();
         //클리어 보드에 현재 시작한 시간을 기록
         //만약 클리어 기록이 존재하면 해당 기록에서 시간 기록 시작
         //아니라면 새로운 기록 생성, 시간 기록 시작
         if(clearedService.findIfUserClearDataExists(curUsersClearRecord)){
             clearedService.updateStartTime(curUsersClearRecord);
+            //
         }
         else {
             Cleared cleared = Cleared.builder()
@@ -91,7 +107,7 @@ public class ArenaController {
             clearedService.saveClearStartTime(cleared);
         }
 
-        return "arenaDetail";
+        return ResponseEntity.ok(new ArenaStartTimeResponse(LocalDateTime.now()));
     }
 
     @Operation(summary = "개별 아레나 참전.", description = "개별 아레나에 참전. 시작 시간과 비교하여 시간이 얼마나 걸렸는지 알려줌" +
@@ -116,7 +132,6 @@ public class ArenaController {
             return result.resultPopupText(false);
         }
         else {
-
             List<Cleared> participantList = clearedService.findAllByBoardId(boardId);
             Long participantSize = (long) participantList.size();
             Long ranking = (long) clearedService.findRanking(participantList, curUser.getId());
