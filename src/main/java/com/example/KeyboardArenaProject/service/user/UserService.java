@@ -110,6 +110,36 @@ public class UserService {
 		}
 	}
 
+	// 회원 탈퇴
+	public void signout(String password, String confirmPassword) {
+		User currentUser = getCurrentUserInfo();
+		Optional<User> userOptional = userRepository.findById(currentUser.getId());
+
+		if (userOptional.isPresent()) {
+			User user = userOptional.get();
+			log.info("회원 탈퇴를 시도하는 사용자ID - {}", user.getUserId());
+			if (!encoder.matches(password, user.getPassword())) {
+				log.warn("비밀번호가 일치하지 않습니다.");
+				throw new PasswordMismatchException("비밀번호가 일치하지 않습니다.");
+			}
+
+			if (!password.equals(confirmPassword)) {
+				log.warn("비밀번호와 비밀번호 확인이 일치하지 않습니다.");
+				throw new ConfirmPasswordMismatchException("비밀번호와 비밀번호 확인이 일치하지 않습니다.");
+			}
+
+			log.info("사용자 {}의 계정을 비활성화합니다.", user.getUserId());
+			user.setIsActive(false);
+			user.setUserId(user.getUserId() + "(탈퇴)");
+			user.setNickname(user.getNickname() + "(탈퇴)");
+			userRepository.save(user);
+			log.info("사용자의 계정이 성공적으로 비활성화되었습니다. - {}", user.getUserId());
+		} else {
+			log.warn("사용자를 찾을 수 없습니다: {}", currentUser.getUserId());
+			throw new UserNotFoundException("사용자를 찾을 수 없습니다: " + currentUser.getUserId());
+		}
+	}
+
 	//임시 유저 닉네임 제공 함수
 	public String getNickNameById(String id){
 		return (id+"nickname");
@@ -138,6 +168,18 @@ public class UserService {
 
 	public static class UserNotFoundException extends RuntimeException {
 		public UserNotFoundException(String message) {
+			super(message);
+		}
+	}
+
+	public class ConfirmPasswordMismatchException extends RuntimeException {
+		public ConfirmPasswordMismatchException(String message) {
+			super(message);
+		}
+	}
+
+	public class PasswordMismatchException extends RuntimeException {
+		public PasswordMismatchException(String message) {
 			super(message);
 		}
 	}
