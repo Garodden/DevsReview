@@ -115,6 +115,11 @@ public class UserService {
 		return (id+"nickname");
 	}
 
+
+	public User findById(String id){
+		return userRepository.findById(id).orElse(null);
+	}
+
 	// 임시 유저 정보 접근용
 	public static User getTemporalUserGet(){
 		return User.builder()

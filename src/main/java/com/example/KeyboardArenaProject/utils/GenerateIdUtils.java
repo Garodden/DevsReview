@@ -21,7 +21,7 @@ public class GenerateIdUtils {
 	}
 
 	public static String generateCommentId(LocalDateTime signUpDate) {
-		DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+		DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyMMdd");
 		DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HHmmss");
 		String date = signUpDate.format(dateFormatter);
 		String time = signUpDate.format(timeFormatter);
