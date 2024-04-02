@@ -1,0 +1,102 @@
+
+/* 헤더 적용에 필요한 css start =======> */
+.title-navbar-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+#logoutButton {
+    margin-left: 10px;
+    border: none;
+    color: black;
+    background-color: #d9d9d9;
+}
+
+#navbar-nickname {
+    font-weight: bold;
+}
+
+.mb-3 {
+    cursor: pointer;
+    margin-top: 1vh;
+}
+
+/* =======> 헤더 적용에 필요한 css end */
+
+.index-menu {
+    display: flex;
+    justify-content: space-evenly;
+    margin-bottom: 5vh;
+}
+
+#index-menu-arena {
+    font-weight: bold;
+    color: black;
+    cursor: pointer;
+    /*margin-right: 40px;*/
+}
+
+#index-menu-freeboard {
+    font-weight: lighter;
+    color: #676767;
+    cursor: pointer;
+}
+
+#create-arena-button {
+    background-color: #676767;
+    padding: .275rem .5rem;
+    border: none;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+}
+
+#create-arena-button:hover {
+    box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+}
+tbody.btn btn-primary {
+    padding: .275rem .5rem;
+}
+
+
+table {
+    text-align: center; /* 테이블 전체의 텍스트를 가운데 정렬합니다. */
+    border-collapse: collapse; /* 테이블의 셀 테두리를 합칩니다. */
+}
+
+table th,
+table td {
+    text-align: center; /* 테이블의 각 셀의 텍스트를 가운데 정렬합니다. */
+}
+
+thead, tbody, tfoot {
+    border-bottom: 2px solid #dee2e6; /* 테이블 헤더, 본문, 푸터의 하단에만 테두리를 추가합니다. */
+}
+
+/* 주간 랭킹 아레나 테이블 행(Row)에 대한 CSS */
+.rank-arena-row td:first-child:before {
+    content: "(주간) ";
+    color: #ff4162;
+    font-weight: bold;
+    margin-right: 5px; /* (주간)과 제목 사이의 여백 조정 */
+}
+
+/* 상위 3개 테이블 행(Row)에 대한 CSS */
+.top3-arena-row td:first-child:before {
+    font-weight: bold;
+    margin-right: 5px; /* "top1", "top2", "top3"과 제목 사이의 여백 조정 */
+}
+
+.top1:before {
+    content: "top1 ";
+    color: green;
+}
+
+.top2:before {
+    content: "top2 ";
+    color: green;
+}
+
+.top3:before {
+    content: "top3 ";
+    color: green;
+}
+
