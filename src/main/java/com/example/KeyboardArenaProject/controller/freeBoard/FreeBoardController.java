@@ -183,10 +183,9 @@ public class FreeBoardController {
     }
 
     @DeleteMapping("/comments/{comment_id}")
-    public String deleteComment(@PathVariable String comment_id){
+    public void deleteComment(@PathVariable String comment_id){
         String boardId = commentService.findCommentById(comment_id).getBoardId();
         commentService.deleteComment(comment_id);
-        return "redirect:/board/"+boardId;
     }
 
 }
