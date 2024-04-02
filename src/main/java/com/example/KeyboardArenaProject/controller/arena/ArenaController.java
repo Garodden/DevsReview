@@ -14,6 +14,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -61,37 +62,50 @@ public class ArenaController {
     public String showArenaDetails(@PathVariable String boardId, Model model) throws JsonProcessingException {
 
         Board arenaRawInfo = arenaService.findByBoardId(boardId);
-
         User user = userService.getCurrentUserInfo();
+        UserBoardCompositeKey curKey = UserBoardCompositeKey
+                .builder()
+                .id(user.getId())
+                .boardId(arenaRawInfo.getBoardId())
+                .build();
 
+        boolean ifFirstTry = false;
+        if(clearedService.findIfUserDataExists(curKey)&&clearedService.findIfUserClearDataExists(curKey)){
+            ifFirstTry = true;
+        }
         ArenaDetailResponse arenaDetails = ArenaDetailResponse
                 .builder()
                 .user(user)
                 .board(arenaRawInfo)
+                .ifFirstTry(ifFirstTry)
                 .comment(commentService.findCommentsByBoardId(boardId))
                 .participates(clearedService.findParticipatesByBoardId(boardId))
                 .writer(userService.getNickNameById(arenaRawInfo.getId()))
                 .build();
         model.addAttribute("arena", arenaDetails);
 
-        UserBoardCompositeKey curUsersClearRecord = UserBoardCompositeKey.builder().id(user.getId()).boardId(boardId).build();
+        return "arenaDetail";
+    }
 
+    @Operation(summary = "시작 시간 기록", description = "챌린지 시작 시간을 기록하는 용도, 시작 시간을 기록함")
+    @GetMapping("/arenas/{boardId}/start")
+    @ResponseBody
+    public ResponseEntity<ArenaStartTimeResponse> markArenaStartTime(@PathVariable String boardId){
+
+        User user = userService.getCurrentUserInfo();
+        UserBoardCompositeKey curUsersClearRecord = UserBoardCompositeKey.builder().id(user.getId()).boardId(boardId).build();
         //클리어 보드에 현재 시작한 시간을 기록
         //만약 클리어 기록이 존재하면 해당 기록에서 시간 기록 시작
         //아니라면 새로운 기록 생성, 시간 기록 시작
-        if(clearedService.findIfUserClearDataExists(curUsersClearRecord)){
+        if(clearedService.findIfUserDataExists(curUsersClearRecord)){
             clearedService.updateStartTime(curUsersClearRecord);
+
         }
         else {
-            Cleared cleared = Cleared.builder()
-                    .boardId(boardId)
-                    .id(user.getId())
-                    .startTime(LocalDateTime.now())
-                    .build();
-            clearedService.saveClearStartTime(cleared);
+            clearedService.saveCleared(user.getId(), boardId);
         }
 
-        return "arenaDetail";
+        return ResponseEntity.ok(new ArenaStartTimeResponse(LocalDateTime.now()));
     }
 
     @Operation(summary = "개별 아레나 참전.", description = "개별 아레나에 참전. 시작 시간과 비교하여 시간이 얼마나 걸렸는지 알려줌" +
@@ -116,7 +130,6 @@ public class ArenaController {
             return result.resultPopupText(false);
         }
         else {
-
             List<Cleared> participantList = clearedService.findAllByBoardId(boardId);
             Long participantSize = (long) participantList.size();
             Long ranking = (long) clearedService.findRanking(participantList, curUser.getId());
@@ -141,26 +154,104 @@ public class ArenaController {
         return "newArena";
     }
 
-    @Operation(summary = "아레나 제작", description = "아레나 개장 Post 메소드 API")
+    @Operation(summary = "아레나 제작", description = "아레나 개장 Post 메소드 API 개장한 arena의 boardId를 알려준다")
     @PostMapping("/newArena")
+    @ResponseBody
     public String addNewArena(@RequestBody ArenaReceiveForm request) {
 
-        User currentUser = userService.getCurrentUserInfo();
+        User curUser = userService.getCurrentUserInfo();
 
         //콘텐트 양 옆의 whitespace 문자 제거.
         String strippedContent = request.getContent().strip();
 
         Board arena = Board.builder()
-                .id(currentUser.getId())
+                .id(curUser.getId())
                 .title(request.getTitle())
                 .content(strippedContent)
-                .board_rank(currentUser.getUserRank())
+                .board_rank(curUser.getUserRank())
                 .board_type(3)
                 .active(false)
                 .build();
 
         arenaService.saveArena(arena);
-        return "redirect:/arena"+arena.getBoardId()+"/verify";
+        return arena.getBoardId();
+    }
+
+
+    @Operation(summary = "제작한 아레나 활성화 전 검증 사이트 API", description = "아레나 개장 Post 메소드 API")
+    @GetMapping("/arena/{boardId}/verify")
+    public String addNewArena(@PathVariable String boardId, Model model ) {
+
+        User currentUser = userService.getCurrentUserInfo();
+        Board currentBoard = arenaService.findByBoardId(boardId);
+
+        ArenaVerifyResponse verifyResponse = ArenaVerifyResponse
+                .builder()
+                .board(currentBoard)
+                .user(currentUser)
+                .writer(userService.getNickNameById(currentBoard.getId()))
+                .build();
+
+        model.addAttribute("arena", verifyResponse);
+
+        return "arenaVerify";
+    }
+
+    @Operation(summary = "아레나 검증 시작 시간 기록", description = "검증 시작 시간을 기록하는 용도, 시작 시간을 기록함")
+    @GetMapping("/arenas/{boardId}/verify/start")
+    @ResponseBody
+    public ResponseEntity<ArenaStartTimeResponse> markArenaVerifyStartTime(@PathVariable String boardId){
+
+        User user = userService.getCurrentUserInfo();
+        UserBoardCompositeKey curUsersClearRecord = UserBoardCompositeKey.builder().id(user.getId()).boardId(boardId).build();
+        //클리어 보드에 현재 시작한 시간을 기록
+        //만약 클리어 기록이 존재하면 해당 기록에서 시간 기록 시작
+        //아니라면 새로운 기록 생성, 시간 기록 시작
+        if(clearedService.findIfUserDataExists(curUsersClearRecord)){
+            clearedService.updateStartTime(curUsersClearRecord);
+        }
+        else {
+            clearedService.saveCleared(user.getId(), boardId);
+        }
+
+        return ResponseEntity.ok(new ArenaStartTimeResponse(LocalDateTime.now()));
+    }
+
+
+
+    @Operation(summary = "제작한 아레나 게시 전 검증 사이트 API", description = "유저가 해당 아레나를 클리어한 시간이 120초 이하면 아레나를 활성화시켜준다.")
+    @PostMapping("/arena/{boardId}/verify")
+    @ResponseBody
+    public String addNewArena(@PathVariable String boardId, @RequestParam String userTypedText) {
+
+        Board curBoard = arenaService.findByBoardId(boardId);
+        User curUser = userService.getCurrentUserInfo();
+
+        UserBoardCompositeKey curKey = UserBoardCompositeKey.builder()
+                .id(curUser.getId())
+                .boardId(boardId)
+                .build();
+
+        String originalContent = curBoard.getContent().trim();
+        String userTypedContent= userTypedText.trim();
+
+        clearedService.getOnlyClearTime(curKey);
+
+        ArenaVerifyResultResponse result = ArenaVerifyResultResponse
+                .builder()
+                .clearTimeBySeconds(clearedService.getOnlyClearTime(curKey))
+                .title(curBoard.getTitle())
+                .build();
+
+        if(originalContent.equals(userTypedContent)&&
+                result.getClearTimeBySeconds()<=120){
+            clearedService.updateClearTime(curKey);
+            arenaService.updateActive(curBoard.getBoardId());
+            return result.resultPopupText(true);
+        }
+        else {
+            return result.resultPopupText(false);
+        }
     }
 
 

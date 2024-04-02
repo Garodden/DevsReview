@@ -6,6 +6,9 @@ import com.example.KeyboardArenaProject.repository.ClearedRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.OptionalInt;
@@ -25,9 +28,20 @@ public class ClearedService {
     public boolean findIfUserClearDataExists(UserBoardCompositeKey id){
         return clearedRepository.ifClearedById(id);
     }
+
+    public boolean findIfUserDataExists(UserBoardCompositeKey id){
+        return clearedRepository.findByCompositeId(id)!=null;
+    }
     //챌린지 시작 시간 기록
-    public void saveClearStartTime(Cleared cleared){
-        clearedRepository.save(cleared);
+
+    public void saveCleared(String userId, String boardId) {
+        Cleared newCleared = Cleared.builder()
+                .id(userId)
+                .boardId(boardId)
+                .tries(0)
+                .startTime(LocalDateTime.now())
+                .build();
+        clearedRepository.save(newCleared);
     }
 
 
@@ -59,6 +73,15 @@ public class ClearedService {
         return clearedData.updateClearTime();
     }
 
+    public Long getOnlyClearTime(UserBoardCompositeKey compositeKey){
+
+        Cleared curCleared = clearedRepository.findByCompositeId(compositeKey);
+        LocalDateTime startTime = curCleared.getStartTime();
+
+        Duration duration = Duration.between(startTime, LocalDateTime.now());
+        return duration.getSeconds();
+
+    }
     public Cleared findByCompositeId(UserBoardCompositeKey id) {
         return clearedRepository.findByCompositeId(id);
     }

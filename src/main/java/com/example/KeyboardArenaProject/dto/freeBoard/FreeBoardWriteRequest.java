@@ -2,6 +2,7 @@ package com.example.KeyboardArenaProject.dto.freeBoard;
 
 import com.example.KeyboardArenaProject.entity.Board;
 import com.example.KeyboardArenaProject.service.freeBoard.FreeBoardService;
+import com.example.KeyboardArenaProject.utils.GenerateIdUtils;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;

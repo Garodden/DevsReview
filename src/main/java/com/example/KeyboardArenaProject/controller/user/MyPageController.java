@@ -2,6 +2,9 @@ package com.example.KeyboardArenaProject.controller.user;
 
 import java.util.List;
 
+import com.example.KeyboardArenaProject.dto.mypage.MyArenaResponse;
+import com.example.KeyboardArenaProject.dto.mypage.MyCommentedBoardsResponse;
+import com.example.KeyboardArenaProject.dto.user.ChangePwRequest;
 import com.example.KeyboardArenaProject.dto.user.MyPageInformation;
 import com.example.KeyboardArenaProject.entity.Board;
 import com.example.KeyboardArenaProject.entity.Like;
@@ -9,10 +12,15 @@ import com.example.KeyboardArenaProject.entity.User;
 import com.example.KeyboardArenaProject.service.user.MyPageService;
 import com.example.KeyboardArenaProject.service.user.UserService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.parameters.P;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.server.ResponseStatusException;
 
 @Slf4j
 @Controller
@@ -44,17 +52,34 @@ public class MyPageController {
         return "mypage";
     }
 
+    @GetMapping("/mypage/changePassword")
+    public String showChangePasswordForm() {
+        return "changePw";
+    }
+
+    @PostMapping("/mypage/changePassword")
+    @ResponseBody
+    public ResponseEntity<String> changePassword(@RequestBody ChangePwRequest changePwRequest) {
+        try {
+            myPageService.changePassword(changePwRequest.getCurrentPassword(), changePwRequest.getNewPassword(),
+                changePwRequest.getConfirmNewPassword());
+            log.info("비밀번호가 성공적으로 변경되었습니다.");
+            return ResponseEntity.ok("비밀번호가 성공적으로 변경되었습니다.");
+        } catch (MyPageService.CurrentPasswordMismatchException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("현재 비밀번호가 일치하지 않습니다.");
+        } catch (MyPageService.NewPasswordMismatchException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("새로운 비밀번호와 새로운 비밀번호 확인 비밀번호가 일치하지 않습니다.");
+        }
+    }
+
     @GetMapping("/mypage/boards")
     public String getMyBoards(Model model) {
         User user = userService.getCurrentUserInfo();
         try {
             List<Board> myBoards = myPageService.getMyBoards(user.getId());
-            // List<String> formattedDates = myBoards.stream()
-            //     .map(board -> formatDate(board.getCreatedDate()))
-            //     .collect(Collectors.toList());
             model.addAttribute("myBoards", myBoards);
             return "myboards";
-        } catch(MyPageService.MyBoardNotFoundException e) {
+        } catch (MyPageService.MyBoardNotFoundException e) {
             String errorMessage = "작성한 게시글이 없습니다";
             model.addAttribute("errorMessage", errorMessage);
             return "myboards";
@@ -68,21 +93,44 @@ public class MyPageController {
         String userId = user.getUserId();
         try {
             List<Like> likes = myPageService.getMyLikes(userId);
-            for(Like like : likes) {
-                log.info("MyPageController - getLikedBoards: 좋아요 boardId는 {}, id는 {}", like.getCompositeId().getBoardId(), like.getCompositeId().getId());
+            for (Like like : likes) {
+                log.info("MyPageController - getLikedBoards: 좋아요 boardId는 {}, id는 {}",
+                    like.getCompositeId().getBoardId(), like.getCompositeId().getId());
             }
             List<Board> likedBoards = myPageService.getMyLikedBoards(likes);
-            for(Board board: likedBoards) {
-                log.info("MyPageController - getLikedBoards: 좋아요 누른 게시글 boardId는 {}, id는 {}", board.getBoardId(), board.getId());
+            for (Board board : likedBoards) {
+                log.info("MyPageController - getLikedBoards: 좋아요 누른 게시글 boardId는 {}, id는 {}", board.getBoardId(),
+                    board.getId());
             }
             model.addAttribute("likedBoards", likedBoards);
             return "likedboards";
-        } catch(MyPageService.MyLikeNotFoundExcpetion e) {
+        } catch (MyPageService.MyLikeNotFoundExcpetion e) {
             String errorMessage = "좋아요를 누른 게시글이 없습니다";
             model.addAttribute("errorMessage", errorMessage);
             return "likedboards";
         }
-
     }
 
+    @GetMapping("/mypage/boards/commented")
+    public String getMyCommentedBoards(Model model) {
+        User user = userService.getCurrentUserInfo();
+        String id = user.getId();
+        try {
+            List<MyCommentedBoardsResponse> myCommentedBoards = myPageService.getMyCommentedBoards(id);
+            model.addAttribute("myCommentedBoards", myCommentedBoards);
+        } catch(MyPageService.MyCommentNotFoundException e) {
+            model.addAttribute("errorMessage", e.getMessage());
+        } catch (MyPageService.AuthorNotFoundException e) {
+            model.addAttribute("errorMessage", e.getMessage());
+        }
+        return "commentBoards";
+    }
+    @GetMapping("/mypage/arenas")
+    public String getMyArenas(Model model) {
+        User user = userService.getCurrentUserInfo();
+        String id = user.getId();
+        List<MyArenaResponse> myArenaDetails = myPageService.getMyArenaDetails(id);
+        model.addAttribute("myArenas", myArenaDetails);
+        return "myArenas";
+	}
 }

@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.DynamicInsert;
 import org.springframework.cglib.core.Local;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 
 import java.time.Duration;
@@ -20,6 +21,7 @@ import java.time.LocalTime;
 @Entity
 @NoArgsConstructor
 @DynamicInsert
+@EntityListeners(AuditingEntityListener.class)
 @Table(name = "user_cleared_board")
 public class Cleared {
 
@@ -56,12 +58,19 @@ public class Cleared {
         return clearTime;
     }
 
+    public LocalTime updateClearTime(Long seconds){
+        this.clearTime = LocalTime.ofSecondOfDay(seconds % (24 * 3600));
+        this.tries+=1;
+        return clearTime;
+    }
+
+
     public String getId(){
         return compositeId.getId();
     }
 
     public String getBoardId(){
-        return compositeId.getId();
+        return compositeId.getBoardId();
     }
 
     public void setId(String id){

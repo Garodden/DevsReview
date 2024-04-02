@@ -115,6 +115,14 @@ public class UserService {
 		return (id+"nickname");
 	}
 
+
+	public Optional<User> findOptionalUserById(String id) {
+		return userRepository.findOptionalUserById(id);
+	}
+	public User findById(String id){
+		return userRepository.findById(id).orElse(null);
+	}
+
 	// 임시 유저 정보 접근용
 	public static User getTemporalUserGet(){
 		return User.builder()
@@ -128,7 +136,7 @@ public class UserService {
 				.findPw("상동초").build();
 	}
 
-	public class UserNotFoundException extends RuntimeException {
+	public static class UserNotFoundException extends RuntimeException {
 		public UserNotFoundException(String message) {
 			super(message);
 		}
