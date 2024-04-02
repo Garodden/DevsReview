@@ -1,7 +1,10 @@
 package com.example.KeyboardArenaProject.service.user;
 
+import java.util.List;
 import java.util.Optional;
 
+import com.example.KeyboardArenaProject.entity.Comment;
+import com.example.KeyboardArenaProject.repository.CommentRepository;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.core.Authentication;
@@ -20,11 +23,13 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class UserService {
 	private final UserRepository userRepository;
+	private final CommentRepository commentRepository;
 	private final BCryptPasswordEncoder encoder;
 	private final MailSender mailSender;
 
-	public UserService(UserRepository userRepository, BCryptPasswordEncoder encoder, MailSender mailSender) {
+	public UserService(UserRepository userRepository, CommentRepository commentRepository, BCryptPasswordEncoder encoder, MailSender mailSender) {
 		this.userRepository = userRepository;
+		this.commentRepository = commentRepository;
 		this.encoder = encoder;
 		this.mailSender = mailSender;
 	}
@@ -114,6 +119,8 @@ public class UserService {
 	public void signout(String password, String confirmPassword) {
 		User currentUser = getCurrentUserInfo();
 		Optional<User> userOptional = userRepository.findById(currentUser.getId());
+		List<Comment> myComments = commentRepository.findAllByIdOrderByCreatedDateDesc(currentUser.getId());
+		log.info("조회된 코멘트 목록: {}", myComments);
 
 		if (userOptional.isPresent()) {
 			User user = userOptional.get();
@@ -132,6 +139,12 @@ public class UserService {
 			user.setIsActive(false);
 			user.setUserId(user.getUserId() + "(탈퇴)");
 			user.setNickname(user.getNickname() + "(탈퇴)");
+			// Comment 테이블의 nickname 변경
+			for (Comment comment : myComments) {
+				log.info("댓글 작성자: {}",comment.getNickName());
+				comment.setNickName(comment.getNickName() + "(탈퇴)");
+			}
+			commentRepository.saveAll(myComments);
 			userRepository.save(user);
 			log.info("사용자의 계정이 성공적으로 비활성화되었습니다. - {}", user.getUserId());
 		} else {
