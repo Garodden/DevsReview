@@ -57,15 +57,6 @@ tbody.btn btn-primary {
     padding: .275rem .5rem;
 }
 
-#rank-arena-exp {
-    color: #ff3459;
-}
-
-.top3-arena-exp {
-    color: #156458;
-
-}
-
 table {
     text-align: center; /* 테이블 전체의 텍스트를 가운데 정렬합니다. */
     border-collapse: collapse; /* 테이블의 셀 테두리를 합칩니다. */
@@ -78,4 +69,33 @@ table td {
 
 thead, tbody, tfoot {
     border-bottom: 2px solid #dee2e6; /* 테이블 헤더, 본문, 푸터의 하단에만 테두리를 추가합니다. */
+}
+
+/* 주간 랭킹 아레나에 대한 CSS */
+.rank-arena-row td:first-child:before {
+    content: "(주간) ";
+    color: #ff4162;
+    font-weight: bold;
+    margin-right: 5px; /* (주간)과 제목 사이의 여백 조정 */
+}
+
+/* 상위 3개 아레나 에 대한 CSS */
+.top3-arena-row td:first-child:before {
+    font-weight: bold;
+    margin-right: 5px; /* "top1", "top2", "top3"과 제목 사이의 여백 조정 */
+}
+
+.top1:before {
+    content: "top1 ";
+    color: green;
+}
+
+.top2:before {
+    content: "top2 ";
+    color: green;
+}
+
+.top3:before {
+    content: "top3 ";
+    color: green;
 }

@@ -59,37 +59,37 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="arena, index : ${rankArenas}">
-                <td th:text="'(주간)' +${arena.title}"></td>
+            <tr th:each="arena, index : ${rankArenas}" class="rank-arena-row">
+                <td th:text="${arena.title}"></td>
                 <td th:text="${arena.boardRank}"></td>
                 <td th:text="${#temporals.format(arena.createdDate, 'yyyy/MM/dd')}">created date</td>
                 <td th:text="${arena.participates}"></td>
                 <td th:text="${arena.comments}"></td>
                 <td th:text="${arena.likes}"></td>
                 <td>
-                    <a th:href="@{/arenas/{boardId}(boardId=${arena.boardId})}" class="btn btn-primary">보러가기</a>
+                    <a th:href="@{/arenas/{boardId}(boardId=${arena.boardId})}" class="btn btn-primary">참전하기</a>
                 </td>
             </tr>
-            <tr th:each="arena, index : ${top3Arenas}">
-                <td th:text="'상위3' + ${arena.title}"></td>
+            <tr th:each="arena, index : ${top3Arenas}" class="top3-arena-row">
+                <td th:text="${arena.title}" th:class="${index.index == 0 ? 'top1' : (index.index == 1 ? 'top2' : 'top3')}"></td>
                 <td th:text="${arena.boardRank}"></td>
                 <td th:text="${#temporals.format(arena.createdDate, 'yyyy/MM/dd')}">created date</td>
                 <td th:text="${arena.participates}"></td>
                 <td th:text="${arena.comments}"></td>
                 <td th:text="${arena.likes}"></td>
                 <td>
-                    <a th:href="@{/arenas/{boardId}(boardId=${arena.boardId})}" class="btn btn-primary">보러가기</a>
+                    <a th:href="@{/arenas/{boardId}(boardId=${arena.boardId})}" class="btn btn-primary">참전하기</a>
                 </td>
             </tr>
             <tr th:each="arena, index : ${otherNormalArenas}">
-                <td th:text="'나머지' + ${arena.title}"></td>
+                <td th:text="${arena.title}"></td>
                 <td th:text="${arena.boardRank}"></td>
                 <td th:text="${#temporals.format(arena.createdDate, 'yyyy/MM/dd')}">created date</td>
                 <td th:text="${arena.participates}"></td>
                 <td th:text="${arena.comments}"></td>
                 <td th:text="${arena.likes}"></td>
                 <td>
-                    <a th:href="@{/arenas/{boardId}(boardId=${arena.boardId})}" class="btn btn-primary">보러가기</a>
+                    <a th:href="@{/arenas/{boardId}(boardId=${arena.boardId})}" class="btn btn-primary">참전하기</a>
 
                 </td>
             </tr>
