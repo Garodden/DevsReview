@@ -9,30 +9,48 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="/css/index.css" th:href="@{/css/index.css}">
     <script defer src="/js/LogoutBtn.js"></script>
+    <style>
+        button {
+            border: 1px solid black;
+        }
+
+        #logoutButton {
+            margin-left: 10px;
+            border: none;
+            color: black;
+            background-color: #d9d9d9;
+        }
+        #navbar-nickname {
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
-<div class="p-5 mb-5 text-center</> bg-light">
-    <div class="title-with-navbar">
-        <h1 class="mb-3">Keyboard Arena</h1>
-        <!-- 탑 네비게이션 바 -->
-        <div class="navbar navbar-expand-lg navbar-light bg-light">
-            <button type="button" class="btn btn-primary" onclick="location.href='/mypage'" >마이페이지</button>
-            <button type="button" class="btn btn-secondary" id="logoutButton">로그아웃</button>
-            <div class="navbar-text" id="navbar-nickname" th:text="'&nbsp;&nbsp;' + ${userTopBarInfo.nickname} + '&nbsp;&nbsp;'"></div>
-            <div class="navbar-text" th:text="'Rank: ' + ${userTopBarInfo.rank} + '&nbsp;&nbsp;'"></div>
-            <div class="navbar-text" th:text="'Points: ' + ${userTopBarInfo.point}"></div>
-        </div>
-    </div>
+<!-- 탑 네비게이션 바 -->
+<div class="navbar navbar-expand-lg navbar-light bg-light">
+    <button type="button" class="btn btn-primary" onclick="location.href='/mypage'" >마이페이지</button>
+    <button type="button" class="btn btn-secondary" id="logoutButton">로그아웃</button>
+    <div class="navbar-text" id="navbar-nickname" th:text="'&nbsp;&nbsp;' + ${userTopBarInfo.nickname} + '&nbsp;&nbsp;'"></div>
+    <div class="navbar-text" th:text="'Rank: ' + ${userTopBarInfo.rank} + '&nbsp;&nbsp;'"></div>
+    <div class="navbar-text" th:text="'Points: ' + ${userTopBarInfo.point}"></div>
+</div>
 
+<div class="p-5 mb-5 text-center</> bg-light">
+    <h1 class="mb-3">Keyboard Arena</h1>
     <h4 class="mb-3">다른 사람들과 타자 속도를 겨뤄보세요</h4>
 
 </div>
 
 <main>
-    <button th:onclick="|location.href='@{/newFreeboard}'|">게시판 글 쓰기</button>
-    <button onclick="location.href='/arenas'">투기장</button>
-    <button onclick="location.href='/board'">자유게시판</button>
-    <button onclick="location.href='/mypage'">마이페이지</button>
+    <section class="write-menu">
+        <button th:onclick="|location.href='@{/newArena}'|">투기장 개장</button>
+        <button th:onclick="|location.href='@{/newFreeboard}'|">게시판 글 쓰기</button>
+    </section>
+    <section class="board-menu">
+        <button id="arena-list-button" onclick="location.href='/arenas'">투기장</button>
+        <button id="freeboard-list-button" onclick="location.href='/board'">자유게시판</button>
+    </section>
+
 
     <p>title</p>
     <p>created date</p>
