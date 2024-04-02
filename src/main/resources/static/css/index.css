@@ -1,0 +1,19 @@
+button {
+    border: 1px solid black;
+}
+
+#logoutButton {
+    margin-left: 10px;
+    border: none;
+    color: black;
+    background-color: #d9d9d9;
+}
+
+.title-with-navbar {
+    display: flex;
+    justify-content: space-between;
+}
+
+#navbar-nickname {
+    font-weight: bold;
+}

@@ -6,6 +6,7 @@ import com.example.KeyboardArenaProject.dto.freeBoard.FreeBoardResponse;
 import com.example.KeyboardArenaProject.dto.freeBoard.FreeBoardWriteRequest;
 import com.example.KeyboardArenaProject.dto.user.AddUserRequest;
 import com.example.KeyboardArenaProject.dto.user.UserResponse;
+import com.example.KeyboardArenaProject.dto.user.UserTopBarInfo;
 import com.example.KeyboardArenaProject.entity.Board;
 import com.example.KeyboardArenaProject.entity.Comment;
 import com.example.KeyboardArenaProject.entity.Like;
@@ -51,7 +52,8 @@ public class FreeBoardController {
     @GetMapping("/")
     public String indexPage(Model model){
         User user = userService.getCurrentUserInfo();
-        log.info("FreeBoardController-indexPage-현재 로그인한 유저 userId: {}", user.getUserId());
+        UserTopBarInfo userTopBarInfo = new UserTopBarInfo(user);
+        model.addAttribute("userTopBarInfo", userTopBarInfo);
         return "index";
     }
 
