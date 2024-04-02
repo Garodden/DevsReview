@@ -9,7 +9,8 @@ if (createButton) {
             },
             body: JSON.stringify({
                 title: document.getElementById('title').value,
-                content: document.getElementById('content').value
+                content: document.getElementById('content').value,
+                boardRank: document.getElementById('selectBoardRank').value
             }),
         })
             .then(response => response.text()) // 응답을 텍스트로 변환하여 boardId 추출

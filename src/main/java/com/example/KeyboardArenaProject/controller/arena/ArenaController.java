@@ -50,8 +50,10 @@ public class ArenaController {
         List<ArenaResponse> ArenaResponseList = arenaList.stream()
                 .map(ArenaResponse::new)
                 .toList();
+        UserTopBarInfo userTopBarInfo = new UserTopBarInfo(userService.getCurrentUserInfo());
 
         model.addAttribute("arenas", ArenaResponseList);
+        model.addAttribute("userTopBarInfo", userTopBarInfo);
 
         return "arenaList";
     }
@@ -130,6 +132,11 @@ public class ArenaController {
             return result.resultPopupText(false);
         }
         else {
+            if (curBoard.getBoardType() == 2){//주간랭크전일시
+
+
+        }
+
             List<Cleared> participantList = clearedService.findAllByBoardId(boardId);
             Long participantSize = (long) participantList.size();
             Long ranking = (long) clearedService.findRanking(participantList, curUser.getId());
@@ -168,7 +175,7 @@ public class ArenaController {
                 .id(curUser.getId())
                 .title(request.getTitle())
                 .content(strippedContent)
-                .board_rank(curUser.getUserRank())
+                .board_rank(request.getBoardRank())
                 .board_type(3)
                 .active(false)
                 .build();
@@ -222,7 +229,7 @@ public class ArenaController {
     @Operation(summary = "제작한 아레나 게시 전 검증 사이트 API", description = "유저가 해당 아레나를 클리어한 시간이 120초 이하면 아레나를 활성화시켜준다.")
     @PostMapping("/arena/{boardId}/verify")
     @ResponseBody
-    public String addNewArena(@PathVariable String boardId, @RequestParam String userTypedText) {
+    public String addNewArenaverify(@PathVariable String boardId, @RequestParam String userTypedText) {
 
         Board curBoard = arenaService.findByBoardId(boardId);
         User curUser = userService.getCurrentUserInfo();
