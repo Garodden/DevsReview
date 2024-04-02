@@ -50,6 +50,7 @@
         </div>
         <button type="submit" class="arena-submit-btn">제출</button>
     </form>
+    <button class="like-button"><img src="/media/like.svg" alt="좋아요 클릭" width="42"></button>
 
     <!-- 수치 정보 -->
     <div>
@@ -59,17 +60,18 @@
     </div>
 
     <!-- 댓글 리스트 -->
-    <div class="mt-3">
-        <h4>댓글</h4>
-        <ul>
-            <li th:each="comment : ${arena.commentResponses}">
-                <span th:text="${comment.nickname} + ': '"></span>
-                <span th:text="${comment.content}"></span>
-                <span th:text="|(${comment.createdTime})|"></span>
-            </li>
+    <details>
+        <summary>댓글</summary>
+        <ul th:each="comment,commentStat : ${comments}">
+            <li th:text="|${comment.nickName}/ ${commentWritersRanks.get(commentStat.index)}
+            ${comment.createdDate} ${comment.content}|"></li>
+            <input type="hidden" th:value="${comment.commentId}" id="comment-id">
+            <button th:if="${loginedId}==${comment.id}" id="delete-comment">댓글삭제</button>
         </ul>
-    </div>
-</div>
+        <textarea name="writeComment" id="write-comment" cols="20" rows="5"></textarea>
+        <button id="commit-comment">댓글등록</button>
+
+    </details>
 
 <script th:inline="javascript">
     var boardId = [[${arena.boardId}]];
