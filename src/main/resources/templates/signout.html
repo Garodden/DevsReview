@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>회원탈퇴</title>
+    <script defer src="/js/Signout.js"></script>
+</head>
+<body>
+
+<header>
+    <h1>Keyboard Arena</h1>
+    <h2>MyPage</h2>
+</header>
+
+<main>
+    <h2>회원 탈퇴</h2>
+    <h3>회원 탈퇴 시 계정은 비활성화 상태로 변경되며<br>
+        작성하신 게시물, 댓글은 삭제되지 않습니다.<br>
+        등록하신 닉네임은 닉네임(탈퇴)로 변경됩니다.</h3>
+    <p>회원 탈퇴 전 등록하신 비밀번호을 입력하세요</p>
+    <form id ="signoutUserForm" action="/mypage/delete" method="post">
+        <div>
+            <label for="password">비밀번호:</label>
+            <input type="password" id="password" name="password" required>
+        </div>
+        <div>
+            <label for="confirmPassword">비밀번호 확인:</label>
+            <input type="password" id="confirmPassword" name="confirmPassword" required>
+        </div>
+        <br>
+        <button type="submit">확인</button>
+        <a href="/mypage" th:href="@{/mypage}"><button type="button">취소</button></a>
+    </form>
+</main>
+
+</body>
+</html>
