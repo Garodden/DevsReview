@@ -41,19 +41,31 @@ public class ArenaController {
     @GetMapping("/arenas")
     public String showArena(Model model) {
 
-        List<Board> arenaList = arenaService.findAllRankArena();
-
-        arenaList.addAll(arenaService.findTop3ArenaOrderByLikes());
-
-        arenaList.addAll(arenaService.findNormalArenaOrderByCreatedDate());
-
-        List<ArenaResponse> ArenaResponseList = arenaList.stream()
-                .map(ArenaResponse::new)
-                .toList();
-        UserTopBarInfo userTopBarInfo = new UserTopBarInfo(userService.getCurrentUserInfo());
-
-        model.addAttribute("arenas", ArenaResponseList);
+        User user = userService.getCurrentUserInfo();
+        UserTopBarInfo userTopBarInfo = new UserTopBarInfo(user);
         model.addAttribute("userTopBarInfo", userTopBarInfo);
+
+        // 전체 랭크전 아레나
+        List<Board> arenaList = arenaService.findAllRankArena();
+        List<ArenaResponse> rankArenas = arenaList.stream()
+            .map(ArenaResponse::new)
+            .toList();
+
+        // 일반 아레나 상위 3개
+        List<Board> top3ArenaList = arenaService.findTop3ArenaOrderByLikes();
+        List<ArenaResponse> top3NormalArenas = top3ArenaList.stream()
+            .map(ArenaResponse::new)
+            .toList();
+
+        // 나머지 일반 아레나 생성일자 내림차순
+        List<Board> otherNormalArenaList = arenaService.findNormalArenaOrderByCreatedDate();
+        List<ArenaResponse> otherNormalArenas = otherNormalArenaList.stream()
+            .map(ArenaResponse::new)
+            .toList();
+
+        model.addAttribute("rankArenas", rankArenas);
+        model.addAttribute("top3Arenas", top3NormalArenas);
+        model.addAttribute("otherNormalArenas", otherNormalArenas);
 
         return "arenaList";
     }
