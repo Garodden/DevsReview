@@ -41,3 +41,41 @@
     cursor: pointer;
     /*margin-right: 40px;*/
 }
+
+#create-freeboard-button {
+    background-color: #676767;
+    padding: .275rem .5rem;
+    border: none;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+}
+
+#create-freeboard-button:hover {
+    box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+}
+
+tbody.btn btn-primary {
+    padding: .275rem .5rem;
+}
+
+#rank-arena-exp {
+    color: #ff3459;
+}
+
+.top3-arena-exp {
+    color: #156458;
+
+}
+
+table {
+    text-align: center; /* 테이블 전체의 텍스트를 가운데 정렬합니다. */
+    border-collapse: collapse; /* 테이블의 셀 테두리를 합칩니다. */
+}
+
+table th,
+table td {
+    text-align: center; /* 테이블의 각 셀의 텍스트를 가운데 정렬합니다. */
+}
+
+thead, tbody, tfoot {
+    border-bottom: 2px solid #dee2e6; /* 테이블 헤더, 본문, 푸터의 하단에만 테두리를 추가합니다. */
+}
