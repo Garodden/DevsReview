@@ -5,18 +5,16 @@ import com.example.KeyboardArenaProject.service.user.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
-@RequiredArgsConstructor
 public class Interceptor implements HandlerInterceptor {
-    private final UserService userService;
-    private final FreeBoardService freeBoardService;
-    private String boardId;
+
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        return false;
+        return HandlerInterceptor.super.preHandle(request, response, handler);
     }
 
     @Override
