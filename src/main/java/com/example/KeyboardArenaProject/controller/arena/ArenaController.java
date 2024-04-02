@@ -111,7 +111,7 @@ public class ArenaController {
     }
 
     @Operation(summary = "개별 아레나 참전.", description = "개별 아레나에 참전. 시작 시간과 비교하여 시간이 얼마나 걸렸는지 알려줌" +
-            "팝업 출력용 문자열 json으로 리턴.")
+            "팝업 출력용 문자열 json으로 리턴. 주간랭킹 첫 클리어시 1000포인트 지급")
     @PostMapping("/arenas/{boardId}")
     @ResponseBody
     public String checkArenaResult(@PathVariable String boardId, @RequestParam String userTypedText){
@@ -132,10 +132,10 @@ public class ArenaController {
             return result.resultPopupText(false);
         }
         else {
-            if (curBoard.getBoardType() == 2){//주간랭크전일시
 
-
-        }
+            if (curBoard.getBoardType() == 2&& clearedService.findIfUserClearDataExists(curKey)){//주간랭크전 첫 클리어시
+                userService.givePoints(curUser.getId(), 1000);
+            }
 
             List<Cleared> participantList = clearedService.findAllByBoardId(boardId);
             Long participantSize = (long) participantList.size();

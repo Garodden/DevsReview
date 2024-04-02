@@ -2,6 +2,7 @@ package com.example.KeyboardArenaProject.service.user;
 
 import java.util.Optional;
 
+import jakarta.transaction.Transactional;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.core.Authentication;
@@ -134,6 +135,14 @@ public class UserService {
 				.email("ormy@ormy.com")
 				.nickname("오르미")
 				.findPw("상동초").build();
+	}
+	@Transactional
+	public void givePoints(String userId, int points) {
+		User user = userRepository.findById(userId).orElse(null);
+
+		if(user!=null){
+			user.updatePoint(points);
+		}
 	}
 
 	public static class UserNotFoundException extends RuntimeException {
