@@ -1,5 +1,6 @@
 package com.example.KeyboardArenaProject.controller.freeBoard;
 
+import com.example.KeyboardArenaProject.config.InterceptorConfiguration;
 import com.example.KeyboardArenaProject.dto.freeBoard.FreeBoardRecieveForm;
 import com.example.KeyboardArenaProject.dto.freeBoard.FreeBoardResponse;
 import com.example.KeyboardArenaProject.dto.freeBoard.FreeBoardWriteRequest;
@@ -103,8 +104,9 @@ public class FreeBoardController {
     @GetMapping("/board")
     public String viewAllFreeBoard(Model model){
 
-        List<Board> freeboard = freeBoardService.findAllSortedFreeBoard();
-        model.addAttribute("freeboard",freeboard);
+        List<Board> freeboardList = freeBoardService.findAllSortedFreeBoard();
+        model.addAttribute("freeboard",freeboardList);
+        model.addAttribute("loginedUserRank",userService.getCurrentUserInfo().getUserRank());
 
         return "index";
     }
@@ -126,11 +128,11 @@ public class FreeBoardController {
         model.addAttribute("post",freeBoardService.findByBoardId(board_id));
         model.addAttribute("comments",commentService.findCommentsByBoardId(board_id));
         model.addAttribute("loginedId",userService.getCurrentUserInfo().getId());
-        List<Integer> commentWriters = new ArrayList<>();
+        List<Integer> commentWritersRank = new ArrayList<>();
         for (int i = 0; i < commentService.findCommentsByBoardId(board_id).size(); i++) {
-            commentWriters.add(userService.findById(commentService.findCommentsByBoardId(board_id).get(i).getId()).getUserRank());
+            commentWritersRank.add(userService.findById(commentService.findCommentsByBoardId(board_id).get(i).getId()).getUserRank());
         }
-        model.addAttribute("commentWritersRanks",commentWriters);
+        model.addAttribute("commentWritersRanks",commentWritersRank);
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(!authentication.getPrincipal().equals("anonymousUser")) {
@@ -138,6 +140,7 @@ public class FreeBoardController {
         }else{
             model.addAttribute("loginedUserId","");
         }
+
         return "freeboardDetail";
     }
 
@@ -149,41 +152,6 @@ public class FreeBoardController {
     }
 
     //좋아요
-    @ResponseBody
-    @PostMapping("/api/like")
-    public void like(@RequestParam String boardId,@RequestParam String id){
-        UserBoardCompositeKey userBoardCompositeKey = UserBoardCompositeKey.builder().id(id).boardId(boardId).build();
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(!authentication.getPrincipal().equals("anonymousUser")) {
-            int likes;
-            if(likeService.findById(userBoardCompositeKey)!=null){
-                if(!likeService.findById(userBoardCompositeKey).isIfLike()){
-                    likes = likeService.clickLikeOne(userBoardCompositeKey);
 
-                }else{
-                    likes = likeService.clickLikeTwo(userBoardCompositeKey);
-                }
-
-            }else{
-                likes = likeService.save(userBoardCompositeKey);
-            }
-            freeBoardService.updateBoardLikes(likes, userBoardCompositeKey.getBoardId());
-        }
-    }
-
-    //댓글
-    @PostMapping("/comments/{board_id}")
-    public String saveComment(@PathVariable String board_id,@RequestBody Map<String,String> content){
-        Comment comment = new Comment(board_id,content.get("content"), userService.getCurrentUserInfo().getId(),userService.getCurrentUserInfo().getNickname());
-        commentService.saveComment(comment);
-        return "redirect:/board/"+board_id;
-    }
-
-    @DeleteMapping("/comments/{comment_id}")
-    public String deleteComment(@PathVariable String comment_id){
-        String boardId = commentService.findCommentById(comment_id).getBoardId();
-        commentService.deleteComment(comment_id);
-        return "redirect:/board/"+boardId;
-    }
 
 }

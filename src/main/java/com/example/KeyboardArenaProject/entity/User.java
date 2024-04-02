@@ -121,4 +121,8 @@ public class User implements UserDetails {
 			.isActive(isActive)
 			.build();
 	}
+
+    public void updatePoint(int points) {
+		this.point+=points;
+    }
 }
