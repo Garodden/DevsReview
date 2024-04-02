@@ -48,6 +48,7 @@ public class LikeCommentController {
     public String saveComment(@PathVariable String board_id,@RequestBody Map<String,String> content){
         Comment comment = new Comment(board_id,content.get("content"), userService.getCurrentUserInfo().getId(),userService.getCurrentUserInfo().getNickname());
         commentService.saveComment(comment);
+        freeBoardService.plusCommentsCount(board_id);
         return "redirect:/board/"+board_id;
     }
 
@@ -55,5 +56,6 @@ public class LikeCommentController {
     public void deleteComment(@PathVariable String comment_id){
         String boardId = commentService.findCommentById(comment_id).getBoardId();
         commentService.deleteComment(comment_id);
+        freeBoardService.minusCommentsCount(boardId);
     }
 }

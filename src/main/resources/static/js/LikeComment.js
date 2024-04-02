@@ -27,11 +27,16 @@ commitCommentButton.addEventListener('click',()=>{
     }
 });
 
-const deleteCommentButton = document.getElementById('delete-comment');
+const deleteCommentButton = document.querySelectorAll('.delete-comment');
 
-deleteCommentButton.addEventListener('click',()=>{
-    let board_id = document.getElementById('board-id').value;
-    let commentId=document.getElementById('comment-id').value;
-    fetch(`/comments/${commentId}`,{method:'DELETE'})
-        .then(()=>location.replace(`/board/${board_id}`));
-})
+if(deleteCommentButton){
+    deleteCommentButton.forEach(btn=>{
+        btn.addEventListener('click',()=>{
+            let board_id = document.getElementById('board-id').value;
+            let commentId=btn.getAttribute('comment-id');
+            fetch(`/comments/${commentId}`,{method:'DELETE'})
+                .then(()=>location.replace(`/board/${board_id}`));
+        });
+    });
+
+}
