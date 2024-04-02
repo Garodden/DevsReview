@@ -12,4 +12,5 @@ import lombok.NoArgsConstructor;
 public class ArenaReceiveForm {
     private String title;
     private String content;
+    private int boardRank;
 }

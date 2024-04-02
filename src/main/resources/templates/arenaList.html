@@ -18,6 +18,12 @@
 <div class="p-5 mb-5 text-center</> bg-light">
     <h1 class="mb-3">Keyboard Arena</h1>
     <h4 class="mb-3">다른 사람들과 타자 속도를 겨뤄보세요</h4>
+    <div class="navbar navbar-expand-lg navbar-light bg-light">
+        <button type="button" onclick="location.href='/mypage'" class="btn btn-primary"th:text="${userTopBarInfo.nickname}">>내 페이지</button>
+        <div class="navbar-text" th:text="'Rank: ' + ${userTopBarInfo.rank}"></div>
+        <div class="navbar-text" th:text="'Points: ' + ${userTopBarInfo.point}"></div>
+
+    </div>
 </div>
 
 <div class="container">
