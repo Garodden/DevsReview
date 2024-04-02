@@ -151,7 +151,7 @@ public class FreeBoardController {
         return "updateFreeboard";
     }
 
-    //좋아요
+
 
 
 }
