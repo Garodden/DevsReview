@@ -2,19 +2,30 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Arena 목록</title>
+    <title>Keyboard Arena</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/index.css" th:href="@{/css/arena/ArenaList.css}">
 </head>
 <body>
+<!-- 탑 네비게이션 바 -->
+<div class="navbar navbar-expand-lg navbar-light bg-light">
+    <button type="button" class="btn btn-primary" onclick="location.href='/mypage'" >마이페이지</button>
+    <button type="button" class="btn btn-secondary" id="logoutButton">로그아웃</button>
+    <div class="navbar-text" id="navbar-nickname" th:text="'&nbsp;&nbsp;' + ${userTopBarInfo.nickname} + '&nbsp;&nbsp;'"></div>
+    <div class="navbar-text" th:text="'Rank: ' + ${userTopBarInfo.rank} + '&nbsp;&nbsp;'"></div>
+    <div class="navbar-text" th:text="'Points: ' + ${userTopBarInfo.point}"></div>
+</div>
 <div class="p-5 mb-5 text-center</> bg-light">
     <h1 class="mb-3">Keyboard Arena</h1>
     <h4 class="mb-3">다른 사람들과 타자 속도를 겨뤄보세요</h4>
 </div>
 
 <div class="container">
-    <button type="button" id="create-btn"
-            th:onclick="|location.href='@{/newArena}'|"
-            class="btn btn-secondary btn-sm mb-3">글 등록</button>
+    <div class="index-menu">
+        <h2 id="index-menu-arena" onclick="location.href='/arenas'">투기장</h2>
+        <h2 id="index-menu-freeboard" onclick="location.href='/board'">자유게시판</h2>
+    </div>
+    <button class="btn btn-secondary btn-sm mb-3" th:onclick="|location.href='@{/newArena}'|">투기장 개장</button>
 
     <div class="row-6" th:each="item :${arenas}">
         <div class="card">
@@ -27,9 +38,7 @@
         </div>
         <br>
     </div>
-
-    <button type="button" class="btn btn-secondary" onclick="location.href='/logout'">로그아웃</button>
 </div>
 
-<script src="/js/Arena.js"></script>
+<script src="/js/arena/Arena.js"></script>
 </body>

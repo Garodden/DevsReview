@@ -1,6 +1,7 @@
 package com.example.KeyboardArenaProject.controller.freeBoard;
 
 import com.example.KeyboardArenaProject.config.InterceptorConfiguration;
+import com.example.KeyboardArenaProject.dto.arena.ArenaResponse;
 import com.example.KeyboardArenaProject.dto.freeBoard.FreeBoardRecieveForm;
 import com.example.KeyboardArenaProject.dto.freeBoard.FreeBoardResponse;
 import com.example.KeyboardArenaProject.dto.freeBoard.FreeBoardWriteRequest;
@@ -14,6 +15,7 @@ import com.example.KeyboardArenaProject.entity.User;
 import com.example.KeyboardArenaProject.entity.compositeKey.UserBoardCompositeKey;
 import com.example.KeyboardArenaProject.service.CommentService;
 import com.example.KeyboardArenaProject.service.LikeService;
+import com.example.KeyboardArenaProject.service.arena.ArenaService;
 import com.example.KeyboardArenaProject.service.freeBoard.FreeBoardService;
 
 import com.example.KeyboardArenaProject.service.user.UserDetailService;
@@ -44,6 +46,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Controller
 public class FreeBoardController {
+    private final ArenaService arenaService;
     private final FreeBoardService freeBoardService;
     private final UserService userService;
     private final LikeService likeService;
@@ -54,6 +57,15 @@ public class FreeBoardController {
         User user = userService.getCurrentUserInfo();
         UserTopBarInfo userTopBarInfo = new UserTopBarInfo(user);
         model.addAttribute("userTopBarInfo", userTopBarInfo);
+
+        List<Board> arenaList = arenaService.findAllRankArena();
+        arenaList.addAll(arenaService.findTop3ArenaOrderByLikes());
+        arenaList.addAll(arenaService.findNormalArenaOrderByCreatedDate());
+        List<ArenaResponse> ArenaResponseList = arenaList.stream()
+            .map(ArenaResponse::new)
+            .toList();
+        model.addAttribute("arenas", ArenaResponseList);
+
         return "index";
     }
 
@@ -105,12 +117,14 @@ public class FreeBoardController {
 
     @GetMapping("/board")
     public String viewAllFreeBoard(Model model){
-
+        User user = userService.getCurrentUserInfo();
+        UserTopBarInfo userTopBarInfo = new UserTopBarInfo(user);
+        model.addAttribute("userTopBarInfo", userTopBarInfo);
         List<Board> freeboardList = freeBoardService.findAllSortedFreeBoard();
         model.addAttribute("freeboard",freeboardList);
         model.addAttribute("loginedUserRank",userService.getCurrentUserInfo().getUserRank());
 
-        return "index";
+        return "freeboardList";
     }
 
     @GetMapping("/board/{board_id}")

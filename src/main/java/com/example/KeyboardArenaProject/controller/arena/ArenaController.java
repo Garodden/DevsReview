@@ -40,6 +40,9 @@ public class ArenaController {
     @Operation(summary = "아레나 전체 보기", description = "주간 랭킹 아레나, 좋아요 top 3 아레나, 그리고 나머지 일반 아레나들을 순서대로 보여주는 API")
     @GetMapping("/arenas")
     public String showArena(Model model) {
+        User user = userService.getCurrentUserInfo();
+        UserTopBarInfo userTopBarInfo = new UserTopBarInfo(user);
+        model.addAttribute("userTopBarInfo", userTopBarInfo);
 
         List<Board> arenaList = arenaService.findAllRankArena();
 
