@@ -15,15 +15,17 @@ import java.util.stream.Collectors;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ArenaDetailResponse {
+public class BoardDetailResponse {
     UserTopBarInfo userTopBarInfo;
     String boardId;
     String title;
     String content;
     String writerNickname;
     String writerId;
+    int writerRank;
     int boardRank;
     LocalDateTime createdDate;
+    LocalDateTime updatedDate;
     boolean ifFirstTry;
     int participates;
     int comments;
@@ -32,16 +34,20 @@ public class ArenaDetailResponse {
     List<CommentResponse> commentResponses;
 
     @Builder
-    ArenaDetailResponse(User user, Board board, List<Comment> comment, int participates,boolean ifFirstTry, String writerNickname){
+    BoardDetailResponse(User user, Board board, List<Comment> comment, int participates, boolean ifFirstTry, String writerNickname, int writerRank){
         this.userTopBarInfo = new UserTopBarInfo(user);
         this.boardId = board.getBoardId();
         this.title = board.getTitle();
         this.content = board.getContent();
         this.ifFirstTry = ifFirstTry;
+
         this.writerNickname =writerNickname;
         this.writerId = board.getId();
+        this.writerRank = writerRank;
+
         this.boardRank = board.getBoardRank();
         this.createdDate = board.getCreatedDate();
+        this.updatedDate = board.getUpdatedDate();
         this.participates = participates;
         this.comments =board.getComments();
         this.likes = board.getLikes();
