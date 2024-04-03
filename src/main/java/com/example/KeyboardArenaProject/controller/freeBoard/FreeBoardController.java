@@ -1,12 +1,15 @@
 package com.example.KeyboardArenaProject.controller.freeBoard;
 
 
+import com.example.KeyboardArenaProject.dto.CommentResponse;
 import com.example.KeyboardArenaProject.dto.arena.BoardDetailResponse;
 import com.example.KeyboardArenaProject.dto.arena.ArenaResponse;
 import com.example.KeyboardArenaProject.dto.freeBoard.FreeBoardRecieveForm;
 import com.example.KeyboardArenaProject.dto.freeBoard.FreeBoardResponse;
 import com.example.KeyboardArenaProject.dto.freeBoard.FreeBoardWriteRequest;
+import com.example.KeyboardArenaProject.dto.user.UserTopBarInfo;
 import com.example.KeyboardArenaProject.entity.Board;
+import com.example.KeyboardArenaProject.entity.Comment;
 import com.example.KeyboardArenaProject.entity.User;
 import com.example.KeyboardArenaProject.service.CommentService;
 import com.example.KeyboardArenaProject.service.arena.ArenaService;
@@ -57,8 +60,12 @@ public class FreeBoardController {
             .map(ArenaResponse::new)
             .toList();
 
+        List<String> top3BoardIds = top3ArenaList.stream()
+            .map(Board::getBoardId)
+            .toList();
+
         // 나머지 일반 아레나 생성일자 내림차순
-        List<Board> otherNormalArenaList = arenaService.findNormalArenaOrderByCreatedDate();
+        List<Board> otherNormalArenaList = arenaService.findNormalArenaOrderByCreatedDate(top3BoardIds);
         List<ArenaResponse> otherNormalArenas = otherNormalArenaList.stream()
             .map(ArenaResponse::new)
             .toList();
@@ -111,9 +118,8 @@ public class FreeBoardController {
     }
 
     @DeleteMapping("/board/{board_id}")
-    public String deleteFreeBoard(@PathVariable String board_id){
+    public void deleteFreeBoard(@PathVariable String board_id){
         freeBoardService.deleteBoard(board_id);
-        return "redirect:/board";
     }
 
     @GetMapping("/board")
@@ -146,17 +152,16 @@ public class FreeBoardController {
             freeBoardService.saveIpAndId(clientIp, boardId,userService.getCurrentUserId());
             freeBoardService.plusView(boardId);
         }
-/*
+//
+        List<Comment> comments = commentService.findCommentsByBoardId(boardId);
         model.addAttribute("writer",freeBoardService.findWriter(boardId));
         model.addAttribute("post",freeBoardService.findByBoardId(boardId));
-        model.addAttribute("comments",commentService.findCommentsByBoardId(boardId));
+        model.addAttribute("comments", comments);
         model.addAttribute("loginedId",userService.getCurrentUserInfo().getId());
-        List<Integer> commentWritersRank = new ArrayList<>();
-        for (int i = 0; i < commentService.findCommentsByBoardId(boardId).size(); i++) {
-            commentWritersRank.add(userService.findById(commentService.findCommentsByBoardId(boardId).get(i).getId()).getUserRank());
-        }
-        model.addAttribute("commentWritersRanks",commentWritersRank);
-
+        //유저탑바
+        User user = userService.getCurrentUserInfo();
+        UserTopBarInfo userTopBarInfo = new UserTopBarInfo(user);
+        model.addAttribute("userTopBarInfo", userTopBarInfo);
 
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -165,7 +170,13 @@ public class FreeBoardController {
         }else{
             model.addAttribute("loginedUserId","");
         }
-*/
+        List<CommentResponse> commentResponseList = new ArrayList<>();
+        for(Comment comment: comments){
+            commentResponseList.add(new CommentResponse(comment.getNickName(),comment.getCommentId(),comment.getId()
+                    ,userService.findById(comment.getId()).getUserRank(),comment.getContent(),comment.getCreatedDate()));
+        }
+        model.addAttribute("commentResponses",commentResponseList);
+//
 
         //여기부터 내 코드
 
