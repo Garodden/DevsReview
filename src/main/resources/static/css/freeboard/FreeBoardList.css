@@ -66,6 +66,9 @@ table th,
 table td {
     text-align: center; /* 테이블의 각 셀의 텍스트를 가운데 정렬합니다. */
 }
+.table td{
+    vertical-align: middle;
+}
 
 thead, tbody, tfoot {
     border-bottom: 2px solid #dee2e6; /* 테이블 헤더, 본문, 푸터의 하단에만 테두리를 추가합니다. */
@@ -91,3 +94,25 @@ thead, tbody, tfoot {
     content: "top3 ";
     color: green;
 }
+
+.container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.first-line{
+    flex-direction: row;
+}
+.new-freeboard-title-input{
+    width: 450px;
+    height: 36px;
+    font-size: 24px;
+    display: inline-block;
+}
+
+.set-board-rank{
+    margin-left: 67px;
+    font-size: 24px;
+}
+
+
