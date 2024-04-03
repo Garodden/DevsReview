@@ -41,17 +41,31 @@ public class ArenaController {
     @GetMapping("/arenas")
     public String showArena(Model model) {
 
+        User user = userService.getCurrentUserInfo();
+        UserTopBarInfo userTopBarInfo = new UserTopBarInfo(user);
+        model.addAttribute("userTopBarInfo", userTopBarInfo);
+
+        // 전체 랭크전 아레나
         List<Board> arenaList = arenaService.findAllRankArena();
+        List<ArenaResponse> rankArenas = arenaList.stream()
+            .map(ArenaResponse::new)
+            .toList();
 
-        arenaList.addAll(arenaService.findTop3ArenaOrderByLikes());
+        // 일반 아레나 상위 3개
+        List<Board> top3ArenaList = arenaService.findTop3ArenaOrderByLikes();
+        List<ArenaResponse> top3NormalArenas = top3ArenaList.stream()
+            .map(ArenaResponse::new)
+            .toList();
 
-        arenaList.addAll(arenaService.findNormalArenaOrderByCreatedDate());
+        // 나머지 일반 아레나 생성일자 내림차순
+        List<Board> otherNormalArenaList = arenaService.findNormalArenaOrderByCreatedDate();
+        List<ArenaResponse> otherNormalArenas = otherNormalArenaList.stream()
+            .map(ArenaResponse::new)
+            .toList();
 
-        List<ArenaResponse> ArenaResponseList = arenaList.stream()
-                .map(ArenaResponse::new)
-                .toList();
-
-        model.addAttribute("arenas", ArenaResponseList);
+        model.addAttribute("rankArenas", rankArenas);
+        model.addAttribute("top3Arenas", top3NormalArenas);
+        model.addAttribute("otherNormalArenas", otherNormalArenas);
 
         return "arenaList";
     }
@@ -109,7 +123,7 @@ public class ArenaController {
     }
 
     @Operation(summary = "개별 아레나 참전.", description = "개별 아레나에 참전. 시작 시간과 비교하여 시간이 얼마나 걸렸는지 알려줌" +
-            "팝업 출력용 문자열 json으로 리턴.")
+            "팝업 출력용 문자열 json으로 리턴. 주간랭킹 첫 클리어시 1000포인트 지급")
     @PostMapping("/arenas/{boardId}")
     @ResponseBody
     public String checkArenaResult(@PathVariable String boardId, @RequestParam String userTypedText){
@@ -130,6 +144,11 @@ public class ArenaController {
             return result.resultPopupText(false);
         }
         else {
+
+            if (curBoard.getBoardType() == 2&& clearedService.findIfUserClearDataExists(curKey)){//주간랭크전 첫 클리어시
+                userService.givePoints(curUser.getId(), 1000);
+            }
+
             List<Cleared> participantList = clearedService.findAllByBoardId(boardId);
             Long participantSize = (long) participantList.size();
             Long ranking = (long) clearedService.findRanking(participantList, curUser.getId());
@@ -168,7 +187,7 @@ public class ArenaController {
                 .id(curUser.getId())
                 .title(request.getTitle())
                 .content(strippedContent)
-                .board_rank(curUser.getUserRank())
+                .board_rank(request.getBoardRank())
                 .board_type(3)
                 .active(false)
                 .build();
@@ -222,7 +241,7 @@ public class ArenaController {
     @Operation(summary = "제작한 아레나 게시 전 검증 사이트 API", description = "유저가 해당 아레나를 클리어한 시간이 120초 이하면 아레나를 활성화시켜준다.")
     @PostMapping("/arena/{boardId}/verify")
     @ResponseBody
-    public String addNewArena(@PathVariable String boardId, @RequestParam String userTypedText) {
+    public String addNewArenaverify(@PathVariable String boardId, @RequestParam String userTypedText) {
 
         Board curBoard = arenaService.findByBoardId(boardId);
         User curUser = userService.getCurrentUserInfo();

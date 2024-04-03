@@ -5,6 +5,7 @@ import java.util.List;
 import com.example.KeyboardArenaProject.dto.mypage.MyArenaResponse;
 import com.example.KeyboardArenaProject.dto.mypage.MyCommentedBoardsResponse;
 import com.example.KeyboardArenaProject.dto.user.ChangePwRequest;
+import com.example.KeyboardArenaProject.dto.user.DeleteUserRequest;
 import com.example.KeyboardArenaProject.dto.user.MyPageInformation;
 import com.example.KeyboardArenaProject.entity.Board;
 import com.example.KeyboardArenaProject.entity.Like;
@@ -69,6 +70,28 @@ public class MyPageController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("현재 비밀번호가 일치하지 않습니다.");
         } catch (MyPageService.NewPasswordMismatchException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("새로운 비밀번호와 새로운 비밀번호 확인 비밀번호가 일치하지 않습니다.");
+        }
+    }
+
+    @GetMapping("/mypage/signout")
+    public String showSignoutForm(Model model) {
+        String userId = userService.getCurrentUserId();
+        model.addAttribute("userId", userId);
+        return "signout";
+    }
+
+    @PostMapping("/mypage/signout")
+    public ResponseEntity<String> signout(@RequestBody DeleteUserRequest deleteUserRequest) {
+        try {
+            userService.signout(deleteUserRequest.getPassword(), deleteUserRequest.getConfirmPassword());
+            log.info("회원탈퇴가 성공적으로 처리되었습니다.");
+            return ResponseEntity.ok("회원탈퇴가 성공적으로 처리되었습니다.");
+        } catch (UserService.UserNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("사용자를 찾을 수 없습니다.");
+        } catch (UserService.PasswordMismatchException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("비밀번호가 일치하지 않습니다.");
+        } catch (UserService.ConfirmPasswordMismatchException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("비밀번호와 비밀번호 확인이 일치하지 않습니다.");
         }
     }
 
