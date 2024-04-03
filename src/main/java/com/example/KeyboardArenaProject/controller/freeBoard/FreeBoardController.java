@@ -1,5 +1,7 @@
 package com.example.KeyboardArenaProject.controller.freeBoard;
 
+
+import com.example.KeyboardArenaProject.dto.arena.BoardDetailResponse;
 import com.example.KeyboardArenaProject.dto.arena.ArenaResponse;
 import com.example.KeyboardArenaProject.dto.freeBoard.FreeBoardRecieveForm;
 import com.example.KeyboardArenaProject.dto.freeBoard.FreeBoardResponse;
@@ -26,6 +28,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import java.util.stream.Collectors;
+
 
 @Slf4j
 @RequiredArgsConstructor
@@ -121,28 +126,38 @@ public class FreeBoardController {
         return "freeboardList";
     }
 
-    @GetMapping("/board/{board_id}")
-    public String viewOneFreeBoard(@PathVariable String board_id,Model model,HttpServletRequest request){
+    @GetMapping("/board/{boardId}")
+    public String viewOneFreeBoard(@PathVariable String boardId, Model model, HttpServletRequest request){
         //ip
         String clientIp = request.getHeader("X-Forwarded-For");
 
         if (clientIp == null) {
             clientIp = request.getRemoteAddr();
         }
+        //현재 보드, 유저 정보
+        Board curFreeBoardInfo = freeBoardService.findByBoardId(boardId);
 
-        if(!freeBoardService.isContainsIpAndId(clientIp,board_id,userService.getCurrentUserId())){
-            freeBoardService.saveIpAndId(clientIp,board_id,userService.getCurrentUserId());
-            freeBoardService.plusView(board_id);
+        User curUser = userService.getCurrentUserInfo();
+
+        User writer = userService.findById(curFreeBoardInfo.getId());
+
+        //조회수 증가
+        if(!freeBoardService.isContainsIpAndId(clientIp, boardId,userService.getCurrentUserId())){
+            freeBoardService.saveIpAndId(clientIp, boardId,userService.getCurrentUserId());
+            freeBoardService.plusView(boardId);
         }
-        model.addAttribute("writer",freeBoardService.findWriter(board_id));
-        model.addAttribute("post",freeBoardService.findByBoardId(board_id));
-        model.addAttribute("comments",commentService.findCommentsByBoardId(board_id));
+/*
+        model.addAttribute("writer",freeBoardService.findWriter(boardId));
+        model.addAttribute("post",freeBoardService.findByBoardId(boardId));
+        model.addAttribute("comments",commentService.findCommentsByBoardId(boardId));
         model.addAttribute("loginedId",userService.getCurrentUserInfo().getId());
         List<Integer> commentWritersRank = new ArrayList<>();
-        for (int i = 0; i < commentService.findCommentsByBoardId(board_id).size(); i++) {
-            commentWritersRank.add(userService.findById(commentService.findCommentsByBoardId(board_id).get(i).getId()).getUserRank());
+        for (int i = 0; i < commentService.findCommentsByBoardId(boardId).size(); i++) {
+            commentWritersRank.add(userService.findById(commentService.findCommentsByBoardId(boardId).get(i).getId()).getUserRank());
         }
         model.addAttribute("commentWritersRanks",commentWritersRank);
+
+
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(!authentication.getPrincipal().equals("anonymousUser")) {
@@ -150,6 +165,29 @@ public class FreeBoardController {
         }else{
             model.addAttribute("loginedUserId","");
         }
+*/
+
+        //여기부터 내 코드
+
+        BoardDetailResponse postDetails = BoardDetailResponse
+                .builder()
+                .user(curUser)
+                .board(curFreeBoardInfo)
+                .ifFirstTry(true)
+                .comment(commentService.findCommentsByBoardId(boardId))
+                .participates(curFreeBoardInfo.getViews())
+                .writerNickname(writer.getNickname())
+                .writerRank(writer.getUserRank())
+                .build();
+
+        postDetails.setCommentResponses(postDetails.getCommentResponses().stream()
+                .peek(commentResponse->{
+                    String writerId = commentResponse.getWriterId();
+                    int writerRank = userService.findById(writerId).getUserRank();
+                    commentResponse.setWriterRank(writerRank);
+                }).collect(Collectors.toList()));
+
+        model.addAttribute("post", postDetails);
 
         return "freeboardDetail";
     }

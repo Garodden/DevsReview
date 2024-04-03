@@ -1,31 +1,41 @@
 const likeButton = document.querySelector('.like-button');
-likeButton.addEventListener('click',()=>{
-    let board_id = document.getElementById('board-id').value;
-    let id = document.getElementById('logined-id').value;
-    if(id !== ""){
-        fetch(`/api/like?boardId=${board_id}&id=${id}`,{method:'POST'})
-            .then(()=>location.replace(`/board/${board_id}`));
 
-    }
-});
+if(likeButton) {
+    likeButton.addEventListener('click', () => {
+        let boardId = document.getElementById('board-id').value;
+        let id = document.getElementById('logged-in-id').value;
+        if (id !== "") {
+            fetch(`/api/like?boardId=${boardId}&id=${id}`, {method: 'POST'})
+                .then(() => location.replace(`/board/${boardId}`));
+        }
+    });
+}
+else{
+    console.log("there's no like button! the value is null")
+}
 
 const commitCommentButton = document.getElementById('commit-comment');
-commitCommentButton.addEventListener('click',()=>{
-    let board_id = document.getElementById('board-id').value;
-    let content = document.getElementById('write-comment').value;
-    let id = document.getElementById('logined-id').value;
-    if(id !== ""){
-        fetch(`/comments/${board_id}`,{
-            method:'POST',
-            headers:{"Content-Type":"application/json"},
-            body:JSON.stringify({
-                "content":content
+if(commitCommentButton) {
+    commitCommentButton.addEventListener('click', () => {
+        let boardId = document.getElementById('board-id').value;
+        let content = document.getElementById('write-comment').value;
+        let id = document.getElementById('logged-in-id').value;
+        if (id !== "") {
+            fetch(`/comments/${boardId}`, {
+                method: 'POST',
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({
+                    "content": content
+                })
             })
-        })
-            .then(()=>location.replace(`/board/${board_id}`));
+                .then(() => location.replace(`/board/${boardId}`));
+        }
+    });
+}
+else{
+    console.log("there's no commit comment button! the value is null")
+}
 
-    }
-});
 
 const deleteCommentButton = document.querySelectorAll('.delete-comment');
 
@@ -38,5 +48,7 @@ if(deleteCommentButton){
                 .then(()=>location.replace(`/board/${board_id}`));
         });
     });
-
+}
+else{
+    console.log("there's no delete comment button! the value is null");
 }
