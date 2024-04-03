@@ -157,6 +157,11 @@ public class FreeBoardController {
         model.addAttribute("post",freeBoardService.findByBoardId(board_id));
         model.addAttribute("comments",commentService.findCommentsByBoardId(board_id));
         model.addAttribute("loginedId",userService.getCurrentUserInfo().getId());
+        //유저탑바
+        User user = userService.getCurrentUserInfo();
+        UserTopBarInfo userTopBarInfo = new UserTopBarInfo(user);
+        model.addAttribute("userTopBarInfo", userTopBarInfo);
+
         List<Integer> commentWritersRank = new ArrayList<>();
         for (int i = 0; i < commentService.findCommentsByBoardId(board_id).size(); i++) {
             commentWritersRank.add(userService.findById(commentService.findCommentsByBoardId(board_id).get(i).getId()).getUserRank());
