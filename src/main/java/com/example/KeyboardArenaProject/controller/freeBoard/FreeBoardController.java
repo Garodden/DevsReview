@@ -111,9 +111,8 @@ public class FreeBoardController {
     }
 
     @DeleteMapping("/board/{board_id}")
-    public String deleteFreeBoard(@PathVariable String board_id){
+    public void deleteFreeBoard(@PathVariable String board_id){
         freeBoardService.deleteBoard(board_id);
-        return "redirect:/board";
     }
 
     @GetMapping("/board")
@@ -151,6 +150,11 @@ public class FreeBoardController {
         model.addAttribute("post",freeBoardService.findByBoardId(boardId));
         model.addAttribute("comments",commentService.findCommentsByBoardId(boardId));
         model.addAttribute("loginedId",userService.getCurrentUserInfo().getId());
+        //유저탑바
+        User user = userService.getCurrentUserInfo();
+        UserTopBarInfo userTopBarInfo = new UserTopBarInfo(user);
+        model.addAttribute("userTopBarInfo", userTopBarInfo);
+
         List<Integer> commentWritersRank = new ArrayList<>();
         for (int i = 0; i < commentService.findCommentsByBoardId(boardId).size(); i++) {
             commentWritersRank.add(userService.findById(commentService.findCommentsByBoardId(boardId).get(i).getId()).getUserRank());
