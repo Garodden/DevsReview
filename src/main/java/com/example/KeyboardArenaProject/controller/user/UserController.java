@@ -43,9 +43,14 @@ public class UserController {
 			log.info("errors = \n{}", bindingResult);
 			return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
 		}
-		User user = userService.save(request);
-		return ResponseEntity.status(HttpStatus.CREATED)
-			.body(user.toResponse());
+		try {
+			User user = userService.save(request);
+			return ResponseEntity.status(HttpStatus.CREATED)
+				.body(user.toResponse());
+		} catch(IllegalArgumentException ex) {
+			return ResponseEntity.badRequest().body(ex.getMessage());
+		}
+
 	}
 
 	@GetMapping("/logout")
