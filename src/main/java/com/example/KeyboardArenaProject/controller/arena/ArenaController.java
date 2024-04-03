@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Tag(name = "아레나 CRUD")
 @Controller
@@ -52,6 +53,7 @@ public class ArenaController {
                 .toList();
         UserTopBarInfo userTopBarInfo = new UserTopBarInfo(userService.getCurrentUserInfo());
 
+
         model.addAttribute("arenas", ArenaResponseList);
         model.addAttribute("userTopBarInfo", userTopBarInfo);
 
@@ -64,29 +66,39 @@ public class ArenaController {
     public String showArenaDetails(@PathVariable String boardId, Model model) throws JsonProcessingException {
 
         Board arenaRawInfo = arenaService.findByBoardId(boardId);
-        User user = userService.getCurrentUserInfo();
+        User curUser = userService.getCurrentUserInfo();
+        User writer = userService.findById(arenaRawInfo.getId());
         UserBoardCompositeKey curKey = UserBoardCompositeKey
                 .builder()
-                .id(user.getId())
+                .id(curUser.getId())
                 .boardId(arenaRawInfo.getBoardId())
                 .build();
 
-        boolean ifFirstTry = false;
-        if(clearedService.findIfUserDataExists(curKey)&&clearedService.findIfUserClearDataExists(curKey)){
-            ifFirstTry = true;
-        }
-        ArenaDetailResponse arenaDetails = ArenaDetailResponse
+        //수정 필요
+        boolean ifFirstTry = clearedService.findIfUserDataExists(curKey) &&
+                clearedService.findIfUserClearDataExists(curKey);
+
+        BoardDetailResponse arenaDetails = BoardDetailResponse
                 .builder()
-                .user(user)
+                .user(curUser)
                 .board(arenaRawInfo)
                 .ifFirstTry(ifFirstTry)
                 .comment(commentService.findCommentsByBoardId(boardId))
                 .participates(clearedService.findParticipatesByBoardId(boardId))
-                .writer(userService.getNickNameById(arenaRawInfo.getId()))
+                .writerNickname(writer.getNickname())
+                .writerRank(writer.getUserRank())
                 .build();
-        model.addAttribute("arena", arenaDetails);
 
+        arenaDetails.setCommentResponses(arenaDetails.getCommentResponses().stream()
+                        .peek(commentResponse->{
+                            String writerId = commentResponse.getWriterId();
+                            int writerRank = userService.findById(writerId).getUserRank();
+                            commentResponse.setWriterRank(writerRank);
+        }).collect(Collectors.toList()));
+
+        model.addAttribute("arena", arenaDetails);
         return "arenaDetail";
+
     }
 
     @Operation(summary = "시작 시간 기록", description = "챌린지 시작 시간을 기록하는 용도, 시작 시간을 기록함")
@@ -101,7 +113,6 @@ public class ArenaController {
         //아니라면 새로운 기록 생성, 시간 기록 시작
         if(clearedService.findIfUserDataExists(curUsersClearRecord)){
             clearedService.updateStartTime(curUsersClearRecord);
-
         }
         else {
             clearedService.saveCleared(user.getId(), boardId);
@@ -151,6 +162,16 @@ public class ArenaController {
 
             return result.resultPopupText(true);
         }
+    }
+
+    @Operation(summary = "아레나 삭제 API", description = "아레나 boardId를 받고 삭제")
+    @GetMapping("/arenas/{boardId}")
+    @DeleteMapping("/arenas/{boardId}")
+    @ResponseBody
+    public ResponseEntity<Void> deleteArena(@PathVariable String boardId){
+        arenaService.deleteBy(boardId);
+        return ResponseEntity.ok().build();
+
     }
 
     @Operation(summary = "아레나 제작", description = "아레나 개장 페이지 get 메소드 API")
