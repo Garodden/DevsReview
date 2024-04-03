@@ -28,7 +28,11 @@ signUpBtn.addEventListener("click", () => {
         alert("입력한 정보의 형식을 확인해주세요.");
         return;
     }
-    signup();
+    if(isEmptyChecked && isIdChecked && isEmailChecked && isFieldChecked) {
+        signup();
+    } else {
+        alert("회원가입에 실패했습니다");
+    }
 })
 
 duplicateIdCheckButton.addEventListener("click", async () => {
@@ -40,8 +44,11 @@ duplicateIdCheckButton.addEventListener("click", async () => {
             return;
         } else if(!validateUserId(userId)) {
             document.getElementById("userId-error").innerText = "아이디는 6~12자 이내의 영문 또는 숫자 형식으로 입력해주세요.";
+            alert("아이디는 6~12자 이내의 영문 또는 숫자 형식으로 입력해주세요.");
             isFieldChecked = false;
             return;
+        } else {
+            document.getElementById("userId-error").innerText = "";
         }
         const response = await fetch('/user/find/id?userId=' + userId, {
             method: 'GET'
@@ -81,9 +88,12 @@ duplicateEmailCheckButton.addEventListener("click", async () => {
             alert("이메일을 입력하세요");
             return;
         } else if (!validateEmail(email)) {
-            alert("이메일 형식으로 입력하세요");
+            document.getElementById("email-error").innerText = "이메일 형식으로 입력해주세요.";
+            alert("이메일 형식으로 입력해주세요.");
             isFieldChecked = false;
             return;
+        } else {
+            document.getElementById("email-error").innerText = "";
         }
         const response = await fetch('/user/find/email?email=' + email, {
             method: 'GET'
@@ -139,29 +149,27 @@ function validateFields(){
     if (!validateUserId(userId)) {
         document.getElementById("userId-error").innerText = "아이디는 6~12자 이내의 영문 또는 숫자 형식으로 입력해주세요.";
         isFieldChecked = false;
-    } else {
+    } else if(validateUserId(userId)) {
         document.getElementById("userId-error").innerText = "";
-        isFieldChecked = true;
     }
     if (!validatePassword(password)) {
         document.getElementById("password-error").innerText = "비밀번호는 8~20자 이내의 영문, 숫자 또는 기호 형식으로 입력해주세요.";
         isFieldChecked = false;
-    } else {
+    } else if(validatePassword(password)) {
         document.getElementById("password-error").innerText = "";
-        isFieldChecked = true;
     }
     if (!validateUsername(nickname)) {
         document.getElementById("nickname-error").innerText = "유저네임은 3~12자 이내의 영문, 한글 또는 숫자 형식으로 입력해주세요.";
         isFieldChecked = false;
-    } else {
+    } else if(validateUsername(nickname)){
         document.getElementById("nickname-error").innerText = "";
-        isFieldChecked = true;
     }
     if (!validateEmail(email)) {
         document.getElementById("email-error").innerText = "이메일 형식으로 입력해주세요.";
         isFieldChecked = false;
-    } else {
+    } else if (validateEmail(email)) {
         document.getElementById("email-error").innerText = "";
+    } else {
         isFieldChecked = true;
     }
 }
