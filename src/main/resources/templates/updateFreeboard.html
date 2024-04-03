@@ -7,27 +7,42 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>자유게시판 수정하기</title>
     <script defer src="/js/common/LogoutBtn.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/freeboard/FreeBoardList.css" th:href="@{/css/freeboard/FreeBoardList.css}">
 </head>
 <body>
 <header>
-    <h1>Keyboard Arena</h1>
-    <ul>
-        <li th:text="${user.nickname}"></li>
-        <li th:text="${user.userRank}"></li>
-        <li th:text="${user.point}"></li>
-        <li><button type="button" id="logoutButton">로그아웃</button></li>
-    </ul>
+    <!-- 공통 헤더 start ======> -->
+    <div class="p-5 mb-5 text-center</> bg-light">
+        <!-- flex 적용을 위한 컨테이너 -->
+        <div class="title-navbar-container">
+            <!--서비스 이름-->
+            <h1 class="mb-3" onclick="location.href='/'">Keyboard Arena</h1>
+            <!-- 탑 네비게이션 바 -->
+            <div class="navbar navbar-expand-lg navbar-light bg-light">
+                <div class="navbar-text" id="navbar-nickname" th:text="${user.nickname} + '&nbsp;&nbsp;'"></div>
+                <div class="navbar-text" th:text="'Rank: ' + ${user.userRank} + '&nbsp;&nbsp;'"></div>
+                <div class="navbar-text" th:text="'Points: ' + ${user.point} + '&nbsp;&nbsp;'"></div>
+                <button type="button" class="btn btn-primary" onclick="location.href='/mypage'" >마이페이지</button>
+                <button type="button" class="btn btn-secondary" id="logoutButton">로그아웃</button>
+            </div>
+        </div>
+    </div>
+    <!-- ======> 공통 헤더 end -->
 </header>
-<main>
+<main class="main-container">
     <form th:action="@{/board/{board_id}(board_id=${post.boardId})}" th:method="put">
         <input type="hidden" name="_method" value="PUT">
-        <input type="text" name="title" placeholder="title" th:value="${post.title}">
-        <label for="selectBoardRank">open to : </label>
-        <select name="boardRank" id="selectBoardRank">
-            <option th:each="num : ${#numbers.sequence(1,user.userRank)}" th:text="${numStat.count}" th:value="${numStat.count}"></option>
-        </select>
-        <span>이상</span>
-        <button type="submit">수정</button>
+        <div class="first-line">
+            <input type="text" name="title" placeholder="title" th:value="${post.title}" class="new-freeboard-title-input">
+            <label for="selectBoardRank" class="set-board-rank">open to : </label>
+            <select name="boardRank" id="selectBoardRank">
+                <option th:each="num : ${#numbers.sequence(0,user.userRank)}" th:text="${numStat.index}" th:value="${numStat.index}" th:if="${num}!=${post.getBoardRank()}"></option>
+                <option th:text="${post.getBoardRank()}" th:value="${post.getBoardRank()}" selected></option>
+            </select>
+            <span>이상</span>
+            <button type="submit">수정</button>
+        </div>
         <textarea name="content" id="free-content" cols="100" rows="5" th:text="${post.content}"></textarea>
     </form>
 </main>
