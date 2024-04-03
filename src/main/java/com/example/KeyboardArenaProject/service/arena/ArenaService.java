@@ -2,6 +2,7 @@ package com.example.KeyboardArenaProject.service.arena;
 
 import com.example.KeyboardArenaProject.entity.Board;
 import com.example.KeyboardArenaProject.repository.ArenaRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -13,10 +14,10 @@ import java.util.List;
 @Service
 public class ArenaService {
     private ArenaRepository boardRepository;
-
-    public ArenaService(ArenaRepository boardRepository){
+    public ArenaService (ArenaRepository boardRepository){
         this.boardRepository = boardRepository;
     }
+
 
     public List<Board> findAllRankArena(){
         return boardRepository.findAllByBoardType(2);
@@ -33,7 +34,7 @@ public class ArenaService {
     }
 
     public List<Board> findNormalArenaOrderByCreatedDate(){
-        return boardRepository.findByBoardTypeOrderByCreatedDateDesc(2);
+        return boardRepository.findByBoardTypeOrderByCreatedDateDesc(3);
     }
     @Transactional
     public void saveArena(Board Arena){
@@ -44,5 +45,9 @@ public class ArenaService {
     public void updateActive(String boardId) {
         Board board = boardRepository.findByBoardId(boardId);
         board.updateToActive();
+    }
+
+    public void deleteBy(String boardId) {
+        boardRepository.deleteByBoardId(boardId);
     }
 }

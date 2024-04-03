@@ -1,6 +1,6 @@
 package com.example.KeyboardArenaProject.entity;
 
-import com.example.KeyboardArenaProject.utils.GenerateIdUtils;
+import com.example.KeyboardArenaProject.utils.user.GenerateIdUtils;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -9,7 +9,6 @@ import lombok.Setter;
 import org.hibernate.annotations.DynamicInsert;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 @Entity

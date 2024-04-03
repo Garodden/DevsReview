@@ -14,10 +14,12 @@ import lombok.Setter;
 @NoArgsConstructor
 public class UserTopBarInfo {
     String nickname;
+    String id;
     int rank;
     int point;
     public UserTopBarInfo(User user){
         this.nickname = user.getNickname();
+        this.id = user.getId();
         this.rank = user.getUserRank();
         this.point = user.getPoint();
     }

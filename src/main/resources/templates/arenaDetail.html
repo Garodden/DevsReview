@@ -2,6 +2,9 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Arena 상세보기</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
     <noscript>
@@ -17,38 +20,36 @@
         }
     </style>
 
-    <script defer src="/js/Arena.js"></script>
-    <script defer src="/js/LikeComment.js"></script>
 
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
 </head>
 
 <body>
 
 <!-- 탑 네비게이션 바 -->
-<div class="navbar navbar-expand-lg navbar-light bg-light">
+<header class="navbar navbar-expand-lg navbar-light bg-light">
     <button type="button" onclick="location.href='/mypage'" class="btn btn-primary"th:text="${arena.userTopBarInfo.nickname}">>내 페이지</button>
     <div class="navbar-text" th:text="'Rank: ' + ${arena.userTopBarInfo.rank}"></div>
     <div class="navbar-text" th:text="'Points: ' + ${arena.userTopBarInfo.point}"></div>
 
-</div>
+</header>
 
 <!-- 본문 내용 -->
-<div class="container mt-5">
+<main class="container mt-5">
     <h2 th:text="${arena.title}"></h2>
-    <h5 th:text="'작성자: ' + ${arena.writer}"></h5>
+    <h5 th:text="'작성자: ' + ${arena.writerNickname}"></h5>
+    <h5 th:text = "'랭크' + ${arena.writerRank}"></h5>
     <h6 th:text="'작성일: ' + ${arena.createdDate}"></h6>
     <h6 th:text="'게시판 랭킹: ' + ${arena.boardRank}"></h6>
-
     <p th:text="${arena.content}"></p>
+
+    <input type="hidden" id="logged-in-id" th:value="${arena.userTopBarInfo.id}" >
+    <input type="hidden" id="board-id" th:value="${arena.boardId}">
 
     <button th:if="${arena.ifFirstTry} ==true" type="button" id="start-button" class="btn btn-primary btn-sm">시작</button>
     <button th:if="${arena.ifFirstTry} == false" type="button" id="retry-button" class="btn btn-primary btn-sm">재시도</button>
     <p id="start-time" style="display: none;"></p>
     <!-- 콘텐트 입력창 -->
-
+    <button th:if="${arena.userTopBarInfo.id}==${arena.writerId}" id="delete-arena-button">아레나 삭제</button>
 
     <form id="user-typed-content" style="display:none;">
         <div class="form-group">
@@ -71,22 +72,29 @@
     <!-- 댓글 리스트 -->
     <details>
         <summary>댓글</summary>
-        <ul th:each="comment,commentStat : ${comments}">
-            <li th:text="|${comment.nickName}/ ${commentWritersRanks.get(commentStat.index)}
-            ${comment.createdDate} ${comment.content}|"></li>
-            <input type="hidden" th:value="${comment.commentId}" id="comment-id">
-            <button th:if="${loginedId}==${comment.id}" id="delete-comment">댓글삭제</button>
+        <ul th:each="comment : ${arena.commentResponses}">
+            <li>
+                <span th:text = "${comment.nickname}" class ="comment-box-element"></span>
+                <span th:text = "${comment.content}" class ="comment-box-element"></span>
+                <span th:text = " ${comment.createdDate}" class ="comment-box-element"></span>
+                <span th:text = " ${comment.content}" class ="comment-box-element"></span>
+                <input type="hidden" th:value="${comment.commentId}" id="comment-id">
+                <button th:if="${arena.userTopBarInfo.id}==${comment.writerId}" class="delete-comment">댓글삭제</button>
+            </li>
         </ul>
+        <label for="write-comment"></label>
         <textarea name="writeComment" id="write-comment" cols="20" rows="5"></textarea>
         <button id="commit-comment">댓글등록</button>
-
     </details>
 
-    <script th:inline="javascript">
-        var boardId = [[${arena.boardId}]];
-    </script>
-</div>
-</body>
+</main>
+<script defer src="/js/Arena.js"></script>
+<script defer src="/js/LikeComment.js"></script>
 
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+
+</body>
 
 </html>
