@@ -60,8 +60,12 @@ public class FreeBoardController {
             .map(ArenaResponse::new)
             .toList();
 
+        List<String> top3BoardIds = top3ArenaList.stream()
+            .map(Board::getBoardId)
+            .toList();
+
         // 나머지 일반 아레나 생성일자 내림차순
-        List<Board> otherNormalArenaList = arenaService.findNormalArenaOrderByCreatedDate();
+        List<Board> otherNormalArenaList = arenaService.findNormalArenaOrderByCreatedDate(top3BoardIds);
         List<ArenaResponse> otherNormalArenas = otherNormalArenaList.stream()
             .map(ArenaResponse::new)
             .toList();
