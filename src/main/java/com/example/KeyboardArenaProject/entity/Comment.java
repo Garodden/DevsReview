@@ -1,5 +1,6 @@
 package com.example.KeyboardArenaProject.entity;
 
+import com.example.KeyboardArenaProject.dto.CommentResponse;
 import com.example.KeyboardArenaProject.utils.user.GenerateIdUtils;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -59,5 +60,6 @@ public class Comment {
         this.nickName=nickname;
         this.createdDate=LocalDateTime.now();
     }
+
 
 }

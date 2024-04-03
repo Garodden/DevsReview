@@ -1,12 +1,15 @@
 package com.example.KeyboardArenaProject.controller.freeBoard;
 
 
+import com.example.KeyboardArenaProject.dto.CommentResponse;
 import com.example.KeyboardArenaProject.dto.arena.BoardDetailResponse;
 import com.example.KeyboardArenaProject.dto.arena.ArenaResponse;
 import com.example.KeyboardArenaProject.dto.freeBoard.FreeBoardRecieveForm;
 import com.example.KeyboardArenaProject.dto.freeBoard.FreeBoardResponse;
 import com.example.KeyboardArenaProject.dto.freeBoard.FreeBoardWriteRequest;
+import com.example.KeyboardArenaProject.dto.user.UserTopBarInfo;
 import com.example.KeyboardArenaProject.entity.Board;
+import com.example.KeyboardArenaProject.entity.Comment;
 import com.example.KeyboardArenaProject.entity.User;
 import com.example.KeyboardArenaProject.service.CommentService;
 import com.example.KeyboardArenaProject.service.arena.ArenaService;
@@ -145,22 +148,16 @@ public class FreeBoardController {
             freeBoardService.saveIpAndId(clientIp, boardId,userService.getCurrentUserId());
             freeBoardService.plusView(boardId);
         }
-/*
+//
+        List<Comment> comments = commentService.findCommentsByBoardId(boardId);
         model.addAttribute("writer",freeBoardService.findWriter(boardId));
         model.addAttribute("post",freeBoardService.findByBoardId(boardId));
-        model.addAttribute("comments",commentService.findCommentsByBoardId(boardId));
+        model.addAttribute("comments", comments);
         model.addAttribute("loginedId",userService.getCurrentUserInfo().getId());
         //유저탑바
         User user = userService.getCurrentUserInfo();
         UserTopBarInfo userTopBarInfo = new UserTopBarInfo(user);
         model.addAttribute("userTopBarInfo", userTopBarInfo);
-
-        List<Integer> commentWritersRank = new ArrayList<>();
-        for (int i = 0; i < commentService.findCommentsByBoardId(boardId).size(); i++) {
-            commentWritersRank.add(userService.findById(commentService.findCommentsByBoardId(boardId).get(i).getId()).getUserRank());
-        }
-        model.addAttribute("commentWritersRanks",commentWritersRank);
-
 
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -169,7 +166,13 @@ public class FreeBoardController {
         }else{
             model.addAttribute("loginedUserId","");
         }
-*/
+        List<CommentResponse> commentResponseList = new ArrayList<>();
+        for(Comment comment: comments){
+            commentResponseList.add(new CommentResponse(comment.getNickName(),comment.getCommentId(),comment.getId()
+                    ,userService.findById(comment.getId()).getUserRank(),comment.getContent(),comment.getCreatedDate()));
+        }
+        model.addAttribute("commentResponses",commentResponseList);
+//
 
         //여기부터 내 코드
 
