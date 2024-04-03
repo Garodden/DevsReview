@@ -1,4 +1,4 @@
-package com.example.KeyboardArenaProject.utils;
+package com.example.KeyboardArenaProject.utils.user;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

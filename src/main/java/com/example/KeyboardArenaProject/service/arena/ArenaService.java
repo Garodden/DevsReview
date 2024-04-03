@@ -33,7 +33,7 @@ public class ArenaService {
     }
 
     public List<Board> findNormalArenaOrderByCreatedDate(){
-        return boardRepository.findByBoardTypeOrderByCreatedDateDesc(2);
+        return boardRepository.findByBoardTypeOrderByCreatedDateDesc(3);
     }
     @Transactional
     public void saveArena(Board Arena){

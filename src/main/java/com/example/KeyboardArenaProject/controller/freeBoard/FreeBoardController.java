@@ -1,46 +1,31 @@
 package com.example.KeyboardArenaProject.controller.freeBoard;
 
-import com.example.KeyboardArenaProject.config.InterceptorConfiguration;
 import com.example.KeyboardArenaProject.dto.arena.ArenaResponse;
 import com.example.KeyboardArenaProject.dto.freeBoard.FreeBoardRecieveForm;
 import com.example.KeyboardArenaProject.dto.freeBoard.FreeBoardResponse;
 import com.example.KeyboardArenaProject.dto.freeBoard.FreeBoardWriteRequest;
-import com.example.KeyboardArenaProject.dto.user.AddUserRequest;
-import com.example.KeyboardArenaProject.dto.user.UserResponse;
-import com.example.KeyboardArenaProject.dto.user.UserTopBarInfo;
 import com.example.KeyboardArenaProject.entity.Board;
-import com.example.KeyboardArenaProject.entity.Comment;
-import com.example.KeyboardArenaProject.entity.Like;
 import com.example.KeyboardArenaProject.entity.User;
-import com.example.KeyboardArenaProject.entity.compositeKey.UserBoardCompositeKey;
 import com.example.KeyboardArenaProject.service.CommentService;
-import com.example.KeyboardArenaProject.service.LikeService;
 import com.example.KeyboardArenaProject.service.arena.ArenaService;
 import com.example.KeyboardArenaProject.service.freeBoard.FreeBoardService;
 
-import com.example.KeyboardArenaProject.service.user.UserDetailService;
 import com.example.KeyboardArenaProject.service.user.UserService;
-import io.micrometer.common.util.StringUtils;
+import com.example.KeyboardArenaProject.utils.user.UserTopBarInfoUtil;
+
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
-import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -49,14 +34,11 @@ public class FreeBoardController {
     private final ArenaService arenaService;
     private final FreeBoardService freeBoardService;
     private final UserService userService;
-    private final LikeService likeService;
     private final CommentService commentService;
 
     @GetMapping("/")
     public String indexPage(Model model){
-        User user = userService.getCurrentUserInfo();
-        UserTopBarInfo userTopBarInfo = new UserTopBarInfo(user);
-        model.addAttribute("userTopBarInfo", userTopBarInfo);
+        model.addAttribute("userTopBarInfo", UserTopBarInfoUtil.getUserTopBarInfo());
 
         // 전체 랭크전 아레나
         List<Board> arenaList = arenaService.findAllRankArena();
@@ -131,9 +113,7 @@ public class FreeBoardController {
 
     @GetMapping("/board")
     public String viewAllFreeBoard(Model model){
-        User user = userService.getCurrentUserInfo();
-        UserTopBarInfo userTopBarInfo = new UserTopBarInfo(user);
-        model.addAttribute("userTopBarInfo", userTopBarInfo);
+        model.addAttribute("userTopBarInfo", UserTopBarInfoUtil.getUserTopBarInfo());
         List<Board> freeboardList = freeBoardService.findAllSortedFreeBoard();
         model.addAttribute("freeboard",freeboardList);
         model.addAttribute("loginedUserRank",userService.getCurrentUserInfo().getUserRank());
@@ -180,8 +160,4 @@ public class FreeBoardController {
         model.addAttribute("post", freeBoardService.findByBoardId(board_id));
         return "updateFreeboard";
     }
-
-
-
-
 }

@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 import com.example.KeyboardArenaProject.dto.user.AddUserRequest;
 import com.example.KeyboardArenaProject.entity.User;
 import com.example.KeyboardArenaProject.repository.UserRepository;
-import com.example.KeyboardArenaProject.utils.GeneratePwUtils;
+import com.example.KeyboardArenaProject.utils.user.GeneratePwUtils;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -36,6 +36,13 @@ public class UserService {
 	}
 
 	public User save(AddUserRequest dto) {
+
+		if (userRepository.existsByUserId(dto.getUserId())) {
+			throw new IllegalArgumentException("이미 사용 중인 아이디입니다.");
+		}
+		if (userRepository.existsByEmail(dto.getEmail())) {
+			throw new IllegalArgumentException("이미 사용 중인 이메일입니다.");
+		}
 		return userRepository.save(
 			User.builder()
 				.userId(dto.getUserId())
