@@ -10,6 +10,7 @@ import com.example.KeyboardArenaProject.service.CommentService;
 import com.example.KeyboardArenaProject.service.arena.ArenaService;
 import com.example.KeyboardArenaProject.service.user.ClearedService;
 import com.example.KeyboardArenaProject.service.user.UserService;
+import com.example.KeyboardArenaProject.utils.user.UserTopBarInfoUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -40,10 +41,7 @@ public class ArenaController {
     @Operation(summary = "아레나 전체 보기", description = "주간 랭킹 아레나, 좋아요 top 3 아레나, 그리고 나머지 일반 아레나들을 순서대로 보여주는 API")
     @GetMapping("/arenas")
     public String showArena(Model model) {
-
-        User user = userService.getCurrentUserInfo();
-        UserTopBarInfo userTopBarInfo = new UserTopBarInfo(user);
-        model.addAttribute("userTopBarInfo", userTopBarInfo);
+        model.addAttribute("userTopBarInfo", UserTopBarInfoUtil.getUserTopBarInfo());
 
         // 전체 랭크전 아레나
         List<Board> arenaList = arenaService.findAllRankArena();
