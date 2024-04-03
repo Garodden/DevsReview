@@ -1,16 +1,20 @@
 package com.example.KeyboardArenaProject.controller.freeBoard;
 
+
 import com.example.KeyboardArenaProject.dto.arena.BoardDetailResponse;
+import com.example.KeyboardArenaProject.dto.arena.ArenaResponse;
 import com.example.KeyboardArenaProject.dto.freeBoard.FreeBoardRecieveForm;
 import com.example.KeyboardArenaProject.dto.freeBoard.FreeBoardResponse;
 import com.example.KeyboardArenaProject.dto.freeBoard.FreeBoardWriteRequest;
 import com.example.KeyboardArenaProject.entity.Board;
 import com.example.KeyboardArenaProject.entity.User;
 import com.example.KeyboardArenaProject.service.CommentService;
-import com.example.KeyboardArenaProject.service.LikeService;
+import com.example.KeyboardArenaProject.service.arena.ArenaService;
 import com.example.KeyboardArenaProject.service.freeBoard.FreeBoardService;
 
 import com.example.KeyboardArenaProject.service.user.UserService;
+import com.example.KeyboardArenaProject.utils.user.UserTopBarInfoUtil;
+
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 
@@ -24,21 +28,45 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import java.util.stream.Collectors;
+
 
 @Slf4j
 @RequiredArgsConstructor
 @Controller
 public class FreeBoardController {
+    private final ArenaService arenaService;
     private final FreeBoardService freeBoardService;
     private final UserService userService;
-    private final LikeService likeService;
     private final CommentService commentService;
 
     @GetMapping("/")
     public String indexPage(Model model){
-        User user = userService.getCurrentUserInfo();
-        log.info("FreeBoardController-indexPage-현재 로그인한 유저 userId: {}", user.getUserId());
+        model.addAttribute("userTopBarInfo", UserTopBarInfoUtil.getUserTopBarInfo());
+
+        // 전체 랭크전 아레나
+        List<Board> arenaList = arenaService.findAllRankArena();
+        List<ArenaResponse> rankArenas = arenaList.stream()
+            .map(ArenaResponse::new)
+            .toList();
+
+        // 일반 아레나 상위 3개
+        List<Board> top3ArenaList = arenaService.findTop3ArenaOrderByLikes();
+        List<ArenaResponse> top3NormalArenas = top3ArenaList.stream()
+            .map(ArenaResponse::new)
+            .toList();
+
+        // 나머지 일반 아레나 생성일자 내림차순
+        List<Board> otherNormalArenaList = arenaService.findNormalArenaOrderByCreatedDate();
+        List<ArenaResponse> otherNormalArenas = otherNormalArenaList.stream()
+            .map(ArenaResponse::new)
+            .toList();
+
+        model.addAttribute("rankArenas", rankArenas);
+        model.addAttribute("top3Arenas", top3NormalArenas);
+        model.addAttribute("otherNormalArenas", otherNormalArenas);
+
         return "index";
     }
 
@@ -90,12 +118,12 @@ public class FreeBoardController {
 
     @GetMapping("/board")
     public String viewAllFreeBoard(Model model){
-
+        model.addAttribute("userTopBarInfo", UserTopBarInfoUtil.getUserTopBarInfo());
         List<Board> freeboardList = freeBoardService.findAllSortedFreeBoard();
         model.addAttribute("freeboard",freeboardList);
         model.addAttribute("loginedUserRank",userService.getCurrentUserInfo().getUserRank());
 
-        return "index";
+        return "freeboardList";
     }
 
     @GetMapping("/board/{boardId}")
@@ -170,8 +198,4 @@ public class FreeBoardController {
         model.addAttribute("post", freeBoardService.findByBoardId(board_id));
         return "updateFreeboard";
     }
-
-    //좋아요
-
-
 }

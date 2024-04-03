@@ -1,8 +1,7 @@
 package com.example.KeyboardArenaProject.entity;
 
-import com.example.KeyboardArenaProject.dto.arena.ArenaResponse;
 import com.example.KeyboardArenaProject.dto.freeBoard.FreeBoardResponse;
-import com.example.KeyboardArenaProject.utils.GenerateIdUtils;
+import com.example.KeyboardArenaProject.utils.user.GenerateIdUtils;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -7,9 +7,8 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Keyboard Arena</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="/css/index.css" th:href="@{/css/index.css}">
+    <link rel="stylesheet" type="text/css" href="/css/freeboard/FreeBoardList.css" th:href="@{/css/freeboard/FreeBoardList.css}">
     <script defer src="/js/common/LogoutBtn.js"></script>
-    <script src="/js/arena/Arena.js"></script>
 </head>
 <body>
 <header>
@@ -39,58 +38,38 @@
             <h2 id="index-menu-freeboard" onclick="location.href='/board'">자유게시판</h2>
         </div>
 
-        <table class="table table-borderless" th:if="${rankArenas}">
+        <table class="table table-borderless" th:if="${freeboard}">
             <thead>
             <tr>
-                <td colspan="6"></td>
+                <td colspan="5"></td>
                 <td>
-                    <button id="create-arena-button" class="btn btn-primary" th:onclick="|location.href='@{/newArena}'|">투기장 개장</button>
+                    <button id="create-freeboard-button" class="btn btn-primary" th:onclick="|location.href='@{/newFreeboard}'|">게시판 글쓰기</button>
                 </td>
             </tr>
             <tr>
-                <th scope="col">Arena</th>
-                <th scope="col">rank</th>
+                <th scope="col">게시글</th>
                 <th scope="col">created date</th>
-                <th scope="col">참가자</th>
+                <th scope="col">조회수</th>
                 <th scope="col">댓글</th>
                 <th scope="col">likes</th>
-                <!--참전하기 버튼용 공백 칼럼-->
+                <!--글쓰기 버튼용 공백 칼럼-->
                 <th scope="col"></th>
             </tr>
             </thead>
             <tbody>
-            <tr th:each="arena, index : ${rankArenas}" class="rank-arena-row">
-                <td th:text="${arena.title}"></td>
-                <td th:text="${arena.boardRank}"></td>
-                <td th:text="${#temporals.format(arena.createdDate, 'yyyy/MM/dd')}">created date</td>
-                <td th:text="${arena.participates}"></td>
-                <td th:text="${arena.comments}"></td>
-                <td th:text="${arena.likes}"></td>
+            <tr th:each="board, index : ${freeboard}" class="top3-freeboard-row">
                 <td>
-                    <a th:href="@{/arenas/{boardId}(boardId=${arena.boardId})}" class="btn btn-primary">참전하기</a>
+                    <span th:if="${index.index == 0}" class="top1" style="font-weight: bold; color: green;">top1 </span>
+                    <span th:if="${index.index == 1}" class="top2" style="font-weight: bold; color: green;">top2 </span>
+                    <span th:if="${index.index == 2}" class="top3" style="font-weight: bold; color: green;">top3 </span>
+                    <span th:text="${board.title}"></span>
                 </td>
-            </tr>
-            <tr th:each="arena, index : ${top3Arenas}" class="top3-arena-row">
-                <td th:text="${arena.title}" th:class="${index.index == 0 ? 'top1' : (index.index == 1 ? 'top2' : 'top3')}"></td>
-                <td th:text="${arena.boardRank}"></td>
-                <td th:text="${#temporals.format(arena.createdDate, 'yyyy/MM/dd')}">created date</td>
-                <td th:text="${arena.participates}"></td>
-                <td th:text="${arena.comments}"></td>
-                <td th:text="${arena.likes}"></td>
+                <td th:text="${#temporals.format(board.createdDate, 'yyyy/MM/dd')}"></td>
+                <td th:text="${board.views}"></td>
+                <td th:text="${board.comments}"></td>
+                <td th:text="${board.likes}"></td>
                 <td>
-                    <a th:href="@{/arenas/{boardId}(boardId=${arena.boardId})}" class="btn btn-primary">참전하기</a>
-                </td>
-            </tr>
-            <tr th:each="arena, index : ${otherNormalArenas}">
-                <td th:text="${arena.title}"></td>
-                <td th:text="${arena.boardRank}"></td>
-                <td th:text="${#temporals.format(arena.createdDate, 'yyyy/MM/dd')}">created date</td>
-                <td th:text="${arena.participates}"></td>
-                <td th:text="${arena.comments}"></td>
-                <td th:text="${arena.likes}"></td>
-                <td>
-                    <a th:href="@{/arenas/{boardId}(boardId=${arena.boardId})}" class="btn btn-primary">참전하기</a>
-
+                    <a th:href="@{/board/{boardId}(boardId=${board.boardId})}" class="btn btn-primary">보러가기</a>
                 </td>
             </tr>
             </tbody>

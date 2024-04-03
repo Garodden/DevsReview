@@ -11,7 +11,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.example.KeyboardArenaProject.dto.user.UserResponse;
-import com.example.KeyboardArenaProject.utils.GenerateIdUtils;
+import com.example.KeyboardArenaProject.utils.user.GenerateIdUtils;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -28,10 +28,10 @@ import jakarta.persistence.Table;
 public class User implements UserDetails {
 	@Getter
 	@Id
-	@Column(name="id", updatable = false)
+	@Column(name="id", unique = true, updatable = false)
 	private String id;
 
-	@Column(name="user_id", nullable = false)
+	@Column(name="user_id", unique = true, nullable = false)
 	private String userId;
 
 	@Column(name="password", nullable = false)
@@ -46,7 +46,7 @@ public class User implements UserDetails {
 	@Column(name="point")
 	private int point;
 
-	@Column(name="email", nullable = false)
+	@Column(name="email", unique = true, nullable = false)
 	private String email;
 
 	@Column(name="find_pw", nullable = false)

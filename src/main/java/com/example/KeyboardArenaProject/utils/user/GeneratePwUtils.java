@@ -1,4 +1,4 @@
-package com.example.KeyboardArenaProject.utils;
+package com.example.KeyboardArenaProject.utils.user;
 
 import org.apache.commons.lang3.RandomStringUtils;
 

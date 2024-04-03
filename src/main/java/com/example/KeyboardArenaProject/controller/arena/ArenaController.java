@@ -10,6 +10,7 @@ import com.example.KeyboardArenaProject.service.CommentService;
 import com.example.KeyboardArenaProject.service.arena.ArenaService;
 import com.example.KeyboardArenaProject.service.user.ClearedService;
 import com.example.KeyboardArenaProject.service.user.UserService;
+import com.example.KeyboardArenaProject.utils.user.UserTopBarInfoUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -41,21 +42,30 @@ public class ArenaController {
     @Operation(summary = "아레나 전체 보기", description = "주간 랭킹 아레나, 좋아요 top 3 아레나, 그리고 나머지 일반 아레나들을 순서대로 보여주는 API")
     @GetMapping("/arenas")
     public String showArena(Model model) {
+        model.addAttribute("userTopBarInfo", UserTopBarInfoUtil.getUserTopBarInfo());
 
+        // 전체 랭크전 아레나
         List<Board> arenaList = arenaService.findAllRankArena();
 
-        arenaList.addAll(arenaService.findTop3ArenaOrderByLikes());
+        List<ArenaResponse> rankArenas = arenaList.stream()
+            .map(ArenaResponse::new)
+            .toList();
 
-        arenaList.addAll(arenaService.findNormalArenaOrderByCreatedDate());
+        // 일반 아레나 상위 3개
+        List<Board> top3ArenaList = arenaService.findTop3ArenaOrderByLikes();
+        List<ArenaResponse> top3NormalArenas = top3ArenaList.stream()
+            .map(ArenaResponse::new)
+            .toList();
 
-        List<ArenaResponse> ArenaResponseList = arenaList.stream()
-                .map(ArenaResponse::new)
-                .toList();
-        UserTopBarInfo userTopBarInfo = new UserTopBarInfo(userService.getCurrentUserInfo());
+        // 나머지 일반 아레나 생성일자 내림차순
+        List<Board> otherNormalArenaList = arenaService.findNormalArenaOrderByCreatedDate();
+        List<ArenaResponse> otherNormalArenas = otherNormalArenaList.stream()
+            .map(ArenaResponse::new)
+            .toList();
 
-
-        model.addAttribute("arenas", ArenaResponseList);
-        model.addAttribute("userTopBarInfo", userTopBarInfo);
+        model.addAttribute("rankArenas", rankArenas);
+        model.addAttribute("top3Arenas", top3NormalArenas);
+        model.addAttribute("otherNormalArenas", otherNormalArenas);
 
         return "arenaList";
     }

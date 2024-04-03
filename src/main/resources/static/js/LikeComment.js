@@ -35,15 +35,20 @@ if(commitCommentButton) {
 else{
     console.log("there's no commit comment button! the value is null")
 }
-const deleteCommentButton = document.getElementById('delete-comment');
-if(deleteCommentButton) {
-    deleteCommentButton.addEventListener('click', () => {
-        let boardId = document.getElementById('board-id').value;
-        let commentId = document.getElementById('comment-id').value;
-        fetch(`/comments/${commentId}`, {method: 'DELETE'})
-            .then(() => location.replace(`/board/${boardId}`));
+
+
+const deleteCommentButton = document.querySelectorAll('.delete-comment');
+
+if(deleteCommentButton){
+    deleteCommentButton.forEach(btn=>{
+        btn.addEventListener('click',()=>{
+            let board_id = document.getElementById('board-id').value;
+            let commentId=btn.getAttribute('comment-id');
+            fetch(`/comments/${commentId}`,{method:'DELETE'})
+                .then(()=>location.replace(`/board/${board_id}`));
+        });
     });
 }
 else{
-    console.log("there's no delete comment button! the value is null")
+    console.log("there's no delete comment button! the value is null");
 }
