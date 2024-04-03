@@ -6,7 +6,7 @@ if(likeButton) {
         let id = document.getElementById('logged-in-id').value;
         if (id !== "") {
             fetch(`/api/like?boardId=${boardId}&id=${id}`, {method: 'POST'})
-                .then(() => location.replace(`/board/${boardId}`));
+                .then(() => location.reload(true));
         }
     });
 }
@@ -28,7 +28,7 @@ if(commitCommentButton) {
                     "content": content
                 })
             })
-                .then(() => location.replace(`/board/${boardId}`));
+                .then(() => location.reload());
         }
     });
 }
@@ -45,7 +45,7 @@ if(deleteCommentButton){
             let board_id = document.getElementById('board-id').value;
             let commentId=btn.getAttribute('comment-id');
             fetch(`/comments/${commentId}`,{method:'DELETE'})
-                .then(()=>location.replace(`/board/${board_id}`));
+                .then(()=>location.reload());
         });
     });
 }
