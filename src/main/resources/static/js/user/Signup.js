@@ -35,16 +35,90 @@ signUpBtn.addEventListener("click", () => {
     }
 })
 
-duplicateIdCheckButton.addEventListener("click", async () => {
+duplicateIdCheckButton.addEventListener("click",  (e) => checkDuplicateId());
+duplicateEmailCheckButton.addEventListener("click", (e) => checkDuplicateEmail());
+
+function checkIfValueIsEmpty() {
+    const userId = document.getElementById("userId").value.trim();
+    const password = document.getElementById("password").value.trim();
+    const nickname = document.getElementById("nickname").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const findPw = document.getElementById("findPw").value.trim();
+    const findPwQuestion = document.getElementById("findPwQuestion").value;
+
+    if (!userId || !password || !nickname || !email || !findPw || !findPwQuestion) {
+        isEmptyChecked = false;
+    } else if(userId && password && nickname && email && findPw && findPwQuestion) {
+        isEmptyChecked = true
+    }
+}
+
+function validateFields(){
+    let userId = document.getElementById("userId").value;
+    let password = document.getElementById("password").value;
+    let nickname = document.getElementById("nickname").value;
+    let email = document.getElementById("email").value;
+
+    isFieldChecked = true;
+    if (!validateUserId(userId)) {
+        document.getElementById("userId-error").innerText = "아이디는 4~12자 이내의 영문 또는 숫자 형식으로 입력해주세요.";
+        isFieldChecked = false;
+    } else if(validateUserId(userId)) {
+        document.getElementById("userId-error").innerText = "";
+    }
+    if (!validatePassword(password)) {
+        document.getElementById("password-error").innerText = "비밀번호는 8~20자 이내의 영문, 숫자 또는 기호 형식으로 입력해주세요.";
+        isFieldChecked = false;
+    } else if(validatePassword(password)) {
+        document.getElementById("password-error").innerText = "";
+    }
+    if (!validateUsername(nickname)) {
+        document.getElementById("nickname-error").innerText = "유저네임은 3~12자 이내의 영문, 한글 또는 숫자 형식으로 입력해주세요.";
+        isFieldChecked = false;
+    } else if(validateUsername(nickname)){
+        document.getElementById("nickname-error").innerText = "";
+    }
+    if (!validateEmail(email)) {
+        document.getElementById("email-error").innerText = "이메일 형식으로 입력해주세요.";
+        isFieldChecked = false;
+    } else if (validateEmail(email)) {
+        document.getElementById("email-error").innerText = "";
+    }
+}
+
+function validateUserId(userId) {
+    // 4~12자 이내 영문 또는 숫자 형식
+    const regex = /^[a-zA-Z0-9]{4,12}$/;
+    return regex.test(userId);
+}
+
+function validatePassword(password) {
+    // 8~16자 이내의 영문, 숫자 또는 기호 형식
+    const regex = /^[a-zA-Z0-9!@#$%^&*()\-_=+[\]{};:'",.<>/?]{8,20}$/;
+    return regex.test(password);
+}
+
+function validateUsername(username) {
+    // 3~12자 이내의 문자 또는 숫자 형식
+    const regex = /^[a-zA-Z0-9가-힣]{3,12}$/;
+    return regex.test(username);
+}
+
+function validateEmail(email) {
+    // 이메일 형식
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(email);
+}
+
+async function checkDuplicateId() {
     var userId = document.getElementById("userId").value.trim();
-    console.log("userId:", userId)
     try {
-        if(userId === "") {
+        if (userId === "") {
             alert("아이디를 입력하세요");
             return;
-        } else if(!validateUserId(userId)) {
-            document.getElementById("userId-error").innerText = "아이디는 6~12자 이내의 영문 또는 숫자 형식으로 입력해주세요.";
-            alert("아이디는 6~12자 이내의 영문 또는 숫자 형식으로 입력해주세요.");
+        } else if (!validateUserId(userId)) {
+            document.getElementById("userId-error").innerText = "아이디는 4~12자 이내의 영문 또는 숫자 형식으로 입력해주세요.";
+            alert("아이디는 4~12자 이내의 영문 또는 숫자 형식으로 입력해주세요.");
             isFieldChecked = false;
             return;
         } else {
@@ -78,11 +152,10 @@ duplicateIdCheckButton.addEventListener("click", async () => {
         alert("중복 확인에 실패했습니다. 다시 시도해주세요.");
         isIdChecked = false;
     }
-});
+}
 
-duplicateEmailCheckButton.addEventListener("click", async () => {
+async function checkDuplicateEmail() {
     var email = document.getElementById("email").value.trim();
-    console.log("email:", email)
     try {
         if(email === "") {
             alert("이메일을 입력하세요");
@@ -119,85 +192,10 @@ duplicateEmailCheckButton.addEventListener("click", async () => {
             isEmailChecked = true;
         }
     } catch (error) {
-        console.error('Error checking duplicate email:', error);
         alert("중복 확인에 실패했습니다. 다시 시도해주세요.");
         isEmailChecked = false;
     }
-});
-
-function checkIfValueIsEmpty() {
-    const userId = document.getElementById("userId").value.trim();
-    const password = document.getElementById("password").value.trim();
-    const nickname = document.getElementById("nickname").value.trim();
-    const email = document.getElementById("email").value.trim();
-    const findPw = document.getElementById("findPw").value.trim();
-    const findPwQuestion = document.getElementById("findPwQuestion").value;
-
-    if (!userId || !password || !nickname || !email || !findPw || !findPwQuestion) {
-        isEmptyChecked = false;
-    } else if(userId && password && nickname && email && findPw && findPwQuestion) {
-        isEmptyChecked = true
-    }
 }
-
-function validateFields(){
-    let userId = document.getElementById("userId").value;
-    let password = document.getElementById("password").value;
-    let nickname = document.getElementById("nickname").value;
-    let email = document.getElementById("email").value;
-
-    if (!validateUserId(userId)) {
-        document.getElementById("userId-error").innerText = "아이디는 6~12자 이내의 영문 또는 숫자 형식으로 입력해주세요.";
-        isFieldChecked = false;
-    } else if(validateUserId(userId)) {
-        document.getElementById("userId-error").innerText = "";
-    }
-    if (!validatePassword(password)) {
-        document.getElementById("password-error").innerText = "비밀번호는 8~20자 이내의 영문, 숫자 또는 기호 형식으로 입력해주세요.";
-        isFieldChecked = false;
-    } else if(validatePassword(password)) {
-        document.getElementById("password-error").innerText = "";
-    }
-    if (!validateUsername(nickname)) {
-        document.getElementById("nickname-error").innerText = "유저네임은 3~12자 이내의 영문, 한글 또는 숫자 형식으로 입력해주세요.";
-        isFieldChecked = false;
-    } else if(validateUsername(nickname)){
-        document.getElementById("nickname-error").innerText = "";
-    }
-    if (!validateEmail(email)) {
-        document.getElementById("email-error").innerText = "이메일 형식으로 입력해주세요.";
-        isFieldChecked = false;
-    } else if (validateEmail(email)) {
-        document.getElementById("email-error").innerText = "";
-    } else {
-        isFieldChecked = true;
-    }
-}
-
-function validateUserId(userId) {
-    // 6~12자 이내 영문 또는 숫자 형식
-    const regex = /^[a-zA-Z0-9]{6,12}$/;
-    return regex.test(userId);
-}
-
-function validatePassword(password) {
-    // 8~16자 이내의 영문, 숫자 또는 기호 형식
-    const regex = /^[a-zA-Z0-9!@#$%^&*()\-_=+[\]{};:'",.<>/?]{8,20}$/;
-    return regex.test(password);
-}
-
-function validateUsername(username) {
-    // 3~12자 이내의 문자 또는 숫자 형식
-    const regex = /^[a-zA-Z0-9가-힣]{3,12}$/;
-    return regex.test(username);
-}
-
-function validateEmail(email) {
-    // 이메일 형식
-    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return regex.test(email);
-}
-
 function signup() {
     var select = document.getElementById("findPwQuestion").value;
     switch (select) {
@@ -220,14 +218,6 @@ function signup() {
         findPw: document.getElementById("findPw").value
     };
 
-    console.log(formData.userId);
-    console.log(formData.password);
-    console.log(formData.nickname);
-    console.log(formData.email);
-    console.log(formData.findPwQuestion);
-    console.log(formData.findPw);
-
-
     fetch('/user', {
         method: 'POST',
         headers: {
@@ -236,7 +226,6 @@ function signup() {
         body: JSON.stringify(formData)
     })
         .then(response => {
-            console.log(response);
             if (response.ok) {
                 alert('회원가입이 완료되었습니다.');
                 window.location.href = '/login'; // 회원가입 완료 후 로그인 페이지로 이동
