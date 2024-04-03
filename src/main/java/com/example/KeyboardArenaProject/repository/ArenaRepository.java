@@ -22,6 +22,8 @@ public interface ArenaRepository extends JpaRepository<Board, String> {
 
     // rest of the normal arena
     List<Board> findByBoardTypeOrderByCreatedDateDesc(int type);
+
+    void deleteByBoardId(String boardId);
 }
 
 
