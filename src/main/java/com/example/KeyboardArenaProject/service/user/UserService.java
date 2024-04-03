@@ -2,11 +2,15 @@ package com.example.KeyboardArenaProject.service.user;
 
 import java.util.Optional;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.PersistenceUnit;
 import jakarta.transaction.Transactional;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.parameters.P;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +28,8 @@ public class UserService {
 	private final BCryptPasswordEncoder encoder;
 	private final MailSender mailSender;
 
+	@PersistenceContext
+	EntityManager entityManager;
 	public UserService(UserRepository userRepository, BCryptPasswordEncoder encoder, MailSender mailSender) {
 		this.userRepository = userRepository;
 		this.encoder = encoder;
@@ -41,6 +47,28 @@ public class UserService {
 				.findPwQuestion(dto.getFindPwQuestion())
 				.build()
 		);
+	}
+
+	public void updateRank(){
+		String sql ="UPDATE user u \n" +
+				"JOIN (\n" +
+				"    SELECT \n" +
+				"        uc.user_id, \n" +
+				"        SUM(uc.rank / uc.total_users)+1 AS rank_score\n" +
+				"    FROM (\n" +
+				"        SELECT \n" +
+				"            user_id, \n" +
+				"            board_id, \n" +
+				"            RANK() OVER (PARTITION BY board_id ORDER BY clear_time ASC) AS rank, \n" +
+				"            COUNT(*) OVER (PARTITION BY board_id) AS total_users\n" +
+				"        FROM user_cleared_board\n" +
+				"        WHERE board_id IN (SELECT board_id FROM board WHERE board_type = 2)\n" +
+				"    ) AS uc\n" +
+				"    GROUP BY uc.user_id\n" +
+				") AS scores ON u.id = scores.user_id\n" +
+				"SET u.user_rank = ROUND(scores.rank_score);";
+
+		entityManager.createNativeQuery(sql).executeUpdate();
 	}
 
 	// 현재 로그인한 유저 정보 조회
@@ -111,9 +139,15 @@ public class UserService {
 		}
 	}
 
-	//임시 유저 닉네임 제공 함수
 	public String getNickNameById(String id){
-		return (id+"nickname");
+		Optional<User> user = userRepository.findById(id);
+		if(user.isPresent()) {
+			return user.get().getNickname();
+		}
+		else{
+			return "user not found";
+		}
+
 	}
 
 
@@ -124,18 +158,7 @@ public class UserService {
 		return userRepository.findById(id).orElse(null);
 	}
 
-	// 임시 유저 정보 접근용
-	public static User getTemporalUserGet(){
-		return User.builder()
-				.userId("user_1111_1111")
-				.auth(" ")
-				.findPwQuestion("내가 다녔던 초등학교 는?")
-				.userId("1111")
-				.password("1111")
-				.email("ormy@ormy.com")
-				.nickname("오르미")
-				.findPw("상동초").build();
-	}
+
 	@Transactional
 	public void givePoints(String userId, int points) {
 		User user = userRepository.findById(userId).orElse(null);
