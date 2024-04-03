@@ -93,9 +93,9 @@ public class ArenaController {
                 .boardId(arenaRawInfo.getBoardId())
                 .build();
 
-        //수정 필요
-        boolean ifFirstTry = clearedService.findIfUserDataExists(curKey) &&
-                clearedService.findIfUserClearDataExists(curKey);
+
+        boolean ifFirstTry = !(clearedService.findIfUserDataExists(curKey) &&
+                clearedService.findIfUserClearDataExists(curKey));
 
         BoardDetailResponse arenaDetails = BoardDetailResponse
                 .builder()
