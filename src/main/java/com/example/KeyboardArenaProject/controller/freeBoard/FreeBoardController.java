@@ -160,8 +160,4 @@ public class FreeBoardController {
         model.addAttribute("post", freeBoardService.findByBoardId(board_id));
         return "updateFreeboard";
     }
-
-
-
-
 }
