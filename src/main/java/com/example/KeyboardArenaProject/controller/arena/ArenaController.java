@@ -77,6 +77,10 @@ public class ArenaController {
     public String showArenaDetails(@PathVariable String boardId, Model model) throws JsonProcessingException {
 
         Board arenaRawInfo = arenaService.findByBoardId(boardId);
+
+        if(!arenaRawInfo.getIfActive()){
+            return "redirect:/arena/"+boardId+"/verify";
+        }
         User curUser = userService.getCurrentUserInfo();
         User writer = userService.findById(arenaRawInfo.getId());
         UserBoardCompositeKey curKey = UserBoardCompositeKey
@@ -108,6 +112,8 @@ public class ArenaController {
         }).collect(Collectors.toList()));
 
         model.addAttribute("arena", arenaDetails);
+
+
         return "arenaDetail";
 
     }
@@ -219,7 +225,6 @@ public class ArenaController {
     @Operation(summary = "제작한 아레나 활성화 전 검증 사이트 API", description = "아레나 개장 Post 메소드 API")
     @GetMapping("/arena/{boardId}/verify")
     public String addNewArena(@PathVariable String boardId, Model model ) {
-
         User currentUser = userService.getCurrentUserInfo();
         Board currentBoard = arenaService.findByBoardId(boardId);
 
