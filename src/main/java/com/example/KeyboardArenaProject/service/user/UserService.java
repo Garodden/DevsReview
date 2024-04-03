@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 import com.example.KeyboardArenaProject.dto.user.AddUserRequest;
 import com.example.KeyboardArenaProject.entity.User;
 import com.example.KeyboardArenaProject.repository.UserRepository;
-import com.example.KeyboardArenaProject.utils.GeneratePwUtils;
+import com.example.KeyboardArenaProject.utils.user.GeneratePwUtils;
 
 import lombok.extern.slf4j.Slf4j;
 

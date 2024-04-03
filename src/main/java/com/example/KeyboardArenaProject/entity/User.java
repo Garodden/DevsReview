@@ -11,7 +11,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.example.KeyboardArenaProject.dto.user.UserResponse;
-import com.example.KeyboardArenaProject.utils.GenerateIdUtils;
+import com.example.KeyboardArenaProject.utils.user.GenerateIdUtils;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

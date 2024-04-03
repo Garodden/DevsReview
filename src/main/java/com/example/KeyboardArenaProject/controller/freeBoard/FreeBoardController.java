@@ -20,6 +20,8 @@ import com.example.KeyboardArenaProject.service.freeBoard.FreeBoardService;
 
 import com.example.KeyboardArenaProject.service.user.UserDetailService;
 import com.example.KeyboardArenaProject.service.user.UserService;
+import com.example.KeyboardArenaProject.utils.user.UserTopBarInfoUtil;
+
 import io.micrometer.common.util.StringUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -51,12 +53,11 @@ public class FreeBoardController {
     private final UserService userService;
     private final LikeService likeService;
     private final CommentService commentService;
+    private final UserTopBarInfoUtil userTopBarInfoUtil;
 
     @GetMapping("/")
     public String indexPage(Model model){
-        User user = userService.getCurrentUserInfo();
-        UserTopBarInfo userTopBarInfo = new UserTopBarInfo(user);
-        model.addAttribute("userTopBarInfo", userTopBarInfo);
+        model.addAttribute("userTopBarInfo", UserTopBarInfoUtil.getUserTopBarInfo());
 
         // 전체 랭크전 아레나
         List<Board> arenaList = arenaService.findAllRankArena();

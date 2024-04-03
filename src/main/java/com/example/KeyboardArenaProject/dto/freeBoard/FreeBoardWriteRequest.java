@@ -1,16 +1,10 @@
 package com.example.KeyboardArenaProject.dto.freeBoard;
 
 import com.example.KeyboardArenaProject.entity.Board;
-import com.example.KeyboardArenaProject.service.freeBoard.FreeBoardService;
-import com.example.KeyboardArenaProject.utils.GenerateIdUtils;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import java.security.Principal;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 @Getter
 @Setter
