@@ -1,32 +1,48 @@
+
+
 const signUpBtn = document.querySelector("#signupBtn");
 const duplicateIdCheckButton = document.querySelector("#duplicateIdCheckButton");
 const duplicateEmailCheckButton = document.querySelector("#duplicateEmailCheckButton");
 
-let isIdChecked = false;
-let isEmailChecked = false;
-let isFieldChecked = false;
+let isEmptyChecked = false; // 빈 값 전달 여부
+let isIdChecked = false; // id 중복 여부
+let isEmailChecked = false; // email 중복 여부
+let isFieldChecked = false; // 필드별 형식 준수 여부
 
 signUpBtn.addEventListener("click", () => {
-    if(!validateFields()) {
-        document.getElementById('signupBtn').disabled = true;
-    }
-    if (validateForm() && isIdChecked && isEmailChecked) {
-        signup();
-        console.log("isIdChecked: ", isIdChecked, "isEmailChecked: ", isEmailChecked)
-    }
-    if (!validateForm()) {
+    checkIfValueIsEmpty();
+    validateFields();
+    if(!isEmptyChecked) {
         alert("모든 항목은 필수로 입력해야 합니다. ");
-    } else if(validateForm() && (!isIdChecked || !isEmailChecked)) {
-        alert("중복확인을 진행해주세요");
+        return;
     }
-    console.log("isIdChecked: ", isIdChecked, "isEmailChecked: ", isEmailChecked)
-
+    if(!isIdChecked) {
+        alert("아이디 중복여부를 확인해주세요.");
+        return;
+    }
+    if(!isEmailChecked) {
+        alert("이메일 중복여부를 확인해주세요.");
+        return;
+    }
+    if(!isFieldChecked) {
+        alert("입력한 정보의 형식을 확인해주세요.");
+        return;
+    }
+    signup();
 })
 
 duplicateIdCheckButton.addEventListener("click", async () => {
     var userId = document.getElementById("userId").value.trim();
     console.log("userId:", userId)
     try {
+        if(userId === "") {
+            alert("아이디를 입력하세요");
+            return;
+        } else if(!validateUserId(userId)) {
+            document.getElementById("userId-error").innerText = "아이디는 6~12자 이내의 영문 또는 숫자 형식으로 입력해주세요.";
+            isFieldChecked = false;
+            return;
+        }
         const response = await fetch('/user/find/id?userId=' + userId, {
             method: 'GET'
         });
@@ -61,6 +77,14 @@ duplicateEmailCheckButton.addEventListener("click", async () => {
     var email = document.getElementById("email").value.trim();
     console.log("email:", email)
     try {
+        if(email === "") {
+            alert("이메일을 입력하세요");
+            return;
+        } else if (!validateEmail(email)) {
+            alert("이메일 형식으로 입력하세요");
+            isFieldChecked = false;
+            return;
+        }
         const response = await fetch('/user/find/email?email=' + email, {
             method: 'GET'
         });
@@ -91,7 +115,7 @@ duplicateEmailCheckButton.addEventListener("click", async () => {
     }
 });
 
-function validateForm() {
+function checkIfValueIsEmpty() {
     const userId = document.getElementById("userId").value.trim();
     const password = document.getElementById("password").value.trim();
     const nickname = document.getElementById("nickname").value.trim();
@@ -100,10 +124,72 @@ function validateForm() {
     const findPwQuestion = document.getElementById("findPwQuestion").value;
 
     if (!userId || !password || !nickname || !email || !findPw || !findPwQuestion) {
-        return false;
+        isEmptyChecked = false;
+    } else if(userId && password && nickname && email && findPw && findPwQuestion) {
+        isEmptyChecked = true
     }
-    return true;
 }
+
+function validateFields(){
+    let userId = document.getElementById("userId").value;
+    let password = document.getElementById("password").value;
+    let nickname = document.getElementById("nickname").value;
+    let email = document.getElementById("email").value;
+
+    if (!validateUserId(userId)) {
+        document.getElementById("userId-error").innerText = "아이디는 6~12자 이내의 영문 또는 숫자 형식으로 입력해주세요.";
+        isFieldChecked = false;
+    } else {
+        document.getElementById("userId-error").innerText = "";
+        isFieldChecked = true;
+    }
+    if (!validatePassword(password)) {
+        document.getElementById("password-error").innerText = "비밀번호는 8~20자 이내의 영문, 숫자 또는 기호 형식으로 입력해주세요.";
+        isFieldChecked = false;
+    } else {
+        document.getElementById("password-error").innerText = "";
+        isFieldChecked = true;
+    }
+    if (!validateUsername(nickname)) {
+        document.getElementById("nickname-error").innerText = "유저네임은 3~12자 이내의 영문, 한글 또는 숫자 형식으로 입력해주세요.";
+        isFieldChecked = false;
+    } else {
+        document.getElementById("nickname-error").innerText = "";
+        isFieldChecked = true;
+    }
+    if (!validateEmail(email)) {
+        document.getElementById("email-error").innerText = "이메일 형식으로 입력해주세요.";
+        isFieldChecked = false;
+    } else {
+        document.getElementById("email-error").innerText = "";
+        isFieldChecked = true;
+    }
+}
+
+function validateUserId(userId) {
+    // 6~12자 이내 영문 또는 숫자 형식
+    const regex = /^[a-zA-Z0-9]{6,12}$/;
+    return regex.test(userId);
+}
+
+function validatePassword(password) {
+    // 8~16자 이내의 영문, 숫자 또는 기호 형식
+    const regex = /^[a-zA-Z0-9!@#$%^&*()\-_=+[\]{};:'",.<>/?]{8,20}$/;
+    return regex.test(password);
+}
+
+function validateUsername(username) {
+    // 3~12자 이내의 문자 또는 숫자 형식
+    const regex = /^[a-zA-Z0-9가-힣]{3,12}$/;
+    return regex.test(username);
+}
+
+function validateEmail(email) {
+    // 이메일 형식
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(email);
+}
+
 function signup() {
     var select = document.getElementById("findPwQuestion").value;
     switch (select) {
@@ -155,61 +241,4 @@ function signup() {
             console.error('Error:', error);
             alert('회원가입에 실패했습니다.');
         });
-}
-
-function validateFields(){
-    let userId = document.getElementById("userId").value;
-    let password = document.getElementById("password").value;
-    let nickname = document.getElementById("nickname").value;
-    let email = document.getElementById("email").value;
-
-    if (!validateUserId(userId)) {
-        document.getElementById("userId-error").innerText = "아이디는 6~12자 이내의 영문 또는 숫자 형식으로 입력해주세요.";
-    } else {
-        document.getElementById("userId-error").innerText = "";
-        isFieldChecked = true;
-    }
-    if (!validatePassword(password)) {
-        document.getElementById("password-error").innerText = "비밀번호는 8~16자 이내의 영문, 숫자 또는 기호 형식으로 입력해주세요.";
-    } else {
-        document.getElementById("password-error").innerText = "";
-        isFieldChecked = true;
-    }
-    if (!validateUsername(nickname)) {
-        document.getElementById("nickname-error").innerText = "유저네임은 3~12자 이내의 영문, 한글 또는 숫자 형식으로 입력해주세요.";
-        isFieldChecked = true;
-    } else {
-        document.getElementById("nickname-error").innerText = "";
-    }
-    if (!validateEmail(email)) {
-        document.getElementById("email-error").innerText = "이메일 형식으로 입력해주세요.";
-        isFieldChecked = true;
-    } else {
-        document.getElementById("email-error").innerText = "";
-    }
-    return isFieldChecked;
-}
-
-function validateUserId(userId) {
-    // 6~12자 이내 영문 또는 숫자 형식
-    const regex = /^[a-zA-Z0-9]{6,12}$/;
-    return regex.test(userId);
-}
-
-function validatePassword(password) {
-    // 8~16자 이내의 영문, 숫자 또는 기호 형식
-    const regex = /^[a-zA-Z0-9!@#$%^&*()\-_=+[\]{};:'",.<>/?]{8,20}$/;
-    return regex.test(password);
-}
-
-function validateUsername(username) {
-    // 3~12자 이내의 문자 또는 숫자 형식
-    const regex = /^[a-zA-Z0-9가-힣]{3,12}$/;
-    return regex.test(username);
-}
-
-function validateEmail(email) {
-    // 이메일 형식
-    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return regex.test(email);
 }
