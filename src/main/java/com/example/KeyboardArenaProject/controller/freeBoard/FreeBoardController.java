@@ -124,9 +124,8 @@ public class FreeBoardController {
     }
 
     @DeleteMapping("/board/{board_id}")
-    public String deleteFreeBoard(@PathVariable String board_id){
+    public void deleteFreeBoard(@PathVariable String board_id){
         freeBoardService.deleteBoard(board_id);
-        return "redirect:/board";
     }
 
     @GetMapping("/board")
