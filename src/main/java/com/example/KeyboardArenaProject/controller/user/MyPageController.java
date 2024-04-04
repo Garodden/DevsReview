@@ -140,15 +140,14 @@ public class MyPageController {
     public String getMyCommentedBoards(Model model) {
         User user = userService.getCurrentUserInfo();
         String id = user.getId();
+        model.addAttribute("userTopBarInfo", UserTopBarInfoUtil.getUserTopBarInfo());
         try {
             List<MyCommentedBoardsResponse> myCommentedBoards = myPageService.getMyCommentedBoards(id);
             model.addAttribute("myCommentedBoards", myCommentedBoards);
-        } catch(MyPageService.MyCommentNotFoundException e) {
-            model.addAttribute("errorMessage", e.getMessage());
-        } catch (MyPageService.AuthorNotFoundException e) {
+        } catch(MyPageService.MyCommentNotFoundException | MyPageService.AuthorNotFoundException e) {
             model.addAttribute("errorMessage", e.getMessage());
         }
-        return "commentBoards";
+		return "commentBoards";
     }
     @GetMapping("/mypage/arenas")
     public String getMyArenas(Model model) {
