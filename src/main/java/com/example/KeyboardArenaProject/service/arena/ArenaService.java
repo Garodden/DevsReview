@@ -50,4 +50,10 @@ public class ArenaService {
     public void deleteBy(String boardId) {
         boardRepository.deleteByBoardId(boardId);
     }
+
+    @Transactional
+    public void updateParticipates(String boardId) {
+        Board board = boardRepository.findByBoardId(boardId);
+        board.updateParticipates();
+    }
 }

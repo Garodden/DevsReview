@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', function() {
 document.addEventListener('DOMContentLoaded', function() {
     const submitButton = document.getElementById('arena-verify-btn');
     const form = document.getElementById('user-typed-verify-content'); // 폼의 ID를 사용합니다.
-    const contentInput = document.getElementById('verifyInput'); // 사용자가 입력한 텍스트를 가져올 요소의 ID
+    const contentInput = document.getElementById('content-input'); // 사용자가 입력한 텍스트를 가져올 요소의 ID
 
     if (form) {
         form.addEventListener('submit', function(event) {
@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // FormData 객체를 생성하고, 사용자가 입력한 텍스트를 추가합니다.
             const formData = new FormData();
-            formData.append('userTypedText', verifyInput.value);
+            formData.append('userTypedText', contentInput.value);
 
             // 서버로 POST 요청을 보냅니다.
             fetch(`/arena/${verifyBoardId}/verify`, {
