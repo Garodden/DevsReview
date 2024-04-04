@@ -116,6 +116,8 @@ public class MyPageController {
     public String getLikedBoards(Model model) {
         User user = userService.getCurrentUserInfo();
         String userId = user.getUserId();
+        model.addAttribute("userTopBarInfo", UserTopBarInfoUtil.getUserTopBarInfo());
+
         try {
             List<Like> likes = myPageService.getMyLikes(userId);
             for (Like like : likes) {
