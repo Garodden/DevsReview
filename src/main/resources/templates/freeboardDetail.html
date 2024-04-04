@@ -45,7 +45,7 @@
         <p th:if="${post.updatedDate} == null or ${post.updatedDate} == ${post.createdDate}" th:text="${#temporals.format(post.createdDate,'yyyy-MM-dd/ HH:mm:ss')}" class="created-date"></p>
         <input type="hidden" th:value="${loginedUserId}" id="logined-id">
         <div class="edit-buttons">
-            <button th:if="${loginedUserId}==${writer.userId} and ${loginedUserId}!=''" th:onclick="|location.href='@{/board/{board_id}/update(board_id=${post.boardId})}'|" class="white-btn">edit</button>
+            <button th:if="${loginedUserId}==${writer.userId} and ${loginedUserId}!=''" class="white-btn edit">edit</button>
             <button th:if="${loginedUserId}==${writer.userId}" id="delete-freeboard-button" class="white-btn">delete</button>
             <input type="hidden" id="board-id" th:value="${post.boardId}">
         </div>
