@@ -52,7 +52,7 @@
             <thead>
             <tr>
                 <th style="white-space: nowrap;">번호</th>
-                <th style="white-space: nowrap; color: #676767">유형</th>
+                <th style="white-space: nowrap; color: #1f6dff">유형</th>
                 <th style="white-space: nowrap; color: #1f6dff">제목</th>
                 <th style="white-space: nowrap;">작성자</th>
                 <th style="white-space: nowrap;">작성일</th>
@@ -85,8 +85,8 @@
                 <td>
                     <span th:switch="${board.boardType}" style="color: #1f6dff">
                         <span th:case="1" style="color: #414141">자유게시판</span>
-                        <span th:case="2" style="color: #1f6dff">아레나</span>
-                        <span th:case="3" style="color: #1f6dff">아레나</span>
+                        <span th:case="2" style="color: #1f6dff">주간 랭크전</span>
+                        <span th:case="3" style="color: #1f6dff">일반 아레나</span>
                         <span th:case="*" th:text="'Unknown'"></span>
                     </span>
                 </td>
@@ -103,7 +103,7 @@
                                     </span><br>
                                 <span th:text="${comment.content}" ></span>
                                 <hr th:if="${commentIndex.index != #lists.size(board.commentResponses) - 1}"
-                                    style="border: 1px #d3d3d3; margin-top: 0.5rem; margin-bottom: 0.5rem;">
+                                    style="border-color: #d3d3d3; margin-top: 0.5rem; margin-bottom: 0.5rem;">
                             </div>
                         </li>
                     </ul>

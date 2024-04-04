@@ -125,10 +125,19 @@ public class FreeBoardController {
     @GetMapping("/board")
     public String viewAllFreeBoard(Model model){
         model.addAttribute("userTopBarInfo", UserTopBarInfoUtil.getUserTopBarInfo());
-        List<Board> freeboardList = freeBoardService.findAllSortedFreeBoard();
+        List<Board> freeboardList = freeBoardService.findAllLikeSortedFreeBoard();
         model.addAttribute("freeboard",freeboardList);
         model.addAttribute("loginedUserRank",userService.getCurrentUserInfo().getUserRank());
+        model.addAttribute("isShowTop",true);
+        return "freeboardList";
+    }
 
+    @GetMapping("/board/sort=2")
+    public String viewAllFreeBoardSortedByCreated(Model model){
+        model.addAttribute("userTopBarInfo", UserTopBarInfoUtil.getUserTopBarInfo());
+        List<Board> freeboardList = freeBoardService.findAllCreatedSortedBoard();
+        model.addAttribute("freeboard",freeboardList);
+        model.addAttribute("loginedUserRank",userService.getCurrentUserInfo().getUserRank());
         return "freeboardList";
     }
 

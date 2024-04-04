@@ -31,12 +31,12 @@ public class FreeBoardService {
     }
 
 
-    //    public String FindUserPkById(){
-//        String user_id = principal.getName();
-////        return userRepository.findByUser_id(user_id).orElseThrow().getId();
-//    }
-    public List<Board> findAllSortedFreeBoard(){
+    public List<Board> findAllLikeSortedFreeBoard(){
         return freeBoardRepository.findAllByBoardTypeOrderByLikesDesc(1);
+    }
+
+    public List<Board> findAllCreatedSortedBoard(){
+        return freeBoardRepository.findAllByBoardTypeOrderByCreatedDateDesc(1);
     }
 
     public Board findByBoardId(String boardId){

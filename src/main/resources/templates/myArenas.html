@@ -84,7 +84,10 @@
             <tbody th:if="${not #lists.isEmpty(myArenas)}">
                 <tr th:each="arena, index : ${myArenas}" class="clickable-row" th:attr="board-id=${arena.getBoardId()}, board-type=${arena.boardType}">
                     <td th:text="${index.index + 1}"></td>
-                    <td th:text="${arena.title}"></td>
+                    <td>
+                        <span th:if="${arena.boardType == 2}" class="weekly-prefix">(주간) </span>
+                        <span th:text="${arena.title}"></span>
+                    </td>
                     <td th:text="${arena.boardRank}"></td>
                     <td th:text="${#temporals.format(arena.createdDate, 'yyyy.MM.dd')}"></td>
                     <td th:text="${arena.participates}"></td>

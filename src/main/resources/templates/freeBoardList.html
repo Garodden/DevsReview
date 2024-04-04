@@ -10,6 +10,7 @@
     <link rel="stylesheet" type="text/css" href="/css/freeboard/FreeBoard.css" th:href="@{/css/freeboard/FreeBoard.css}">
     <script defer src="/js/common/LogoutBtn.js"></script>
     <script defer src="/js/freeboard/FreeBoard.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 </head>
 <body>
 <header>
@@ -42,7 +43,15 @@
         <table class="table table-borderless" th:if="${freeboard}">
             <thead>
             <tr>
-                <td colspan="5"></td>
+                <td colspan="3"></td>
+                <td colspan="2">
+                    <label for="sorting">조회:  </label>
+                    <select name="sorting" id="sorting">
+                        <option selected></option>
+                        <option value="likes">좋아요 순</option>
+                        <option value="created">작성일 순</option>
+                    </select>
+                </td>
                 <td>
                     <button id="create-freeboard-button" class="btn btn-primary" th:onclick="|location.href='@{/newFreeboard}'|">게시판 글쓰기</button>
                 </td>
@@ -60,9 +69,9 @@
             <tbody>
             <tr th:each="board, index : ${freeboard}" class="top3-freeboard-row">
                 <td>
-                    <span th:if="${index.index == 0}" class="top1" style="font-weight: bold; color: green;">top1 </span>
-                    <span th:if="${index.index == 1}" class="top2" style="font-weight: bold; color: green;">top2 </span>
-                    <span th:if="${index.index == 2}" class="top3" style="font-weight: bold; color: green;">top3 </span>
+                    <span th:if="${index.index == 0} and ${isShowTop}" class="top1" style="font-weight: bold; color: green;">top1 </span>
+                    <span th:if="${index.index == 1} and ${isShowTop}" class="top2" style="font-weight: bold; color: green;">top2 </span>
+                    <span th:if="${index.index == 2} and ${isShowTop}" class="top3" style="font-weight: bold; color: green;">top3 </span>
                     <span th:text="${board.title}"></span>
                 </td>
                 <td th:text="${#temporals.format(board.createdDate, 'yyyy/MM/dd')}"></td>
