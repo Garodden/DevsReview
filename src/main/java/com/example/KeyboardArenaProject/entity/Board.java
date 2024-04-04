@@ -58,6 +58,7 @@ public class Board {
     @Column(name="if_active")  //default false
     private Boolean ifActive;
 
+    //아레나에서는 참가자 수, 프리보드에서는 그냥 조회수로 친다.
     @Column(name="views")   //default 0
     private Integer views;
     //조회수
@@ -86,6 +87,5 @@ public class Board {
     public void updateToActive(){
         this.ifActive = true;
     }
-
-
+    public void updateParticipates() {this.views+=1;}
 }

@@ -37,7 +37,8 @@
     <div class="main-container-content">
         <h2 th:text="${post.title}"></h2>
         <p th:text="${writer.nickname}"></p>
-        <p th:text="${writer.userRank}"></p><br>
+        <p th:text="${writer.userRank}"></p>
+        <p th:text="${post.boardRank}"></p><br>
         <p th:if="${post.updatedDate} != null and ${post.updatedDate} != ${post.createdDate}" class="edited">edited</p>
         <p th:if="${post.updatedDate} != null and ${post.updatedDate} != ${post.createdDate}" th:text="${#temporals.format(post.updatedDate,'yyyy-MM-dd/ HH:mm:ss')}" class="updated-date"></p>
         <p th:if="${post.updatedDate} == null or ${post.updatedDate} == ${post.createdDate}" th:text="${#temporals.format(post.createdDate,'yyyy-MM-dd/ HH:mm:ss')}" class="created-date"></p>

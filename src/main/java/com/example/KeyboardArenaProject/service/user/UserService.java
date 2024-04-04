@@ -214,12 +214,8 @@ public class UserService {
 
 
 	@Transactional
-	public void givePoints(String userId, int points) {
-		User user = userRepository.findById(userId).orElse(null);
-
-		if(user!=null){
-			user.updatePoint(points);
-		}
+	public void givePoints(String Id, int points) {
+		userRepository.updatePoints(Id, points);
 	}
 
 	public static class UserNotFoundException extends RuntimeException {
