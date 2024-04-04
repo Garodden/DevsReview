@@ -6,11 +6,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -43,9 +41,14 @@ public class UserController {
 			log.info("errors = \n{}", bindingResult);
 			return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
 		}
-		User user = userService.save(request);
-		return ResponseEntity.status(HttpStatus.CREATED)
-			.body(user.toResponse());
+		try {
+			User user = userService.save(request);
+			return ResponseEntity.status(HttpStatus.CREATED)
+				.body(user.toResponse());
+		} catch(IllegalArgumentException ex) {
+			return ResponseEntity.badRequest().body(ex.getMessage());
+		}
+
 	}
 
 	@GetMapping("/logout")

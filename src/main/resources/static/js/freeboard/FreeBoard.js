@@ -7,3 +7,6 @@ if(deleteFreeButton){
                 location.replace('/board');});
     });
 }
+
+let deactivatedButton = document.querySelectorAll('.deactivated');
+deactivatedButton.forEach(btn=>btn.addEventListener('click',()=>{alert("랭크가 낮아 게시글에 접근이 불가능합니다.")}));

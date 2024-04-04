@@ -7,36 +7,44 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
 </head>
 <body>
-<!-- 탑 네비게이션 바 -->
-
-
+<header>
+    <!-- 공통 헤더 start ======> -->
 <div class="p-5 mb-5 text-center</> bg-light">
-    <h1 class="mb-3">My Arena</h1>
-    <h4 class="mb-3">본인이 원하는 글로 아레나 개장을 해보세요</h4>
-    <div class="navbar navbar-expand-lg navbar-light bg-light">
-        <button type="button" onclick="location.href='/mypage'" class="btn btn-primary"th:text="${userTopBarInfo.nickname}">>내 페이지</button>
-        <div class="navbar-text" th:text="'Rank: ' + ${userTopBarInfo.rank}"></div>
-        <div class="navbar-text" th:text="'Points: ' + ${userTopBarInfo.point}"></div>
-
+    <!-- flex 적용을 위한 컨테이너 -->
+    <div class="title-navbar-container">
+        <!--서비스 이름-->
+        <h1 class="mb-3" onclick="location.href='/arenas'">Keyboard Arena</h1>
+        <h3 class="mb-3">My Arena</h3>
+        <h4 class="mb-3"></h4>
+        <!-- 탑 네비게이션 바 -->
+        <div class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="navbar-text" id="navbar-nickname" th:text="${userTopBarInfo.nickname} + '&nbsp;&nbsp;'"></div>
+            <div class="navbar-text" th:text="'Rank: ' + ${userTopBarInfo.rank} + '&nbsp;&nbsp;'"></div>
+            <div class="navbar-text" th:text="'Points: ' + ${userTopBarInfo.point} + '&nbsp;&nbsp;'"></div>
+            <button type="button" class="btn btn-primary" onclick="location.href='/mypage'" >마이페이지</button>
+            <button type="button" class="btn btn-secondary" id="logoutButton">로그아웃</button>
+        </div>
     </div>
+    <h4 class="mb-3">본인이 원하는 글로 아레나 개장을 해보세요</h4>
 </div>
-
-
-
+</header>
 <div class="container mt-5">
     <div class="row">
         <div class="col-lg-8">
             <article>
+                <label for="selectBoardRank"></label>
                 <select name="boardRank" id="selectBoardRank">
                     <option th:each="num : ${#numbers.sequence(1,userTopBarInfo.rank)}" th:text="${numStat.count}" th:value="${numStat.count}"></option>
                 </select>
                 <header class="mb-4">
-                    <input type="text" class="form-control" placeholder="제목" id="title">
+                    <label for="title"></label>
+                    <input type="text" class="form-control" placeholder="제목" maxlength="20" id="title">
                     <form></form>
                 </header>
 
                 <section class="mb-5">
-                    <textarea class="form-control h-25" rows="10" placeholder="내용" id="content"></textarea>
+                    <label for="content"></label>
+                    <textarea class="form-control h-25" rows="10" placeholder="내용" maxlength="500" id="content"></textarea>
                 </section>
 
                 <button type="button" id="create-arena-btn" class="btn btn-primary btn-sm">등록</button>
@@ -45,8 +53,8 @@
     </div>
 </div>
 
-<script src="/js/Arena.js"></script>
-<script defer src="/js/LikeComment.js"></script>
+<script src="/js/arena/Arena.js"></script>
+<script defer src="/js/common/LogoutBtn.js"></script>
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>

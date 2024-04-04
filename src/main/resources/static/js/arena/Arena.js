@@ -2,6 +2,7 @@ const createButton = document.getElementById('create-arena-btn');
 
 if (createButton) {
     createButton.addEventListener('click', event => {
+
         fetch(`/newArena`, {
             method: 'POST',
             headers: {
@@ -42,6 +43,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const retryButton = document.getElementById('retry-button');
     const userTypedContent = document.getElementById('user-typed-content');
     const startTimeElement = document.getElementById('start-time');
+    let boardId = document.getElementById("board-id").value;
     function sendAsyncRequest() {
         //콘텐츠 입력창 보이게 함
         userTypedContent.style.display = 'block';
@@ -72,8 +74,8 @@ document.addEventListener('DOMContentLoaded', function() {
 //post 작동 로직
 document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('user-typed-content'); // 폼의 ID를 사용합니다.
-    const contentInput = document.getElementById('contentInput'); // 사용자가 입력한 텍스트를 가져올 요소의 ID입니다.
-
+    const contentInput = document.getElementById('content-input'); // 사용자가 입력한 텍스트를 가져올 요소의 ID입니다.
+    let boardId = document.getElementById("board-id").value;
     form.addEventListener('submit', function(event) {
         event.preventDefault(); // 폼의 기본 제출 동작을 방지합니다.
 
@@ -87,11 +89,22 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(response => response.text()) // 서버로부터 받은 응답을 텍스트로 변환
             .then(data => {
                 alert(data); // 서버로부터 받은 텍스트 표사
-                window.location.href = `/arenas/${boardId}`; // 지정된 페이지로 리다이렉tus
+                location.replace(`/arenas/${boardId}`); // 지정된 페이지로 리다이렉트
             })
             .catch(error => console.error('Error:', error));
     });
 });
+
+const deleteArenaButton = document.getElementById('delete-arena-button');
+if(deleteArenaButton){
+    deleteArenaButton.addEventListener('click',()=>{
+        let boardId = document.getElementById("board-id").value;
+        fetch(`/arenas/${boardId}`,{method: 'DELETE'})
+            .then(()=>{alert('삭제가 완료되었습니다.');
+                location.replace('/arenas');
+            });
+    });
+}
 
 document.addEventListener('copy', function(e) {
     e.preventDefault(); // 복사 이벤트를 막음

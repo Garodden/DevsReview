@@ -33,4 +33,14 @@ public interface FreeBoardRepository extends JpaRepository<Board,String> {
     @Transactional
     void plusView(String boardId);
 
+    @Query(value = "UPDATE board SET comments=comments+1 WHERE board_id=:boardId", nativeQuery = true)
+    @Modifying
+    @Transactional
+    void plusCommentsCount(String boardId);
+
+    @Query(value = "UPDATE board SET comments=comments-1 WHERE board_id=:boardId", nativeQuery = true)
+    @Modifying
+    @Transactional
+    void minusCommentsCount(String boardId);
+
 }

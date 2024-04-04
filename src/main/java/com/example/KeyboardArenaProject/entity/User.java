@@ -4,19 +4,16 @@ import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
+import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.example.KeyboardArenaProject.dto.user.UserResponse;
-import com.example.KeyboardArenaProject.utils.GenerateIdUtils;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import com.example.KeyboardArenaProject.utils.user.GenerateIdUtils;
 
 @Table(name = "user")
 @Entity
@@ -121,8 +118,4 @@ public class User implements UserDetails {
 			.isActive(isActive)
 			.build();
 	}
-
-    public void updatePoint(int points) {
-		this.point+=points;
-    }
 }

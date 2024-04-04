@@ -80,5 +80,15 @@ public class FreeBoardService {
         freeBoardRepository.updateBoardLikes(likes,boardId);
     }
 
+    @Transactional
+    public void plusCommentsCount(String boardId){
+        freeBoardRepository.plusCommentsCount(boardId);
+    }
+
+    @Transactional
+    public void minusCommentsCount(String boardId){
+        freeBoardRepository.minusCommentsCount(boardId);
+    }
+
 
 }
