@@ -27,43 +27,6 @@
 }
 /* =======> 헤더 적용에 필요한 css end */
 
-/* main CSS */
-
-.main-content {
-    display: flex;
-    flex-direction: column;
-}
-
-.main-content-title {
-    margin-top: 3rem;
-    margin-left: 3rem;
-}
-
-.user-profile-image {
-    margin-left: 3rem;
-    width: 200px;
-    height: 200px;
-    background-color: #fff;
-    border: 1px solid #ccc;
-    border-radius: 10%;
-}
-
-.user-panel {
-    display: flex;
-    align-items: center;
-    margin-top: 3rem;
-    margin-bottom: 3rem;
-}
-
-.user-info {
-    margin-left: 2rem;
-    font-size: 15px;
-}
-
-.user-info-details {
-    margin: 15px 0px 15px;
-}
-
 /* mypage 공통 메뉴 css start =======> */
 
 .list-group-container {
@@ -90,16 +53,60 @@
 
 /* =======> mypage 공통 메뉴 css end */
 
-.user-actions {
-    margin-top: 20px;
-    margin-left: 3rem;
+/* main CSS */
+
+.main-content {
+    display: flex;
+    flex-direction: column;
 }
 
-.btn-secondary {
-    margin-left: 10px;
+.main-content-title,.main-content-subtitle {
+    margin-top: 3rem;
+    margin-left: 3rem;
 }
 
 .my-2 {
-    margin-left: 3rem;
     width: 70vh;
+    margin-left: 0;
+}
+
+.signoutInfo {
+    margin-left: 3rem;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.fontHighLight {
+    color: red;
+}
+
+#signoutUserForm {
+    margin-top: 1rem;
+    margin-left: 3rem;
+}
+
+.signoutPasswordInput {
+    margin-bottom: 15px;
+}
+
+.signoutPasswordInput label {
+    display: flex;
+    flex-direction: column;
+}
+
+.signoutPasswordInput input {
+    width: 30vh;
+    padding: 10px;
+    margin: 8px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+.user-actions {
+    margin-left: 60vh;
+}
+
+.user-actions button {
+    margin-right: 5px;
 }

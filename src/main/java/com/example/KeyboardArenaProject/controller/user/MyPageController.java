@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.server.ResponseStatusException;
 
 @Slf4j
 @Controller
@@ -56,7 +57,8 @@ public class MyPageController {
     }
 
     @GetMapping("/mypage/changePassword")
-    public String showChangePasswordForm() {
+    public String showChangePasswordForm(Model model) {
+        model.addAttribute("userTopBarInfo", UserTopBarInfoUtil.getUserTopBarInfo());
         return "changePw";
     }
 
@@ -79,6 +81,7 @@ public class MyPageController {
     public String showSignoutForm(Model model) {
         String userId = userService.getCurrentUserId();
         model.addAttribute("userId", userId);
+        model.addAttribute("userTopBarInfo", UserTopBarInfoUtil.getUserTopBarInfo());
         return "signout";
     }
 
