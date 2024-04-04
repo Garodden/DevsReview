@@ -35,6 +35,20 @@ if(selectedSort) {
         }
     });
 }
+const updateButton = document.querySelector('.edit');
+if(updateButton) {
+    updateButton.addEventListener('click', () => {
+        let board_id=document.getElementById('board-id').value;
+        let userId = document.getElementById('logined-id').value;
+        let signoutStr= userId.slice(-4);
+        if(signoutStr!=='(탈퇴)'){
+            location.href = `/board/${board_id}/update`;
+        }else{
+            alert('탈퇴유저는 수정이 불가합니다.');
+        }
+    });
+}
+
 if(window.location.pathname==="/board"){
     selectedSort.options[0].innerText = 'likes'
 }else if(window.location.pathname==="/board/sort=2"){

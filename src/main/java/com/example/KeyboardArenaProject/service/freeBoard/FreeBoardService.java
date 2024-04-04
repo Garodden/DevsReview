@@ -8,6 +8,7 @@ import com.example.KeyboardArenaProject.entity.compositeKey.IpCompositeKey;
 import com.example.KeyboardArenaProject.repository.FreeBoardRepository;
 
 import com.example.KeyboardArenaProject.repository.IpRepository;
+import com.example.KeyboardArenaProject.repository.MyPageRepository;
 import com.example.KeyboardArenaProject.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,7 @@ public class FreeBoardService {
     private final FreeBoardRepository freeBoardRepository;
     private final UserRepository userRepository;
     private final IpRepository ipRepository;
+    private final MyPageRepository myPageRepository;
 
     public void writeFreeBoard(Board board){
         freeBoardRepository.save(board);
@@ -88,6 +90,10 @@ public class FreeBoardService {
     @Transactional
     public void minusCommentsCount(String boardId){
         freeBoardRepository.minusCommentsCount(boardId);
+    }
+
+    public List<Board> getMyBoards(String id){
+        return myPageRepository.findAllByIdOrderByCreatedDateDesc(id);
     }
 
 
