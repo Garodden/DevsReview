@@ -2,35 +2,83 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>회원탈퇴</title>
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Keyboard Arena</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/user/signout.css" th:href="@{/css/user/signout.css}">
     <script defer src="/js/Signout.js"></script>
+    <script defer src="/js/common/LogoutBtn.js"></script>
 </head>
 <body>
 
 <header>
-    <h1>Keyboard Arena</h1>
-    <h2>MyPage</h2>
+    <!-- 공통 헤더 start ======> -->
+    <div class="p-5 mb-5 text-center</> bg-light">
+        <!-- flex 적용을 위한 컨테이너 -->
+        <div class="title-navbar-container">
+            <!--서비스 이름-->
+            <h1 class="mb-3" onclick="location.href='/'">Keyboard Arena</h1>
+            <!-- 탑 네비게이션 바 -->
+            <div class="navbar navbar-expand-lg navbar-light bg-light">
+                <div class="navbar-text" id="navbar-nickname" th:text="${userTopBarInfo.nickname} + '&nbsp;&nbsp;'"></div>
+                <div class="navbar-text" th:text="'Rank: ' + ${userTopBarInfo.rank} + '&nbsp;&nbsp;'"></div>
+                <div class="navbar-text" th:text="'Points: ' + ${userTopBarInfo.point} + '&nbsp;&nbsp;'"></div>
+                <button type="button" class="btn btn-primary" onclick="location.href='/mypage'" >마이페이지</button>
+                <button type="button" class="btn btn-secondary" id="logoutButton">로그아웃</button>
+            </div>
+        </div>
+        <h4 class="mb-3">다른 사람들과 타자 속도를 겨뤄보세요</h4>
+    </div>
+    <!-- ======> 공통 헤더 end -->
+
+    <!-- mypage 공통 메뉴 html start ======> -->
+    <div class="list-group-container">
+        <div class="list-group">
+            <a href="/mypage/arenas" class="list-group-item list-group-item-action">내가 참전한 아레나</a>
+            <a href="/mypage/boards/commented" class="list-group-item list-group-item-action">내가 댓글 단 게시물</a>
+            <a href="/mypage/boards" class="list-group-item list-group-item-action">내가 쓴 게시물</a>
+            <a href="/mypage/boards/liked" class="list-group-item list-group-item-action">좋아요 누른 게시물</a>
+        </div>
+    </div>
+    <!-- ======> mypage 공통 메뉴 html end -->
 </header>
 
 <main>
-    <h2>회원 탈퇴</h2>
-    <h3>회원 탈퇴 시 계정은 비활성화 상태로 변경되며<br>
-        작성하신 게시물, 댓글은 삭제되지 않습니다.<br>
-        등록하신 닉네임은 닉네임(탈퇴)로 변경됩니다.</h3>
-    <p>회원 탈퇴 전 등록하신 비밀번호을 입력하세요</p>
-    <form id ="signoutUserForm" action="/mypage/delete" method="post">
-        <div>
-            <label for="password">비밀번호:</label>
-            <input type="password" id="password" name="password" required>
+    <div class="main-content">
+        <div class="main-content-title">
+            <h2>My Page</h2>
         </div>
-        <div>
-            <label for="confirmPassword">비밀번호 확인:</label>
-            <input type="password" id="confirmPassword" name="confirmPassword" required>
+
+        <div class="main-content-subtitle">
+            <h3>회원 탈퇴</h3>
+            <hr class="my-2">
         </div>
-        <br>
-        <button type="submit">확인</button>
-        <a href="/mypage" th:href="@{/mypage}"><button type="button">취소</button></a>
-    </form>
+
+        <div class="signoutInfo">
+            <p>회원 탈퇴 시 계정은 비활성화 상태로 변경되며<br>
+                작성하신 게시물, 댓글은 삭제되지 않습니다.<br>
+                등록하신 닉네임은 닉네임(탈퇴)로 변경됩니다.</p>
+            <p>회원 탈퇴를 위해 현재 비밀번호을 입력해주세요.</p>
+        </div>
+
+        <form id ="signoutUserForm" action="/mypage/delete" method="post">
+            <div class="signoutPasswordInput">
+                <label for="password">비밀번호</label>
+                <input type="password" id="password" name="password" required placeholder="현재 비밀번호를 입력해주세요.">
+            </div>
+            <div class="signoutPasswordInput">
+                <label for="confirmPassword">비밀번호 확인</label>
+                <input type="password" id="confirmPassword" name="confirmPassword" required placeholder="현재 비밀번호를 입력해주세요.">
+            </div>
+            <div class="user-actions">
+                <button class="btn btn-primary" type="submit">확인</button>
+                <a href="/mypage" th:href="@{/mypage}"><button class="btn btn-secondary" type="button">취소</button></a>
+            </div>
+        </form>
+
+    </div>
 </main>
 
 </body>
