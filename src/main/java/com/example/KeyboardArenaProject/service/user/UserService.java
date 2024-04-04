@@ -66,28 +66,6 @@ public class UserService {
 		);
 	}
 
-	public void updateRank(){
-		String sql ="UPDATE user u \n" +
-				"JOIN (\n" +
-				"    SELECT \n" +
-				"        uc.user_id, \n" +
-				"        SUM(uc.rank / uc.total_users)+1 AS rank_score\n" +
-				"    FROM (\n" +
-				"        SELECT \n" +
-				"            user_id, \n" +
-				"            board_id, \n" +
-				"            RANK() OVER (PARTITION BY board_id ORDER BY clear_time ASC) AS rank, \n" +
-				"            COUNT(*) OVER (PARTITION BY board_id) AS total_users\n" +
-				"        FROM user_cleared_board\n" +
-				"        WHERE board_id IN (SELECT board_id FROM board WHERE board_type = 2)\n" +
-				"    ) AS uc\n" +
-				"    GROUP BY uc.user_id\n" +
-				") AS scores ON u.id = scores.user_id\n" +
-				"SET u.user_rank = ROUND(scores.rank_score);";
-
-		entityManager.createNativeQuery(sql).executeUpdate();
-	}
-
 	// 현재 로그인한 유저 정보 조회
 	public User getCurrentUserInfo() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

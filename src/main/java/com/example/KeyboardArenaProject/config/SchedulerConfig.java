@@ -1,8 +1,6 @@
 package com.example.KeyboardArenaProject.config;
 
-import com.example.KeyboardArenaProject.entity.Board;
-import com.example.KeyboardArenaProject.service.arena.ArenaService;
-import com.example.KeyboardArenaProject.service.user.ClearedService;
+
 import com.example.KeyboardArenaProject.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
