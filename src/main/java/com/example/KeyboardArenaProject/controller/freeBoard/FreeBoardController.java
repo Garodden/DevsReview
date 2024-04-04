@@ -15,20 +15,25 @@ import com.example.KeyboardArenaProject.service.CommentService;
 import com.example.KeyboardArenaProject.service.arena.ArenaService;
 import com.example.KeyboardArenaProject.service.freeBoard.FreeBoardService;
 
+import com.example.KeyboardArenaProject.service.user.MyPageService;
 import com.example.KeyboardArenaProject.service.user.UserService;
 import com.example.KeyboardArenaProject.utils.user.UserTopBarInfoUtil;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jdk.jshell.spi.ExecutionControl;
 import lombok.RequiredArgsConstructor;
 
 import lombok.extern.slf4j.Slf4j;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -105,6 +110,9 @@ public class FreeBoardController {
 //        }else{
 //            model.addAttribute("board",new Board());
 //        }
+        if(!userService.getCurrentUserInfo().getIsActive()){
+            return "signoutUserError";
+        }
         return "newFreeboard";
     }
 
@@ -211,9 +219,11 @@ public class FreeBoardController {
 
         model.addAttribute("post", postDetails);
 
-        //탈퇴유저 들어갈 수 없게하기
+        //탈퇴유저 들어갈 수 없게하기 자기가 쓴 게시글에는 접근 가능하게 하기
         if(userService.getCurrentUserInfo().getUserId().contains("(탈퇴)")||!userService.getCurrentUserInfo().getIsActive()){
-            return "signoutUserError";
+            if(!freeBoardService.getMyBoards(user.getId()).contains(freeBoardService.findByBoardId(boardId))) {
+                return "signoutUserError";
+            }
         }
 
         return "freeboardDetail";
