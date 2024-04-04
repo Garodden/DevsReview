@@ -190,23 +190,4 @@ thead, tbody, tfoot {
     height: 599px;
 }
 
-.like-button{
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    background-color: transparent;
-    border: none;
-}
 
-.like-button:hover{
-    cursor: pointer;
-}
-
-details{
-    display: inline-block;
-    margin-right: 486px;
-}
-
-details ul{
-    list-style: none;
-}

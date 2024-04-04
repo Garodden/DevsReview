@@ -20,21 +20,21 @@ let deactivatedButton = document.querySelectorAll('.deactivated');
 deactivatedButton.forEach(btn=>btn.addEventListener('click',()=>{alert("랭크가 낮아 게시글에 접근이 불가능합니다.")}));
 
 let selectedSort = document.getElementById('sorting');
+if(selectedSort) {
+    selectedSort.addEventListener('change', (event) => {
+        let selected = selectedSort.value;
+        if (selected === "likes") {
+            location.href = "/board";
+            // $("#sorting").val("likes").prop("selected",true);
 
-selectedSort.addEventListener('change',(event)=> {
-    let selected = selectedSort.value;
-    if (selected === "likes") {
-        location.href = "/board";
-        // $("#sorting").val("likes").prop("selected",true);
+        } else if (selected === "created") {
+            location.href = "/board/sort=2";
+            // selectedSort.options[0].selected=false;
+            // $("#sorting").val("created").prop("selected",true);
 
-    } else if (selected === "created") {
-        location.href = "/board/sort=2";
-        // selectedSort.options[0].selected=false;
-        // $("#sorting").val("created").prop("selected",true);
-
-    }
-});
-
+        }
+    });
+}
 if(window.location.pathname==="/board"){
     selectedSort.options[0].innerText = 'likes'
 }else if(window.location.pathname==="/board/sort=2"){
