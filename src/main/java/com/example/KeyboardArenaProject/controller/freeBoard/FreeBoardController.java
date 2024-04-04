@@ -212,7 +212,7 @@ public class FreeBoardController {
         model.addAttribute("post", postDetails);
 
         //탈퇴유저 들어갈 수 없게하기
-        if(userService.getCurrentUserInfo().getUserId().contains("(탈퇴)")){
+        if(userService.getCurrentUserInfo().getUserId().contains("(탈퇴)")||!userService.getCurrentUserInfo().getIsActive()){
             return "signoutUserError";
         }
 
