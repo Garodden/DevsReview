@@ -48,23 +48,40 @@
         <div class="main-content-subtitle">
             내가 참전한 아레나
         </div>
-        <div th:unless="${myArenas}">
-            <p th:text="${errorMessage}"></p>
-        </div>
+        <table th:unless="${myArenas}">
+            <thead>
+                <tr>
+                    <th style="white-space: nowrap;">번호</th>
+                    <th style="white-space: nowrap; color: #1f6dff">Arena 제목</th>
+                    <th style="white-space: nowrap; color: #1f6dff">랭크</th>
+                    <th style="white-space: nowrap;">작성일</th>
+                    <th style="white-space: nowrap;">참가자</th>
+                    <th style="white-space: nowrap;">댓글</th>
+                    <th style="white-space: nowrap;">좋아요</th>
+                    <th style="white-space: nowrap; color: #1f6dff">N%</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td colspan="8" th:text="${errorMessage}"></td>
+                </tr>
+            </tbody>
+
+        </table>
         <table th:if="${myArenas}">
             <thead>
             <tr>
-                <th>번호</th>
-                <th>Arena 제목</th>
-                <th>랭크</th>
-                <th>작성일</th>
-                <th>참가자</th>
-                <th>댓글</th>
-                <th>좋아요</th>
-                <th>N%</th>
+                <th style="white-space: nowrap;">번호</th>
+                <th style="white-space: nowrap; color: #1f6dff">Arena 제목</th>
+                <th style="white-space: nowrap; color: #1f6dff">랭크</th>
+                <th style="white-space: nowrap;">작성일</th>
+                <th style="white-space: nowrap;">참가자</th>
+                <th style="white-space: nowrap;">댓글</th>
+                <th style="white-space: nowrap;">좋아요</th>
+                <th style="white-space: nowrap; color: #1f6dff">N%</th>
             </tr>
             </thead>
-            <tbody>
+            <tbody th:if="${not #lists.isEmpty(myArenas)}">
             <tr th:each="arena, index : ${myArenas}" class="clickable-row" th:attr="board-id=${arena.getBoardId()}, board-type=${arena.boardType}">
                 <td th:text="${index.index + 1}"></td>
                 <td th:text="${arena.title}"></td>
@@ -73,13 +90,33 @@
                 <td th:text="${arena.participates}"></td>
                 <td th:text="${arena.comments}"></td>
                 <td th:text="${arena.likes}"></td>
-                <td th:text="${arena.percentage + '%'}"></td>
+                <td>
+                    <span data-toggle="tooltip"
+                          th:attr="title=${'나의 아레나 클리어 기록이 상위 ' + arena.percentage + '%에 해당합니다.'}"
+                          style="color: #1f6dff; text-decoration: underline; cursor: pointer;"
+                          data-placement="top"
+                          th:text="${arena.percentage} + '%'">
+                    </span>
+                </td>
             </tr>
             </tbody>
         </table>
     </div>
 
 </main>
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- Bootstrap tooltips -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<!-- Bootstrap core JavaScript -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+<!-- Initialize Bootstrap tooltips -->
+<script>
+    $(document).ready(function(){
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+</script>
+
 
 </body>
 </html>
