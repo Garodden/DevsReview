@@ -89,7 +89,7 @@
 }
 
 .changePasswordInput input {
-    width: 20%;
+    width: 30vh;
     padding: 10px;
     margin: 8px 0;
     border: 1px solid #ccc;
