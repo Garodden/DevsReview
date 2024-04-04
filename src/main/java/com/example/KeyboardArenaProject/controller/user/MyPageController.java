@@ -154,8 +154,15 @@ public class MyPageController {
         User user = userService.getCurrentUserInfo();
         model.addAttribute("userTopBarInfo", UserTopBarInfoUtil.getUserTopBarInfo());
         String id = user.getId();
-        List<MyArenaResponse> myArenaDetails = myPageService.getMyArenaDetails(id);
-        model.addAttribute("myArenas", myArenaDetails);
-        return "myArenas";
+        try {
+            List<MyArenaResponse> myArenaDetails = myPageService.getMyArenaDetails(id);
+            model.addAttribute("myArenas", myArenaDetails);
+            return "myArenas";
+        } catch (MyPageService.MyClearedBoardNotFoundException e) {
+            model.addAttribute("errorMessage", e.getMessage());
+            log.info("{}", model.getAttribute("errorMessage"));
+            return "myArenas";
+        }
+
 	}
 }
