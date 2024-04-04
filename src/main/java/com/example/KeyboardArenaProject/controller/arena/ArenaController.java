@@ -165,8 +165,11 @@ public class ArenaController {
         }
         else {
 
-            if (curBoard.getBoardType() == 2&& clearedService.findIfUserClearDataExists(curKey)){//주간랭크전 첫 클리어시
+            if (curBoard.getBoardType() == 2 && !clearedService.findIfUserClearDataExists(curKey)){//주간랭크전 첫 클리어시
                 userService.givePoints(curUser.getId(), 1000);
+            }
+            if(!clearedService.findIfUserClearDataExists(curKey)) {
+                arenaService.updateParticipates(curBoard.getBoardId());
             }
 
             List<Cleared> participantList = clearedService.findAllByBoardId(boardId);

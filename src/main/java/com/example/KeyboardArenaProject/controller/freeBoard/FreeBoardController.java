@@ -187,8 +187,10 @@ public class FreeBoardController {
                 .ifFirstTry(true)
                 .comment(commentService.findCommentsByBoardId(boardId))
                 .participates(curFreeBoardInfo.getViews())
-                .writerNickname(writer.getNickname())
-                .writerRank(writer.getUserRank())
+//                .writerNickname(writer.getNickname())
+                .writerNickname(freeBoardService.findWriter(boardId).getNickname())
+//                .writerRank(writer.getUserRank())
+                .writerRank(freeBoardService.findWriter(boardId).getUserRank())
                 .build();
 
         postDetails.setCommentResponses(postDetails.getCommentResponses().stream()
@@ -199,6 +201,11 @@ public class FreeBoardController {
                 }).collect(Collectors.toList()));
 
         model.addAttribute("post", postDetails);
+
+        //탈퇴유저 들어갈 수 없게하기
+        if(userService.getCurrentUserInfo().getUserId().contains("(탈퇴)")){
+            return "signoutUserError";
+        }
 
         return "freeboardDetail";
     }
