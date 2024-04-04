@@ -1,6 +1,7 @@
 package com.example.KeyboardArenaProject.service.user;
 import com.example.KeyboardArenaProject.dto.mypage.MyArenaResponse;
 import com.example.KeyboardArenaProject.dto.mypage.MyCommentedBoardsResponse;
+import com.example.KeyboardArenaProject.dto.mypage.MyLikedBoardsResponse;
 import com.example.KeyboardArenaProject.dto.user.MyPageInformation;
 import com.example.KeyboardArenaProject.entity.Board;
 import com.example.KeyboardArenaProject.entity.Cleared;
@@ -93,23 +94,34 @@ public class MyPageService {
         return myBoards;
     }
 
-    public List<Like> getMyLikes(String userId) {
-        List<Like> myLikes = likeRepository.findByCompositeId_Id(userId);
+    public List<Like> getMyLikes(String id) {
+        List<Like> myLikes = likeRepository.findByCompositeId_Id(id);
         if(myLikes.isEmpty()) {
             throw new MyLikeNotFoundExcpetion("좋아요를 누른 게시글이 없습니다");
         }
-        return likeRepository.findByCompositeId_Id(userId);
+        return myLikes;
     }
 
-    public List<Board> getMyLikedBoards(List<Like> likes) {
+    public List<MyLikedBoardsResponse> getMyLikedBoards(List<Like> likes) {
         List<String> boardIds = likes.stream()
             .map(like -> like.getCompositeId().getBoardId())
             .collect(Collectors.toList());
+
         List<Board> myLikedBoards = myPageRepository.findAllByBoardIdInOrderByCreatedDateDesc(boardIds);
-        for (Board likedBoard : myLikedBoards) {
-            log.info("MyPageService - getMyLikedBoards: 작성일자 내림차순으로 조회한 좋아요 누른 게시물의 작성일자 : {}", likedBoard.getCreatedDate());
-        }
-        return myLikedBoards;
+
+        List<MyLikedBoardsResponse> myLikedBoardResponses = myLikedBoards
+            .stream()
+            .map(board -> {
+                String author = userService.getNickNameById(board.getId());
+                return MyLikedBoardsResponse.builder()
+                    .board(board)
+                    .author(author)
+                    .build();
+
+            })
+            .toList();
+
+        return myLikedBoardResponses;
     }
 
     public List<MyArenaResponse> getMyArenaDetails(String id) {

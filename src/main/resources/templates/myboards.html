@@ -3,33 +3,126 @@
 <head>
     <meta charset="UTF-8">
     <title>Keyboard Arena</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/common/Header.css" th:href="@{/css/common/Header.css}">
     <link rel="stylesheet" type="text/css" href="/css/mypage/MyPageBoards.css" th:href="@{/css/mypage/MyPageBoards.css}">
+    <link rel="stylesheet" type="text/css" href="/css/mypage/MypageMenu.css" th:href="@{/css/mypage/MypageMenu.css}">
     <script defer src="/js/mypage/MyPageGetBoardDetails.js"></script>
+    <script defer src="/js/common/LogoutBtn.js"></script>
 </head>
 <body>
-<h1>Keyboard Arena</h1>
-<h2>My Page</h2>
-<h3>내가 쓴 게시물</h3>
-<div th:unless="${myBoards}">
-    <p th:text="${errorMessage}"></p>
-</div>
-<table th:if="${myBoards}">
-    <thead>
-        <tr>
-            <th>번호</th>
-            <th>제목</th>
-            <th>작성일</th>
-            <th>좋아요</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr th:each="board, index : ${myBoards}" class="clickable-row" th:attr="board-id=${board.getBoardId()}, board-type=${board.boardType}">
-            <td th:text="${index.index + 1}"></td>
-            <td th:text="${board.title}"></td>
-            <td th:text="${#temporals.format(board.createdDate, 'yyyy.MM.dd')}"></td>
-            <td th:text="${board.likes}"></td>
-        </tr>
-    </tbody>
-</table>
+<header>
+    <!-- 공통 헤더 start ======> -->
+    <div class="p-5 mb-5 text-center</> bg-light">
+        <!-- flex 적용을 위한 컨테이너 -->
+        <div class="title-navbar-container">
+            <!--서비스 이름-->
+            <h1 class="mb-3" onclick="location.href='/'">Keyboard Arena</h1>
+            <!-- 탑 네비게이션 바 -->
+            <div class="navbar navbar-expand-lg navbar-light bg-light">
+                <div class="navbar-text" id="navbar-nickname" th:text="${userTopBarInfo.nickname} + '&nbsp;&nbsp;'"></div>
+                <div class="navbar-text" th:text="'Rank: ' + ${userTopBarInfo.rank} + '&nbsp;&nbsp;'"></div>
+                <div class="navbar-text" th:text="'Points: ' + ${userTopBarInfo.point} + '&nbsp;&nbsp;'"></div>
+                <button type="button" class="btn btn-primary" onclick="location.href='/mypage'" >마이페이지</button>
+                <button type="button" class="btn btn-secondary" id="logoutButton">로그아웃</button>
+            </div>
+        </div>
+        <h4 class="mb-3">다른 사람들과 타자 속도를 겨뤄보세요</h4>
+    </div>
+    <!-- ======> 공통 헤더 end -->
+</header>
+<main>
+    <!-- mypage 공통 메뉴 html start ======> -->
+    <div class="list-group-container">
+        <div class="list-group">
+            <a href="/mypage/arenas" class="list-group-item list-group-item-action">내가 참전한 아레나</a>
+            <a href="/mypage/boards/commented" class="list-group-item list-group-item-action">내가 댓글 단 게시물</a>
+            <a href="/mypage/boards" class="list-group-item list-group-item-action" style="border-bottom: 1px solid #919191;">내가 쓴 게시물</a>
+            <a href="/mypage/boards/liked" class="list-group-item list-group-item-action"  >좋아요 누른 게시물</a>
+        </div>
+    </div>
+    <!-- ======> mypage 공통 메뉴 html end -->
+    <div class="main-content">
+        <h2>My Page</h2>
+        <div class="main-content-subtitle">
+            내가 쓴 게시물
+        </div>
+        <table th:unless="${myBoards}">
+            <thead>
+            <tr>
+                <th style="white-space: nowrap;">번호</th>
+                <th style="white-space: nowrap; color: #1f6dff">유형</th>
+                <th style="white-space: nowrap; color: #1f6dff">제목</th>
+                <th style="white-space: nowrap;">작성일</th>
+                <th style="white-space: nowrap;">좋아요</th>
+                <th style="white-space: nowrap; color: #1f6dff" >수정하러 가기</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td colspan="6" th:text="${errorMessage}"></td>
+            </tr>
+            </tbody>
+        </table>
+        <table th:if="${myBoards}">
+            <thead>
+            <tr>
+                <th style="white-space: nowrap;">번호</th>
+                <th style="white-space: nowrap; color: #1f6dff">유형</th>
+                <th style="white-space: nowrap; color: #1f6dff">제목</th>
+                <th style="white-space: nowrap;">작성일</th>
+                <th style="white-space: nowrap;">좋아요</th>
+                <th style="white-space: nowrap; color: #1f6dff" >수정하러 가기</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="board, index : ${myBoards}" class="clickable-row" th:attr="board-id=${board.getBoardId()}, board-type=${board.boardType}">
+                <td th:text="${index.index + 1}"></td>
+                <td>
+                    <span th:switch="${board.boardType}" style="color: #1f6dff">
+                        <span th:case="1" style="color: #414141">자유게시판</span>
+<!--                        <span th:case="2" style="color: #1f6dff">주간 랭크전</span>-->
+                        <span th:case="3" style="color: #1f6dff">일반 아레나</span>
+                        <span th:case="*" th:text="'Unknown'"></span>
+                    </span>
+                </td>
+                <td th:text="${board.title}"></td>
+                <td th:text="${#temporals.format(board.createdDate, 'yyyy.MM.dd')}"></td>
+                <td th:text="${board.likes}"></td>
+                <td>
+                    <a th:href="@{'/board/' + ${board.getBoardId()} + '/update'}">
+                        수정
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+
+</main>
+
+<!---->
+<!--<div th:unless="${myBoards}">-->
+<!--    <p th:text="${errorMessage}"></p>-->
+<!--</div>-->
+<!--<table th:if="${myBoards}">-->
+<!--    <thead>-->
+<!--        <tr>-->
+<!--            <th>번호</th>-->
+<!--            <th>제목</th>-->
+<!--            <th>작성일</th>-->
+<!--            <th>좋아요</th>-->
+<!--        </tr>-->
+<!--    </thead>-->
+<!--    <tbody>-->
+<!--        <tr th:each="board, index : ${myBoards}" class="clickable-row" th:attr="board-id=${board.getBoardId()}, board-type=${board.boardType}">-->
+<!--            <td th:text="${index.index + 1}"></td>-->
+<!--            <td th:text="${board.title}"></td>-->
+<!--            <td th:text="${#temporals.format(board.createdDate, 'yyyy.MM.dd')}"></td>-->
+<!--            <td th:text="${board.likes}"></td>-->
+<!--        </tr>-->
+<!--    </tbody>-->
+<!--</table>-->
 </body>
 </html>
