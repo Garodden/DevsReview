@@ -26,7 +26,7 @@ public class ArenaResponse {
         title = arenaEntity.getTitle();
         boardRank = arenaEntity.getBoardRank();
         createdDate = arenaEntity.getCreatedDate();
-        participates=0;
+        participates=arenaEntity.getViews();
         comments = arenaEntity.getComments();
         likes = arenaEntity.getLikes();
         boardType =arenaEntity.getBoardType();
