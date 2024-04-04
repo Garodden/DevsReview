@@ -18,6 +18,8 @@ public interface FreeBoardRepository extends JpaRepository<Board,String> {
 
     List<Board> findAllByBoardTypeOrderByLikesDesc(Integer boardType);
 
+    List<Board> findAllByBoardTypeOrderByCreatedDateDesc(Integer boardType);
+
     @Query(value = "UPDATE board SET title=:title, content=:content, board_rank=:boardRank, updated_date=:updatedDate where board_id=:boardId",nativeQuery = true)
     @Modifying
     @Transactional

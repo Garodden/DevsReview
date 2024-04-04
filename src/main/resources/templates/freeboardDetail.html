@@ -58,7 +58,7 @@
     <a href="/board">뒤로가기</a>
 
     <details open>
-        <input type="hidden" id="logged-in-id" th:value="${loginedUserId}">
+        <input type="hidden" id="logged-in-id" th:value="${loginedId}">
         <summary>댓글</summary>
         <ul th:each="comment,commentStat : ${commentResponses}">
             <li>
