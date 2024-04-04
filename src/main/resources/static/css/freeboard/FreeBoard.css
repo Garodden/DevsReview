@@ -136,6 +136,11 @@ thead, tbody, tfoot {
     margin-left: 35px;
     display: inline-block;
 }
+.main-container-content p:nth-of-type(3){
+    font-size: 25px;
+    margin-left: 35px;
+    display: inline-block;
+}
 
 .main-container-content p:nth-of-type(1)::before{
     content: '작성자 : ';
@@ -146,10 +151,15 @@ thead, tbody, tfoot {
     content: '작성자 랭크 : ';
     color: gray;
 }
+.main-container-content p:nth-of-type(3)::before{
+    content: '게시판 랭크 : ';
+    color: gray;
+}
 
 .edited{
     color: #777777;
     font-size: 24px;
+    display: inline-block;
 }
 
 .updated-date, .created-date{
@@ -162,7 +172,7 @@ thead, tbody, tfoot {
 }
 
 .edit-buttons{
-    margin-left: 443px;
+    margin-left: 398px;
     display: inline;
 }
 
