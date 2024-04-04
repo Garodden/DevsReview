@@ -4,6 +4,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const startVerifyButton = document.getElementById('start-verify-button');
     const userTypedContent = document.getElementById('user-typed-verify-content');
     const startTimeElement = document.getElementById('start-time');
+    const contentInput = document.getElementById('content-input');
+
     function sendAsyncRequest() {
         //콘텐츠 입력창 보이게 함
         userTypedContent.style.display = 'block';
@@ -14,6 +16,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 // 'start-time' 요소에 시작 시간을 표시
                 startTimeElement.innerText = `Start time: ${data.startTime}`;
                 startTimeElement.style.display = 'block';
+                contentInput.value ='';
+                contentInput.value ='';
             })
             .catch(error => {
                 console.error('Error:', error);
