@@ -12,6 +12,8 @@ import com.example.KeyboardArenaProject.entity.Like;
 import com.example.KeyboardArenaProject.entity.User;
 import com.example.KeyboardArenaProject.service.user.MyPageService;
 import com.example.KeyboardArenaProject.service.user.UserService;
+import com.example.KeyboardArenaProject.utils.user.UserTopBarInfoUtil;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -98,6 +100,7 @@ public class MyPageController {
     @GetMapping("/mypage/boards")
     public String getMyBoards(Model model) {
         User user = userService.getCurrentUserInfo();
+        model.addAttribute("userTopBarInfo", UserTopBarInfoUtil.getUserTopBarInfo());
         try {
             List<Board> myBoards = myPageService.getMyBoards(user.getId());
             model.addAttribute("myBoards", myBoards);
@@ -151,6 +154,7 @@ public class MyPageController {
     @GetMapping("/mypage/arenas")
     public String getMyArenas(Model model) {
         User user = userService.getCurrentUserInfo();
+        model.addAttribute("userTopBarInfo", UserTopBarInfoUtil.getUserTopBarInfo());
         String id = user.getId();
         List<MyArenaResponse> myArenaDetails = myPageService.getMyArenaDetails(id);
         model.addAttribute("myArenas", myArenaDetails);

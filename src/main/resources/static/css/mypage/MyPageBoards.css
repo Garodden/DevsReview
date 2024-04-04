@@ -1,10 +1,41 @@
+/* mypage menu와 어울리기 위한 Header css start */
+.mb-5 {
+    margin-bottom: 0 !important;
+}
+/* mypage menu와 어울리기 위한 Header css end */
+
+
+.main-content {
+    margin-top: 3em;
+    margin-left: 3em;
+}
+
+.main-content-subtitle {
+    font-size: 1.2rem;
+    font-weight: normal;
+    color: #333333;
+}
+
 table {
+    margin-top: 2rem;
     border-collapse: collapse;
     width: 70vw;
 }
 
+/* table thead row의 위, 아래에만 테두리가 있도록 적용 start */
+
+thead th {
+    border-top: 1px solid #d3d3d3;
+    border-bottom: 1px solid #d3d3d3;
+}
+
+tbody tr:last-child {
+    border-bottom: 1px solid #d3d3d3;
+}
+/* table thead row의 위, 아래에만 테두리가 있도록 적용 end */
+
 th, td {
-    border: 1px solid #dddddd;
+    /*border: 1px solid #dddddd;*/
     text-align: center;
     padding: 8px;
 }
