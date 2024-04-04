@@ -80,6 +80,7 @@ public class MyPageController {
     public String showSignoutForm(Model model) {
         String userId = userService.getCurrentUserId();
         model.addAttribute("userId", userId);
+        model.addAttribute("userTopBarInfo", UserTopBarInfoUtil.getUserTopBarInfo());
         return "signout";
     }
 

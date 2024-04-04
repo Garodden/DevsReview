@@ -76,6 +76,10 @@
     font-weight: bold;
 }
 
+.fontHighLight {
+    color: red;
+}
+
 #signoutUserForm {
     margin-top: 1rem;
     margin-left: 3rem;
