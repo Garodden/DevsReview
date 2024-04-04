@@ -1,22 +1,23 @@
 package com.example.KeyboardArenaProject.service.user;
 
+
+import java.sql.Time;
+import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.example.KeyboardArenaProject.dto.arena.ArenaBestUserResponse;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.PersistenceUnit;
 import com.example.KeyboardArenaProject.entity.Comment;
 import com.example.KeyboardArenaProject.repository.CommentRepository;
 
 import jakarta.transaction.Transactional;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.parameters.P;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -220,6 +221,42 @@ public class UserService {
 				"	SET u.user_rank = ROUND(scores.rank_score)" +
 				"	WHERE u.user_rank != 10;";
 		entityManager.createNativeQuery(sql).executeUpdate();
+	}
+
+
+	public List<ArenaBestUserResponse> findTop5UsersOfBoard(String boardId) {
+		String sql = "SELECT u.nickname, u.user_rank as userRank, ct.clear_time as clearTime, ct.clear_rank as clearRank" +
+				" FROM user AS u" +
+				" JOIN(SELECT id, clear_time, RANK() OVER (ORDER BY clear_time ASC) AS clear_rank" +
+				" FROM user_cleared_board" +
+				"            WHERE board_id = '" + boardId + "' AND clear_time IS NOT NULL" +
+				"            ORDER BY clear_time ASC" +
+				") AS ct" +
+				" ON u.id = ct.id" +
+				" ORDER BY clearRank" +
+				" LIMIT 5";
+
+
+		List<ArenaBestUserResponse> responseList = new ArrayList<>();
+		List<Object[]> resultList = entityManager.createNativeQuery(sql).getResultList();
+
+		for (Object[] result : resultList) {
+			String nickname = (String) result[0];
+			int userRank = (int) result[1];
+			LocalTime clearTime = ((Time) result[2]).toLocalTime(); // DB에서 Timestamp 타입으로 받는 경우
+			int clearRank = ((Long) result[3]).intValue();
+
+			ArenaBestUserResponse response = ArenaBestUserResponse.builder()
+					.nickname(nickname)
+					.userRank(userRank)
+					.clearTime(clearTime)
+					.clearRank(clearRank)
+					.build();
+
+			responseList.add(response);
+		}
+
+		return responseList;
 	}
 
 	public static class UserNotFoundException extends RuntimeException {
