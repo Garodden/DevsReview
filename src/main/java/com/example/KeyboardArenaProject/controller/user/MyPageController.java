@@ -13,6 +13,7 @@ import com.example.KeyboardArenaProject.entity.User;
 import com.example.KeyboardArenaProject.service.user.MyPageService;
 import com.example.KeyboardArenaProject.service.user.UserService;
 import com.example.KeyboardArenaProject.utils.user.UserTopBarInfoUtil;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -79,7 +80,6 @@ public class MyPageController {
     public String showSignoutForm(Model model) {
         String userId = userService.getCurrentUserId();
         model.addAttribute("userId", userId);
-        model.addAttribute("userTopBarInfo", UserTopBarInfoUtil.getUserTopBarInfo());
         return "signout";
     }
 
@@ -101,6 +101,7 @@ public class MyPageController {
     @GetMapping("/mypage/boards")
     public String getMyBoards(Model model) {
         User user = userService.getCurrentUserInfo();
+        model.addAttribute("userTopBarInfo", UserTopBarInfoUtil.getUserTopBarInfo());
         try {
             List<Board> myBoards = myPageService.getMyBoards(user.getId());
             model.addAttribute("myBoards", myBoards);
@@ -141,22 +142,29 @@ public class MyPageController {
     public String getMyCommentedBoards(Model model) {
         User user = userService.getCurrentUserInfo();
         String id = user.getId();
+        model.addAttribute("userTopBarInfo", UserTopBarInfoUtil.getUserTopBarInfo());
         try {
             List<MyCommentedBoardsResponse> myCommentedBoards = myPageService.getMyCommentedBoards(id);
             model.addAttribute("myCommentedBoards", myCommentedBoards);
-        } catch(MyPageService.MyCommentNotFoundException e) {
-            model.addAttribute("errorMessage", e.getMessage());
-        } catch (MyPageService.AuthorNotFoundException e) {
+        } catch(MyPageService.MyCommentNotFoundException | MyPageService.AuthorNotFoundException e) {
             model.addAttribute("errorMessage", e.getMessage());
         }
-        return "commentBoards";
+		return "commentBoards";
     }
     @GetMapping("/mypage/arenas")
     public String getMyArenas(Model model) {
         User user = userService.getCurrentUserInfo();
+        model.addAttribute("userTopBarInfo", UserTopBarInfoUtil.getUserTopBarInfo());
         String id = user.getId();
-        List<MyArenaResponse> myArenaDetails = myPageService.getMyArenaDetails(id);
-        model.addAttribute("myArenas", myArenaDetails);
-        return "myArenas";
+        try {
+            List<MyArenaResponse> myArenaDetails = myPageService.getMyArenaDetails(id);
+            model.addAttribute("myArenas", myArenaDetails);
+            return "myArenas";
+        } catch (MyPageService.MyClearedBoardNotFoundException e) {
+            model.addAttribute("errorMessage", e.getMessage());
+            log.info("{}", model.getAttribute("errorMessage"));
+            return "myArenas";
+        }
+
 	}
 }

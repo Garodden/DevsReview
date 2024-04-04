@@ -23,12 +23,6 @@ public class UserViewController {
 		return "login";
 	}
 
-	@GetMapping("/home")
-	public String home(Model model) {
-		model.addAttribute("user", userService.getCurrentUserInfo());
-		return "home";
-	}
-
 	@GetMapping("/findId")
 	public String findId() {
 		return "findId";
