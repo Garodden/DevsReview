@@ -2,12 +2,14 @@ package com.example.KeyboardArenaProject.repository;
 
 import java.util.Optional;
 
+import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.example.KeyboardArenaProject.entity.User;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.transaction.annotation.Transactional;
+
+
 
 public interface UserRepository extends JpaRepository<User, String> {
 	Optional<User> findOptionalUserById(String id);
@@ -23,4 +25,5 @@ public interface UserRepository extends JpaRepository<User, String> {
 	void updatePoints(String id, int points);
 
 	Optional<User> findByUserIdAndFindPwQuestionAndFindPw(String userId, String findPwQuestion, String findPw);
+
 }
