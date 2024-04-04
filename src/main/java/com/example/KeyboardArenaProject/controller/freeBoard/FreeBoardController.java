@@ -7,6 +7,7 @@ import com.example.KeyboardArenaProject.dto.arena.ArenaResponse;
 import com.example.KeyboardArenaProject.dto.freeBoard.FreeBoardRecieveForm;
 import com.example.KeyboardArenaProject.dto.freeBoard.FreeBoardResponse;
 import com.example.KeyboardArenaProject.dto.freeBoard.FreeBoardWriteRequest;
+import com.example.KeyboardArenaProject.dto.user.AnonymousUser;
 import com.example.KeyboardArenaProject.dto.user.UserTopBarInfo;
 import com.example.KeyboardArenaProject.entity.Board;
 import com.example.KeyboardArenaProject.entity.Comment;
@@ -90,8 +91,8 @@ public class FreeBoardController {
         User user = (User)authentication.getPrincipal();
         log.warn("유저정보 id {}",user.getId());
 
-        if(user == null){
-            request = new FreeBoardWriteRequest("unknown",recieveForm.getTitle(),recieveForm.getContent(),recieveForm.getBoardRank());
+        if(authentication.getPrincipal().equals("anonymousUser")){
+            request = new FreeBoardWriteRequest("",recieveForm.getTitle(),recieveForm.getContent(),recieveForm.getBoardRank());
         }else{
             request = new FreeBoardWriteRequest(user.getId(),recieveForm.getTitle(),recieveForm.getContent(),recieveForm.getBoardRank());
         }
@@ -103,7 +104,12 @@ public class FreeBoardController {
     }
     @GetMapping("/newFreeboard")
     public String newFreeBoard(Model model){
-        model.addAttribute("user",userService.getCurrentUserInfo());
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(!authentication.getPrincipal().equals("anonymousUser")){
+            model.addAttribute("user",userService.getCurrentUserInfo());
+        }else{
+            model.addAttribute("user",new AnonymousUser());
+        }
 //        if(boardId!=null){
 //            model.addAttribute("board",freeBoardService.findByBoardId(boardId));
 //
@@ -165,33 +171,41 @@ public class FreeBoardController {
         User writer = userService.findById(curFreeBoardInfo.getId());
 
         //조회수 증가
-        if(!freeBoardService.isContainsIpAndId(clientIp, boardId,userService.getCurrentUserId())){
-            freeBoardService.saveIpAndId(clientIp, boardId,userService.getCurrentUserId());
-            freeBoardService.plusView(boardId);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(!authentication.getPrincipal().equals("anonymousUser")){
+            if(!freeBoardService.isContainsIpAndId(clientIp, boardId, userService.getCurrentUserId())){
+                freeBoardService.saveIpAndId(clientIp, boardId,userService.getCurrentUserId());
+                freeBoardService.plusView(boardId);
+            }
+        }else{
+            if(!freeBoardService.isContainsIpAndId(clientIp, boardId, "")){
+                freeBoardService.saveIpAndId(clientIp, boardId,"");
+                freeBoardService.plusView(boardId);
+            }
         }
+
 //
         List<Comment> comments = commentService.findCommentsByBoardId(boardId);
         model.addAttribute("writer",freeBoardService.findWriter(boardId));
         model.addAttribute("post",freeBoardService.findByBoardId(boardId));
         model.addAttribute("comments", comments);
         model.addAttribute("loginedId",userService.getCurrentUserInfo().getId());
+
         //유저탑바
-        User user = userService.getCurrentUserInfo();
-        UserTopBarInfo userTopBarInfo = new UserTopBarInfo(user);
-        model.addAttribute("userTopBarInfo", userTopBarInfo);
+        model.addAttribute("userTopBarInfo", UserTopBarInfoUtil.getUserTopBarInfo());
 
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(!authentication.getPrincipal().equals("anonymousUser")) {
             model.addAttribute("loginedUserId",userService.getCurrentUserId());
         }else{
             model.addAttribute("loginedUserId","");
         }
-        List<CommentResponse> commentResponseList = new ArrayList<>();
-        for(Comment comment: comments){
-            commentResponseList.add(new CommentResponse(comment.getNickName(),comment.getCommentId(),comment.getId()
-                    ,userService.findById(comment.getId()).getUserRank(),comment.getContent(),comment.getCreatedDate()));
-        }
+
+        //CommentResponse DTO
+        List<CommentResponse> commentResponseList = comments.stream()
+                .map(comment->new CommentResponse(comment.getNickName(),comment.getCommentId(),comment.getId(),
+                userService.findById(comment.getId()).getUserRank(),comment.getContent(),comment.getCreatedDate()))
+                .toList();
         model.addAttribute("commentResponses",commentResponseList);
 //
 
@@ -220,9 +234,11 @@ public class FreeBoardController {
         model.addAttribute("post", postDetails);
 
         //탈퇴유저 들어갈 수 없게하기 자기가 쓴 게시글에는 접근 가능하게 하기
-        if(userService.getCurrentUserInfo().getUserId().contains("(탈퇴)")||!userService.getCurrentUserInfo().getIsActive()){
-            if(!freeBoardService.getMyBoards(user.getId()).contains(freeBoardService.findByBoardId(boardId))) {
-                return "signoutUserError";
+        if(!authentication.getPrincipal().equals("anonymousUser")) {
+            if (userService.getCurrentUserInfo().getUserId().contains("(탈퇴)") || !userService.getCurrentUserInfo().getIsActive()) {
+                if (!freeBoardService.getMyBoards(curUser.getId()).contains(freeBoardService.findByBoardId(boardId))) {
+                    return "signoutUserError";
+                }
             }
         }
 
