@@ -43,6 +43,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const retryButton = document.getElementById('retry-button');
     const userTypedContent = document.getElementById('user-typed-content');
     const startTimeElement = document.getElementById('start-time');
+    const contentInput = document.getElementById('content-input');
     let boardId = document.getElementById("board-id").value;
     function sendAsyncRequest() {
         //콘텐츠 입력창 보이게 함
@@ -54,6 +55,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 // start-time 요소에 시작 시간을 표시
                 startTimeElement.innerText = `Start time: ${data.startTime}`;
                 startTimeElement.style.display = 'block';
+                contentInput.value ='';
             })
             .catch(error => {
                 console.error('Error:', error);
