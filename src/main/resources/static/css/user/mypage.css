@@ -34,6 +34,11 @@
     flex-direction: column;
 }
 
+.main-content-title {
+    margin-top: 3rem;
+    margin-left: 3rem;
+}
+
 .user-profile-image {
     margin-left: 3rem;
     width: 200px;
