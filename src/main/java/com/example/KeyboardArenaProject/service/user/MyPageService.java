@@ -118,13 +118,22 @@ public class MyPageService {
 
         // 유저가 클리어한 기록을 참전 시작일시 기준으로 내림차순 조회
         List<Cleared> myArenas = clearedRepository.findAllByCompositeId_idOrderByStartTimeDesc(id);
+        if(myArenas.isEmpty()) {
+            throw new MyClearedBoardNotFoundException("아직 아레나에 참전한 기록이 없습니다.");
+        }
         // boardId만 모은 리스트
         List<String> boardIds = myArenas.stream()
             .map(myArena -> myArena.getCompositeId().getBoardId())
             .collect(Collectors.toList());
+        if(boardIds.isEmpty()) {
+            throw new MyClearedBoardNotFoundException("아직 아레나에 참전한 기록이 없습니다.");
+        }
+
         // 유저가 클리어한 아레나를 Board 테이블에서 다시 조회
         List<Board> myArenasFromBoard = myPageRepository.findAllById(boardIds);
-
+        if(myArenasFromBoard.isEmpty()) {
+            throw new MyClearedBoardNotFoundException("아직 아레나에 참전한 기록이 없습니다.");
+        }
         for(Board myArena: myArenasFromBoard) {
             // 유저가 클리어한 아레나에 참전한 기록 전체를 조회
             List<Cleared> participantList = clearedService.findAllByBoardId(myArena.getBoardId());
@@ -150,7 +159,7 @@ public class MyPageService {
         }
 
         List<String> boardIds = myComments.stream()
-            .map(comment -> comment.getBoardId())
+            .map(Comment::getBoardId)
             .collect(Collectors.toList());
 
         List<Board> myCommentedBoards = myPageRepository.findAllByBoardIdInOrderByCreatedDateDesc(boardIds);
@@ -163,10 +172,13 @@ public class MyPageService {
             if(nickname.isBlank()) {
                 throw new AuthorNotFoundException("게시물의 작성자를 조회하지 못했습니다.");
             }
+            List<Comment> myCommentsForBoard = commentRepository.findAllByBoardIdAndIdByCreatedDateDesc(board.getBoardId(), id);
+            log.info("{}", myCommentsForBoard.size());
             MyCommentedBoardsResponse response = MyCommentedBoardsResponse
                 .builder()
                 .board(board)
                 .author(nickname)
+                .myComments(myCommentsForBoard)
                 .build();
             myCommentedBoardsResponse.add(response);
         }
@@ -188,6 +200,12 @@ public class MyPageService {
 
     public class NewPasswordMismatchException extends RuntimeException {
         public NewPasswordMismatchException(String message) {
+            super(message);
+        }
+    }
+
+    public class MyClearedBoardNotFoundException extends RuntimeException {
+        public MyClearedBoardNotFoundException(String message) {
             super(message);
         }
     }

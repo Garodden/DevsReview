@@ -1,0 +1,26 @@
+/* mypage 공통 메뉴 css start =======> */
+
+.list-group-container {
+    position: absolute;
+    z-index: 1;
+    width: 35vh;
+    height: 100vh;
+    /*top: 0;*/
+    right: 0;
+    background-color: #f0f0f0;
+    padding: 20px;
+}
+
+.list-group {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.list-group-item {
+    margin-bottom: 30px;
+    background-color: transparent;
+    color: black;
+    border: none;
+}
+
+/* =======> mypage 공통 메뉴 css end */
