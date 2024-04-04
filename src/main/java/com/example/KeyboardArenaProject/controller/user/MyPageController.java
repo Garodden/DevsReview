@@ -116,11 +116,11 @@ public class MyPageController {
     @GetMapping("/mypage/boards/liked")
     public String getLikedBoards(Model model) {
         User user = userService.getCurrentUserInfo();
-        String userId = user.getUserId();
+        String id = user.getId();
         model.addAttribute("userTopBarInfo", UserTopBarInfoUtil.getUserTopBarInfo());
 
         try {
-            List<Like> likes = myPageService.getMyLikes(userId);
+            List<Like> likes = myPageService.getMyLikes(id);
             for (Like like : likes) {
                 log.info("MyPageController - getLikedBoards: 좋아요 boardId는 {}, id는 {}",
                     like.getCompositeId().getBoardId(), like.getCompositeId().getId());

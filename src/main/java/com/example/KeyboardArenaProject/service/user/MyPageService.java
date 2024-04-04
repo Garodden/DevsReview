@@ -94,12 +94,12 @@ public class MyPageService {
         return myBoards;
     }
 
-    public List<Like> getMyLikes(String userId) {
-        List<Like> myLikes = likeRepository.findByCompositeId_Id(userId);
+    public List<Like> getMyLikes(String id) {
+        List<Like> myLikes = likeRepository.findByCompositeId_Id(id);
         if(myLikes.isEmpty()) {
             throw new MyLikeNotFoundExcpetion("좋아요를 누른 게시글이 없습니다");
         }
-        return likeRepository.findByCompositeId_Id(userId);
+        return myLikes;
     }
 
     public List<MyLikedBoardsResponse> getMyLikedBoards(List<Like> likes) {
