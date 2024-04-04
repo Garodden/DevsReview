@@ -1,0 +1,106 @@
+/* header CSS */
+/* 헤더 적용에 필요한 css start =======> */
+
+.title-navbar-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+#logoutButton {
+    margin-left: 10px;
+    border: none;
+    color: black;
+    background-color: #d9d9d9;
+}
+
+#navbar-nickname {
+    font-weight: bold;
+}
+
+.mb-3 {
+    cursor: pointer;
+    margin-top: 1vh;
+}
+
+.mb-5 {
+    margin-bottom: 0 !important;
+}
+/* =======> 헤더 적용에 필요한 css end */
+
+/* mypage 공통 메뉴 css start =======> */
+
+.list-group-container {
+    position: absolute;
+    z-index: 1;
+    width: 35vh;
+    height: 100vh;
+    right: 0;
+    background-color: #f0f0f0;
+    padding: 20px;
+}
+
+.list-group {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.list-group-item {
+    margin-bottom: 30px;
+    background-color: transparent;
+    color: black;
+    border: none;
+}
+
+/* =======> mypage 공통 메뉴 css end */
+
+/* main CSS */
+
+.main-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.main-content-title,.main-content-subtitle {
+    margin-top: 3rem;
+    margin-left: 3rem;
+}
+
+.main-content-subtitle h3 {
+    margin-bottom: 20px;
+}
+
+.my-2 {
+    width: 70vh;
+    margin-left: 0;
+}
+
+#changePasswordForm {
+    margin-top: 1rem;
+    margin-left: 3rem;
+}
+
+.changePasswordInput {
+    margin-bottom: 15px;
+}
+
+.changePasswordInput label {
+    display: flex;
+    flex-direction: column;
+}
+
+.changePasswordInput input {
+    width: 20%;
+    padding: 10px;
+    margin: 8px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+.user-actions {
+    margin-left: 60vh;
+}
+
+.user-actions button {
+    margin-right: 5px;
+}
