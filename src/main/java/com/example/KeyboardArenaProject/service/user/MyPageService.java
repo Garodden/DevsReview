@@ -150,7 +150,7 @@ public class MyPageService {
         }
 
         List<String> boardIds = myComments.stream()
-            .map(comment -> comment.getBoardId())
+            .map(Comment::getBoardId)
             .collect(Collectors.toList());
 
         List<Board> myCommentedBoards = myPageRepository.findAllByBoardIdInOrderByCreatedDateDesc(boardIds);
@@ -163,10 +163,13 @@ public class MyPageService {
             if(nickname.isBlank()) {
                 throw new AuthorNotFoundException("게시물의 작성자를 조회하지 못했습니다.");
             }
+            List<Comment> myCommentsForBoard = commentRepository.findAllByBoardIdAndIdByCreatedDateDesc(board.getBoardId(), id);
+            log.info("{}", myCommentsForBoard.size());
             MyCommentedBoardsResponse response = MyCommentedBoardsResponse
                 .builder()
                 .board(board)
                 .author(nickname)
+                .myComments(myCommentsForBoard)
                 .build();
             myCommentedBoardsResponse.add(response);
         }
