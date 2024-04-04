@@ -11,6 +11,7 @@
     <script defer src="/js/common/LogoutBtn.js"></script>
 </head>
 <body>
+
 <header>
     <!-- 공통 헤더 start ======> -->
     <div class="p-5 mb-5 text-center</> bg-light">
@@ -47,13 +48,11 @@
         <div class="main-content-subtitle">
             내가 댓글 단 게시물
         </div>
-        <div th:unless="${myCommentedBoards}">
-            <p th:text="${errorMessage}"></p>
-        </div>
-        <table th:if="${myCommentedBoards}">
+        <table th:unless="${myCommentedBoards}">
             <thead>
             <tr>
                 <th style="white-space: nowrap;">번호</th>
+                <th style="white-space: nowrap; color: #3c7fff">유형</th>
                 <th style="white-space: nowrap; color: #1f6dff">제목</th>
                 <th style="white-space: nowrap;">작성자</th>
                 <th style="white-space: nowrap;">작성일</th>
@@ -62,8 +61,35 @@
             </tr>
             </thead>
             <tbody>
+                <tr>
+                    <td colspan="6" th:text="${errorMessage}"></td>
+                </tr>
+            </tbody>
+        </table>
+        <table th:if="${myCommentedBoards}">
+            <thead>
+                <tr>
+                    <th style="white-space: nowrap;">번호</th>
+                    <th style="white-space: nowrap; color: #3c7fff">유형</th>
+                    <th style="white-space: nowrap; color: #1f6dff">제목</th>
+                    <th style="white-space: nowrap;">작성자</th>
+                    <th style="white-space: nowrap;">작성일</th>
+                    <th style="white-space: nowrap;">좋아요</th>
+                    <th style="white-space: nowrap; color: #1f6dff">작성 댓글</th>
+                </tr>
+            </thead>
+            <tbody>
+
             <tr th:each="board, index : ${myCommentedBoards}" class="clickable-row" th:attr="board-id=${board.boardId}, board-type=${board.boardType}">
                 <td th:text="${index.index + 1}"></td>
+                <td>
+                    <span th:switch="${board.boardType}" style="color: #3c7fff">
+                        <span th:case="1">자유게시판</span>
+                        <span th:case="2">아레나</span>
+                        <span th:case="3">아레나</span>
+                        <span th:case="*" th:text="'Unknown'"></span>
+                    </span>
+                </td>
                 <td th:text="${board.title}"></td>
                 <td th:text="${board.author}"></td>
                 <td th:text="${#temporals.format(board.createdDate, 'yyyy.MM.dd')}"></td>
@@ -72,9 +98,9 @@
                     <ul style="list-style-type: none; text-align: left">
                         <li th:each="comment, commentIndex : ${board.commentResponses}">
                             <div style="max-width: 22vw; overflow: hidden; text-overflow: ellipsis;">
-                                <span th:text="${#temporals.format(comment.createdDate, 'yyyy.MM.dd')}"
-                                style="color: #7fabff; font-weight: bold">
-                                </span><br>
+                                    <span th:text="${#temporals.format(comment.createdDate, 'yyyy.MM.dd')}"
+                                          style="color: #7fabff; font-weight: bold">
+                                    </span><br>
                                 <span th:text="${comment.content}" ></span>
                                 <hr th:if="${commentIndex.index != #lists.size(board.commentResponses) - 1}"
                                     style="border: 1px #d3d3d3; margin-top: 0.5rem; margin-bottom: 0.5rem;">
@@ -89,3 +115,4 @@
 </main>
 </body>
 </html>
+

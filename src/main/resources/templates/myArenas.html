@@ -70,35 +70,35 @@
         </table>
         <table th:if="${myArenas}">
             <thead>
-            <tr>
-                <th style="white-space: nowrap;">번호</th>
-                <th style="white-space: nowrap; color: #1f6dff">Arena 제목</th>
-                <th style="white-space: nowrap; color: #1f6dff">랭크</th>
-                <th style="white-space: nowrap;">작성일</th>
-                <th style="white-space: nowrap;">참가자</th>
-                <th style="white-space: nowrap;">댓글</th>
-                <th style="white-space: nowrap;">좋아요</th>
-                <th style="white-space: nowrap; color: #1f6dff">N%</th>
-            </tr>
+                <tr>
+                    <th style="white-space: nowrap;">번호</th>
+                    <th style="white-space: nowrap; color: #1f6dff">Arena 제목</th>
+                    <th style="white-space: nowrap; color: #1f6dff">랭크</th>
+                    <th style="white-space: nowrap;">작성일</th>
+                    <th style="white-space: nowrap;">참가자</th>
+                    <th style="white-space: nowrap;">댓글</th>
+                    <th style="white-space: nowrap;">좋아요</th>
+                    <th style="white-space: nowrap; color: #1f6dff">N%</th>
+                </tr>
             </thead>
             <tbody th:if="${not #lists.isEmpty(myArenas)}">
-            <tr th:each="arena, index : ${myArenas}" class="clickable-row" th:attr="board-id=${arena.getBoardId()}, board-type=${arena.boardType}">
-                <td th:text="${index.index + 1}"></td>
-                <td th:text="${arena.title}"></td>
-                <td th:text="${arena.boardRank}"></td>
-                <td th:text="${#temporals.format(arena.createdDate, 'yyyy.MM.dd')}"></td>
-                <td th:text="${arena.participates}"></td>
-                <td th:text="${arena.comments}"></td>
-                <td th:text="${arena.likes}"></td>
-                <td>
-                    <span data-toggle="tooltip"
-                          th:attr="title=${'나의 아레나 클리어 기록이 상위 ' + arena.percentage + '%에 해당합니다.'}"
-                          style="color: #1f6dff; text-decoration: underline; cursor: pointer;"
-                          data-placement="top"
-                          th:text="${arena.percentage} + '%'">
-                    </span>
-                </td>
-            </tr>
+                <tr th:each="arena, index : ${myArenas}" class="clickable-row" th:attr="board-id=${arena.getBoardId()}, board-type=${arena.boardType}">
+                    <td th:text="${index.index + 1}"></td>
+                    <td th:text="${arena.title}"></td>
+                    <td th:text="${arena.boardRank}"></td>
+                    <td th:text="${#temporals.format(arena.createdDate, 'yyyy.MM.dd')}"></td>
+                    <td th:text="${arena.participates}"></td>
+                    <td th:text="${arena.comments}"></td>
+                    <td th:text="${arena.likes}"></td>
+                    <td>
+                        <span data-toggle="tooltip"
+                              th:attr="title=${'나의 아레나 클리어 기록이 상위 ' + arena.percentage + '%에 해당합니다.'}"
+                              style="color: #1f6dff; text-decoration: underline; cursor: pointer;"
+                              data-placement="top"
+                              th:text="${arena.percentage} + '%'">
+                        </span>
+                    </td>
+                </tr>
             </tbody>
         </table>
     </div>
