@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.example.KeyboardArenaProject.dto.mypage.MyArenaResponse;
 import com.example.KeyboardArenaProject.dto.mypage.MyCommentedBoardsResponse;
+import com.example.KeyboardArenaProject.dto.mypage.MyLikedBoardsResponse;
 import com.example.KeyboardArenaProject.dto.user.ChangePwRequest;
 import com.example.KeyboardArenaProject.dto.user.DeleteUserRequest;
 import com.example.KeyboardArenaProject.dto.user.MyPageInformation;
@@ -124,11 +125,7 @@ public class MyPageController {
                 log.info("MyPageController - getLikedBoards: 좋아요 boardId는 {}, id는 {}",
                     like.getCompositeId().getBoardId(), like.getCompositeId().getId());
             }
-            List<Board> likedBoards = myPageService.getMyLikedBoards(likes);
-            for (Board board : likedBoards) {
-                log.info("MyPageController - getLikedBoards: 좋아요 누른 게시글 boardId는 {}, id는 {}", board.getBoardId(),
-                    board.getId());
-            }
+            List<MyLikedBoardsResponse> likedBoards = myPageService.getMyLikedBoards(likes);
             model.addAttribute("likedBoards", likedBoards);
             return "likedboards";
         } catch (MyPageService.MyLikeNotFoundExcpetion e) {
