@@ -2,7 +2,11 @@ package com.example.KeyboardArenaProject.service.user;
 
 import java.util.Optional;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.core.Authentication;
@@ -24,6 +28,8 @@ public class UserService {
 	private final BCryptPasswordEncoder encoder;
 	private final MailSender mailSender;
 
+	@PersistenceContext
+	private EntityManager entityManager;
 	public UserService(UserRepository userRepository, BCryptPasswordEncoder encoder, MailSender mailSender) {
 		this.userRepository = userRepository;
 		this.encoder = encoder;
@@ -143,6 +149,30 @@ public class UserService {
 		if(user!=null){
 			user.updatePoint(points);
 		}
+	}
+
+	//특정주기마다 랭크 최신화시키는 쿼리
+	@Transactional
+	public void updateRank() {
+		String sql = "UPDATE user AS u" +
+				"    JOIN (" +
+				"        SELECT" +
+				"            uc.id," +
+				"            SUM((uc.total_users - uc.board_rank) / (uc.total_users-1) )+1 AS rank_score" +
+				"        FROM (" +
+				"                 SELECT" +
+				"                     id," +
+				"                     board_id," +
+				"                     RANK() OVER (PARTITION BY board_id ORDER BY clear_time ASC) AS board_rank," +
+				"                     COUNT(*) OVER (PARTITION BY board_id) AS total_users" +
+				"                 FROM user_cleared_board" +
+				"                 WHERE board_id IN (SELECT board_id FROM board WHERE board_type = 2)" +
+				"             ) AS uc" +
+				"        GROUP BY uc.id" +
+				"    ) AS scores ON u.id = scores.id" +
+				"	SET u.user_rank = ROUND(scores.rank_score)" +
+				"	WHERE u.user_rank != 10;";
+		entityManager.createNativeQuery(sql).executeUpdate();
 	}
 
 	public static class UserNotFoundException extends RuntimeException {
