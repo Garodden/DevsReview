@@ -189,7 +189,7 @@ public class FreeBoardController {
         model.addAttribute("writer",freeBoardService.findWriter(boardId));
         model.addAttribute("post",freeBoardService.findByBoardId(boardId));
         model.addAttribute("comments", comments);
-        model.addAttribute("loginedId",userService.getCurrentUserInfo().getId());
+
 
         //유저탑바
         model.addAttribute("userTopBarInfo", UserTopBarInfoUtil.getUserTopBarInfo());
@@ -197,8 +197,10 @@ public class FreeBoardController {
 
         if(!authentication.getPrincipal().equals("anonymousUser")) {
             model.addAttribute("loginedUserId",userService.getCurrentUserId());
+            model.addAttribute("loginedId",userService.getCurrentUserInfo().getId());
         }else{
             model.addAttribute("loginedUserId","");
+            model.addAttribute("loginedId","");
         }
 
         //CommentResponse DTO

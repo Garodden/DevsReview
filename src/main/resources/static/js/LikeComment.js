@@ -7,6 +7,8 @@ if(likeButton) {
         if (id !== "") {
             fetch(`/api/like?boardId=${boardId}&id=${id}`, {method: 'POST'})
                 .then(() => location.reload(true));
+        }else{
+            alert("로그인하지 않았습니다.");
         }
     });
 }
@@ -29,6 +31,8 @@ if(commitCommentButton) {
                 })
             })
                 .then(() => location.reload());
+        }else{
+            alert("로그인하지 않았습니다.");
         }
     });
 }
@@ -42,7 +46,7 @@ const deleteCommentButton = document.querySelectorAll('.delete-comment');
 if(deleteCommentButton){
     deleteCommentButton.forEach(btn=>{
         btn.addEventListener('click',()=>{
-            let board_id = document.getElementById('board-id').value;
+
             let commentId=btn.getAttribute('comment-id');
             fetch(`/comments/${commentId}`,{method:'DELETE'})
                 .then(()=>location.reload());
