@@ -52,3 +52,10 @@ tbody tr:hover {
 .clickable-row {
     cursor: pointer;
 }
+
+/* 주간 아레나 prefix */
+.weekly-prefix {
+    font-size: 0.75rem;
+    color: #ff4162;
+    font-weight: bold;
+}
