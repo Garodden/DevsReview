@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="/css/freeboard/UpdateAndViewFreeBoardDetail.css">
     <link rel="stylesheet" type="text/css" href="/css/common/LikeComment.css">
+    <link rel="stylesheet" type="text/css" href="/css/common/LikeComment.css" th:href="@{/css/common/LikeComment.css}">
     <script defer src="/js/freeboard/FreeBoard.js"></script>
     <script defer src="/js/LikeComment.js"></script>
     <script defer src="/js/common/LogoutBtn.js"></script>
@@ -24,9 +25,9 @@
             <h1 class="mb-3" onclick="location.href='/'">Keyboard Arena</h1>
             <!-- 탑 네비게이션 바 -->
             <div class="navbar navbar-expand-lg navbar-light bg-light">
-                <div class="navbar-text" id="navbar-nickname" th:text="${userTopBarInfo.nickname} + '&nbsp;&nbsp;'"></div>
-                <div class="navbar-text" th:text="'Rank: ' + ${userTopBarInfo.rank} + '&nbsp;&nbsp;'"></div>
-                <div class="navbar-text" th:text="'Points: ' + ${userTopBarInfo.point} + '&nbsp;&nbsp;'"></div>
+                <div class="navbar-text" id="navbar-nickname" th:text="${post.userTopBarInfo.nickname} + '&nbsp;&nbsp;'"></div>
+                <div class="navbar-text" th:text="'Rank: ' + ${post.userTopBarInfo.rank} + '&nbsp;&nbsp;'"></div>
+                <div class="navbar-text" th:text="'Points: ' + ${post.userTopBarInfo.point} + '&nbsp;&nbsp;'"></div>
                 <button type="button" class="btn btn-primary" onclick="location.href='/mypage'" >마이페이지</button>
                 <button type="button" class="btn btn-secondary" id="logoutButton">로그아웃</button>
             </div>
@@ -37,16 +38,16 @@
 <main class="main-container">
     <div class="main-container-content">
         <h2 th:text="${post.title}"></h2>
-        <p th:text="${writer.nickname}"></p>
-        <p th:text="${writer.userRank}"></p>
+        <p th:text="${post.writerNickname}"></p>
+        <p th:text="${post.writerRank}"></p>
         <p th:text="${post.boardRank}"></p><br>
         <p th:if="${post.updatedDate} != null and ${post.updatedDate} != ${post.createdDate}" class="edited">edited</p>
         <p th:if="${post.updatedDate} != null and ${post.updatedDate} != ${post.createdDate}" th:text="${#temporals.format(post.updatedDate,'yyyy-MM-dd/ HH:mm:ss')}" class="updated-date"></p>
         <p th:if="${post.updatedDate} == null or ${post.updatedDate} == ${post.createdDate}" th:text="${#temporals.format(post.createdDate,'yyyy-MM-dd/ HH:mm:ss')}" class="created-date"></p>
-        <input type="hidden" th:value="${loginedUserId}" id="logined-id">
+        <input type="hidden" th:value="${loggedInId}" id="logged-in-id">
         <div class="edit-buttons">
-            <button th:if="${loginedUserId}==${writer.userId} and ${loginedUserId}!=''" class="white-btn edit">edit</button>
-            <button th:if="${loginedUserId}==${writer.userId}" id="delete-freeboard-button" class="white-btn">delete</button>
+            <button th:if="${loggedInId}==${post.writerId} and ${loggedInId}!=''" class="white-btn edit">edit</button>
+            <button th:if="${loggedInId}==${post.writerId}" id="delete-freeboard-button" class="white-btn">delete</button>
             <input type="hidden" id="board-id" th:value="${post.boardId}">
         </div>
 
@@ -57,27 +58,29 @@
     <span th:text="${post.likes}"></span>
 
     <a href="/board">뒤로가기</a>
-
-
-
-
 </main>
-<details open>
-    <input type="hidden" id="logged-in-id" th:value="${loginedId}">
-    <summary>댓글</summary>
-    <ul th:each="comment,commentStat : ${commentResponses}">
-        <li>
-            <span th:text = "${comment.nickname }" class ="comment-box-element"></span>
-            <span th:text = "${comment.writerRank}" class ="comment-box-element"></span>
-            <span th:text = " ${comment.createdDate}" class ="comment-box-element"></span>
-            <span th:text = " ${comment.content}" class ="comment-box-element"></span>
+
+<article class = "container mt-5">
+    <label for="write-comment"></label>
+    <textarea name="writeComment" class="form-control" id="write-comment" cols="20" rows="5"></textarea>
+    <div class="comment-nav-bar">
+        <button  id="commit-comment" class="btn btn-outline-secondary" >댓글등록</button>
+        <span th:text="'댓글 수: ' + ${post.comments}"></span>
+    </div>
+    <ul th:each="comment : ${post.commentResponses}" class="list-group">
+        <li th:if="${comment.commentId != null}" class="list-group-item">
+            <span th:text = "${comment.nickname}" class ="comment-writer"></span>
+            <span th:text = "'Rank '+${comment.writerRank}" class ="comment-writer-rank"></span>
             <button th:if="${post.userTopBarInfo.id}==${comment.writerId}" class="delete-comment" th:attr="comment-id=${comment.commentId}">댓글삭제</button>
+            <br>
+            <span th:text = " ${comment.content}" class ="comment-content"></span>
+            <br>
+            <span th:text = " ${comment.createdDate}" class ="comment-created-date"></span>
 
         </li>
     </ul>
-    <textarea name="writeComment" id="write-comment" cols="20" rows="5"></textarea>
-    <button id="commit-comment">댓글등록</button>
+</article>
+\
 
-</details>
 </body>
 </html>

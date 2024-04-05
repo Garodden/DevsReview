@@ -1,3 +1,9 @@
+.like-btn-container{
+    display:flex;
+    justify-content: center;
+    margin:20px;
+}
+
 .like-button{
     -webkit-appearance: none;
     -moz-appearance: none;
@@ -10,6 +16,35 @@
     cursor: pointer;
 }
 
+.comment-writer{
+    font-weight: bolder;
+}
+
+.delete-comment{
+    background-color: transparent;
+    border: none;
+    color: #9a9a9a;
+}
+
+.delete-comment:hover{
+    background-color: transparent;
+    border: none;
+    color: #9a9a9a;
+}
+
+.comment-nav-bar{
+    display:flex;
+    justify-content: space-between;
+}
+
+.comment-created-date{
+    font-weight: lighter;
+    color: #777777;
+}
+.comment-content{
+    font-size: larger;
+}
+/*
 details{
     display: inline-block;
     margin-left: 164px;
@@ -18,3 +53,7 @@ details{
 details ul{
     list-style: none;
 }
+
+
+
+*/
