@@ -35,7 +35,7 @@ public class ArenaResultResponse {
                     "상위 " + String.format("%.2f", percentage*100)+"%입니다!";
         }
         else{
-            return title + " 아레나 클리어에 실패했습니다. 다시 시도해보세요!";
+            return "아레나 클리어에 실패했습니다. 다시 시도해보세요!";
         }
     }
 }
