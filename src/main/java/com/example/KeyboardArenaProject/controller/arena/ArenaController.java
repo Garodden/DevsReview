@@ -97,6 +97,8 @@ public class ArenaController {
         boolean ifFirstTry = !(clearedService.findIfUserDataExists(curKey) &&
                 clearedService.findIfUserClearDataExists(curKey));
 
+        List<ArenaBestUserResponse> top5Users = userService.findTop5UsersOfBoard(boardId);
+
         BoardDetailResponse arenaDetails = BoardDetailResponse
                 .builder()
                 .user(curUser)
@@ -116,7 +118,7 @@ public class ArenaController {
         }).collect(Collectors.toList()));
 
         model.addAttribute("arena", arenaDetails);
-
+        model.addAttribute("bestUsers", top5Users);
 
         return "arenaDetail";
 
@@ -239,7 +241,6 @@ public class ArenaController {
                 .builder()
                 .board(currentBoard)
                 .user(currentUser)
-                .writer(userService.getNickNameById(currentBoard.getId()))
                 .build();
 
         model.addAttribute("arena", verifyResponse);

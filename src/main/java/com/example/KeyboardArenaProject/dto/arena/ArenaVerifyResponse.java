@@ -18,16 +18,20 @@ public class ArenaVerifyResponse {
     String boardId;
     String title;
     String content;
-    String writer;
+    String writerNickName;
+    String writerId;
+    int writerRank;
     LocalDateTime createdDate;
     int boardRank;
 
-    @Builder ArenaVerifyResponse(User user, Board board, String writer){
+    @Builder ArenaVerifyResponse(User user, Board board){
         this.userTopBarInfo = new UserTopBarInfo(user);
         this.title = board.getTitle();
         this.content = board.getContent();
         this.boardId = board.getBoardId();
-        this.writer =writer;
+        this.writerNickName = user.getNickname();
+        this.writerId = user.getUserId();
+        this.writerRank = user.getUserRank();
         this.boardRank = board.getBoardRank();
         this.createdDate = board.getCreatedDate();
 
