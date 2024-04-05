@@ -134,7 +134,7 @@ public class FreeBoardController {
         model.addAttribute("freeboard",freeboardList);
         model.addAttribute("loginedUserRank",userService.getCurrentUserInfo().getUserRank());
         model.addAttribute("isShowTop",true);
-        return "freeboardList";
+        return "freeBoardList";
     }
 
     @GetMapping("/board/sort=2")
@@ -143,7 +143,7 @@ public class FreeBoardController {
         List<Board> freeboardList = commonBoardService.findAllCreatedSortedBoard();
         model.addAttribute("freeboard",freeboardList);
         model.addAttribute("loginedUserRank",userService.getCurrentUserInfo().getUserRank());
-        return "freeboardList";
+        return "freeBoardList";
     }
 
     @GetMapping("/board/{boardId}")
