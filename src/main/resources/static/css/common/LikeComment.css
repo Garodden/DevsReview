@@ -1,17 +1,17 @@
-
-.blind{
-    width:1px;
+.blind {
+    width: 1px;
     height: 1px;
-    margin:0;
+    margin: 0;
     clip-path: inset(50%);
     overflow: hidden;
     display: inline-block;
-  
+}
+
 .like-btn-container{
     display:flex;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
     margin:20px;
-
 }
 
 .like-button{

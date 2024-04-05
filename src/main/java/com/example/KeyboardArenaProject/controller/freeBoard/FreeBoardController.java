@@ -179,6 +179,7 @@ public class FreeBoardController {
             }
         }
 
+
         if(!authentication.getPrincipal().equals("anonymousUser")) {
             model.addAttribute("loggedInId",userService.getCurrentUserInfo().getId());
         }else{
@@ -207,9 +208,7 @@ public class FreeBoardController {
                 .ifFirstTry(true)
                 .comment(commentService.findCommentsByBoardId(boardId))
                 .participates(curFreeBoardInfo.getViews())
-                .writerNickname(writer.getNickname())
                 .writerNickname(commonBoardService.findWriter(boardId).getNickname())
-                .writerRank(writer.getUserRank())
                 .writerRank(commonBoardService.findWriter(boardId).getUserRank())
                 .build();
 
