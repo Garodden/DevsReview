@@ -4,7 +4,7 @@ import com.example.KeyboardArenaProject.entity.Comment;
 import com.example.KeyboardArenaProject.entity.compositeKey.UserBoardCompositeKey;
 import com.example.KeyboardArenaProject.service.CommentService;
 import com.example.KeyboardArenaProject.service.LikeService;
-import com.example.KeyboardArenaProject.service.freeBoard.FreeBoardService;
+import com.example.KeyboardArenaProject.service.board.CommonBoardService;
 import com.example.KeyboardArenaProject.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -19,7 +19,7 @@ public class LikeCommentController {
 
     private final LikeService likeService;
     private final CommentService commentService;
-    private final FreeBoardService freeBoardService;
+    private final CommonBoardService commonBoardService;
     private final UserService userService;
     @ResponseBody
     @PostMapping("/api/like")
@@ -39,7 +39,7 @@ public class LikeCommentController {
             }else{
                 likes = likeService.save(userBoardCompositeKey);
             }
-            freeBoardService.updateBoardLikes(likes, userBoardCompositeKey.getBoardId());
+            commonBoardService.updateBoardLikes(likes, userBoardCompositeKey.getBoardId());
         }
     }
 
@@ -48,7 +48,7 @@ public class LikeCommentController {
     public String saveComment(@PathVariable String board_id,@RequestBody Map<String,String> content){
         Comment comment = new Comment(board_id,content.get("content"), userService.getCurrentUserInfo().getId(),userService.getCurrentUserInfo().getNickname());
         commentService.saveComment(comment);
-        freeBoardService.plusCommentsCount(board_id);
+        commonBoardService.plusCommentsCount(board_id);
         return "redirect:/board/"+board_id;
     }
 
@@ -56,6 +56,6 @@ public class LikeCommentController {
     public void deleteComment(@PathVariable String comment_id){
         String boardId = commentService.findCommentById(comment_id).getBoardId();
         commentService.deleteComment(comment_id);
-        freeBoardService.minusCommentsCount(boardId);
+        commonBoardService.minusCommentsCount(boardId);
     }
 }
