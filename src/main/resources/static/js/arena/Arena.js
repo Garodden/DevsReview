@@ -103,7 +103,12 @@ if(deleteArenaButton){
         let boardId = document.getElementById("board-id").value;
         fetch(`/arenas/${boardId}`,{method: 'DELETE'})
             .then(()=>{alert('삭제가 완료되었습니다.');
-                location.replace('/arenas');
+                if (!document.referrer) {
+                    window.location.href = '/arenas';
+                }
+                else {
+                    window.history.back();
+                }
             });
     });
 }

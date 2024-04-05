@@ -174,35 +174,12 @@ public class FreeBoardController {
                 commonBoardService.plusView(boardId);
             }
         }
-
-//
-        List<Comment> comments = commentService.findCommentsByBoardId(boardId);
-        model.addAttribute("writer",commonBoardService.findWriter(boardId));
-        model.addAttribute("post",commonBoardService.findByBoardId(boardId));
-        model.addAttribute("comments", comments);
-
-
-        //유저탑바
-        model.addAttribute("userTopBarInfo", UserTopBarInfoUtil.getUserTopBarInfo());
-
-
         if(!authentication.getPrincipal().equals("anonymousUser")) {
-            model.addAttribute("loginedUserId",userService.getCurrentUserId());
-            model.addAttribute("loginedId",userService.getCurrentUserInfo().getId());
+            model.addAttribute("loggedInId",userService.getCurrentUserInfo().getId());
         }else{
-            model.addAttribute("loginedUserId","");
-            model.addAttribute("loginedId","");
+            model.addAttribute("loggedInId","");
         }
 
-        //CommentResponse DTO
-        List<CommentResponse> commentResponseList = comments.stream()
-                .map(comment->new CommentResponse(comment.getNickName(),comment.getCommentId(),comment.getId(),
-                userService.findById(comment.getId()).getUserRank(),comment.getContent(),comment.getCreatedDate()))
-                .toList();
-        model.addAttribute("commentResponses",commentResponseList);
-//
-
-        //여기부터 내 코드
 
         BoardDetailResponse postDetails = BoardDetailResponse
                 .builder()
@@ -211,9 +188,9 @@ public class FreeBoardController {
                 .ifFirstTry(true)
                 .comment(commentService.findCommentsByBoardId(boardId))
                 .participates(curFreeBoardInfo.getViews())
-//                .writerNickname(writer.getNickname())
+                .writerNickname(writer.getNickname())
                 .writerNickname(commonBoardService.findWriter(boardId).getNickname())
-//                .writerRank(writer.getUserRank())
+                .writerRank(writer.getUserRank())
                 .writerRank(commonBoardService.findWriter(boardId).getUserRank())
                 .build();
 
