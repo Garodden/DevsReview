@@ -241,7 +241,6 @@ public class ArenaController {
                 .builder()
                 .board(currentBoard)
                 .user(currentUser)
-                .writer(userService.getNickNameById(currentBoard.getId()))
                 .build();
 
         model.addAttribute("arena", verifyResponse);
