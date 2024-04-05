@@ -86,7 +86,11 @@
                         <span th:case="*" th:text="'Unknown'"></span>
                     </span>
                 </td>
-                <td th:text="${board.title}"></td>
+                <td>
+                    <span th:if="${board.boardType == 3 && board.ifActive == false}" style="font-weight: bold; color: #ff3459">(검증 필요)</span>
+                    <span th:if="${board.boardType == 3 &&  board.ifActive == true}" style="color: #1f6dff">(등록 완료)</span>
+                    <span th:text="${board.title}"></span>
+                </td>
                 <td th:text="${#temporals.format(board.createdDate, 'yyyy.MM.dd')}"></td>
                 <td th:text="${board.likes}"></td>
                 <td><a th:href="@{'/board/' + ${board.getBoardId()} + '/update'}"
