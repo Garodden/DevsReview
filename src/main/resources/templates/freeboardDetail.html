@@ -44,6 +44,7 @@
         <p th:if="${post.updatedDate} != null and ${post.updatedDate} != ${post.createdDate}" th:text="${#temporals.format(post.updatedDate,'yyyy-MM-dd/ HH:mm:ss')}" class="updated-date"></p>
         <p th:if="${post.updatedDate} == null or ${post.updatedDate} == ${post.createdDate}" th:text="${#temporals.format(post.createdDate,'yyyy-MM-dd/ HH:mm:ss')}" class="created-date"></p>
         <input type="hidden" th:value="${loggedInId}" id="logged-in-id">
+        <input type="hidden" th:value="${post.userTopBarInfo.userId}" id="logged-in-user-id">
         <div class="edit-buttons">
             <button th:if="${loggedInId}==${post.writerId} and ${loggedInId}!=''" class="white-btn edit">edit</button>
             <button th:if="${loggedInId}==${post.writerId}" id="delete-freeboard-button" class="white-btn">delete</button>
