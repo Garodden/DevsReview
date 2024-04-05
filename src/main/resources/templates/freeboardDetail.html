@@ -91,6 +91,7 @@
         <li th:if="${comment.commentId != null}" class="list-group-item">
             <span th:text = "${comment.nickname}" class ="comment-writer"></span>
             <span th:text = "'Rank '+${comment.writerRank}" class ="comment-writer-rank"></span>
+
             <button th:if="${post.userTopBarInfo.id}==${comment.writerId}" class="delete-comment" th:attr="comment-id=${comment.commentId}">댓글삭제</button>
             <br>
             <span th:text = " ${comment.content}" class ="comment-content"></span>
@@ -100,7 +101,6 @@
         </li>
     </ul>
 </article>
-\
 
 </body>
 </html>

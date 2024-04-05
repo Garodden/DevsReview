@@ -179,11 +179,11 @@ public class FreeBoardController {
             }
         }
 
-// chanhyuk
+        //잠시
         List<Comment> comments = commentService.findCommentsByBoardId(boardId);
         model.addAttribute("writer",commonBoardService.findWriter(boardId));
         model.addAttribute("comments", comments);
-//
+
 
         if(!authentication.getPrincipal().equals("anonymousUser")) {
             model.addAttribute("loggedInId",userService.getCurrentUserInfo().getId());
@@ -207,8 +207,6 @@ public class FreeBoardController {
         model.addAttribute("ifLike",ifLike);
 
 
-        //여기부터 내 코드
-
         BoardDetailResponse postDetails = BoardDetailResponse
                 .builder()
                 .user(curUser)
@@ -216,9 +214,7 @@ public class FreeBoardController {
                 .ifFirstTry(true)
                 .comment(commentService.findCommentsByBoardId(boardId))
                 .participates(curFreeBoardInfo.getViews())
-//                .writerNickname(writer.getNickname())
                 .writerNickname(commonBoardService.findWriter(boardId).getNickname())
-//                .writerRank(writer.getUserRank())
                 .writerRank(commonBoardService.findWriter(boardId).getUserRank())
                 .build();
 

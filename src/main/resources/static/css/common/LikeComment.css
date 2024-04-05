@@ -1,3 +1,4 @@
+
 .blind{
     width:1px;
     height: 1px;
@@ -5,7 +6,6 @@
     clip-path: inset(50%);
     overflow: hidden;
     display: inline-block;
-}
 
 .like-btn-container{
     display:flex;
