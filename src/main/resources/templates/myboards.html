@@ -90,9 +90,7 @@
                 <td th:text="${#temporals.format(board.createdDate, 'yyyy.MM.dd')}"></td>
                 <td th:text="${board.likes}"></td>
                 <td><a th:href="@{'/board/' + ${board.getBoardId()} + '/update'}"
-                       th:unless="${
-                       userTopBarInfo.userId.length() >= 4 &&
-                       userTopBarInfo.userId.substring(userTopBarInfo.userId.length()-4,userTopBarInfo.userId.length())}=='(탈퇴)'">
+                       th:unless="${userTopBarInfo.userId.contains('(탈퇴)')}">
                     수정
                 </a>
 
