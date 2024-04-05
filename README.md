@@ -1,8 +1,7 @@
- ESTsoft 오르미 백엔드 개발자 과정 4기 스프링 프로젝트 6팀의 리포지토리
-
 # 🎮💻 Keyboard-Arena
 ## Keyboard Arena는? <br>
-Keyboard Arena는 경쟁 기반 타자 연습을 위한 회원제 커뮤니티 서비스입니다.
+Keyboard Arena는 경쟁 기반 타자 연습을 위한 회원제 커뮤니티 서비스입니다.<br>
+ESTsoft 백엔드 개발자 과정 '오르미' 4기 Java/Spring 프로젝트의 일환으로 제작되었습니다.
 
 ## 🕹 주요 기능
 - `주간 랭크전 타자연습 아레나 참전 `
@@ -12,8 +11,14 @@ Keyboard Arena는 경쟁 기반 타자 연습을 위한 회원제 커뮤니티 �
   - 유저는 자격 검증을 마치고 정식으로 등록된 아레나를 자유로이 즐기고, 좋아요 및 댓글을 남길 수 있습니다. 
 - `유저 랭킹 기반 권한 부여 시스템`
     - 아레나 참전 및 자유게시판 게시글 조회에 있어 권한이 차등 부여됩니다.
-    - 
-
+ 
+## 🤼‍♂️ Team
+(맡은 역할 추가)
+- 서창덕 ([Github](https://github.com/Garodden))
+- 송찬혁 ([Github](https://github.com/songchanyok))
+- 지윤호 ([Github](https://github.com/UUUUUKnow))
+- 장한빛 ([Github](https://github.com/biiit4894))
+ 
 ## 🛠 Tech Stack
 - Language : Java 17
 - Framework : Spring Boot 3.2.4
@@ -22,7 +27,7 @@ Keyboard Arena는 경쟁 기반 타자 연습을 위한 회원제 커뮤니티 �
 - 배포 : AWS EC2/RDS
 
 ## ⛏ ERD
-
+(추가 예정)
 [//]: # (시간 날때 기술 스택 아이콘 첨부하려고 냅둔 주석 ...)
 
 [//]: # (- https://camo.githubusercontent.com/b0648ef7a9b6980ea27c1caaeb06d5c8503dbb4f9b4d9d7ca1df60a5edc14340/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f6a6176612d2532334544384230302e7376673f7374796c653d666f722d7468652d6261646765266c6f676f3d6f70656e6a646b266c6f676f436f6c6f723d7768697465)
