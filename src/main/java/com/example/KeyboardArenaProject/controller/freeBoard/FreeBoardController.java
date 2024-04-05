@@ -183,10 +183,6 @@ public class FreeBoardController {
         List<Comment> comments = commentService.findCommentsByBoardId(boardId);
         model.addAttribute("writer",commonBoardService.findWriter(boardId));
         model.addAttribute("comments", comments);
-
-
-        //유저탑바
-        model.addAttribute("userTopBarInfo", UserTopBarInfoUtil.getUserTopBarInfo());
 //
 
         if(!authentication.getPrincipal().equals("anonymousUser")) {

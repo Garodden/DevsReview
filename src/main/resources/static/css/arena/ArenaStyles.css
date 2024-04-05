@@ -46,3 +46,14 @@
     border-radius: 10px; /* 코너를 둥글게 처리 */
 }
 
+/*.like-btn-container>span{*/
+/*    display: flex;*/
+/*    justify-content: center;*/
+/*}*/
+
+/*.comment-and-rank-container{*/
+/*    display:flex;*/
+/*    gap: 20px;*/
+/*    justify-content:center;*/
+/*}*/
+
