@@ -14,6 +14,8 @@ import com.example.KeyboardArenaProject.entity.Comment;
 import com.example.KeyboardArenaProject.repository.CommentRepository;
 
 import jakarta.transaction.Transactional;
+
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.core.Authentication;
@@ -48,23 +50,28 @@ public class UserService {
 	}
 
 	public User save(AddUserRequest dto) {
-
 		if (userRepository.existsByUserId(dto.getUserId())) {
 			throw new IllegalArgumentException("이미 사용 중인 아이디입니다.");
 		}
 		if (userRepository.existsByEmail(dto.getEmail())) {
 			throw new IllegalArgumentException("이미 사용 중인 이메일입니다.");
 		}
-		return userRepository.save(
-			User.builder()
-				.userId(dto.getUserId())
-				.password(encoder.encode(dto.getPassword()))
-				.nickname(dto.getNickname())
-				.email(dto.getEmail())
-				.findPw(dto.getFindPw())
-				.findPwQuestion(dto.getFindPwQuestion())
-				.build()
-		);
+
+		User user = User.builder()
+			.userId(dto.getUserId())
+			.password(encoder.encode(dto.getPassword()))
+			.nickname(dto.getNickname())
+			.email(dto.getEmail())
+			.findPw(dto.getFindPw())
+			.findPwQuestion(dto.getFindPwQuestion())
+			.build();
+
+		try {
+			return userRepository.save(user);
+		} catch (DataIntegrityViolationException e) {
+			// PK 중복 예외
+			throw new IllegalArgumentException("잘못된 접근입니다.");
+		}
 	}
 
 	// 현재 로그인한 유저 정보 조회

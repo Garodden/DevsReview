@@ -64,10 +64,12 @@
             <div class="changePasswordInput">
                 <label for="newPassword">새로운 비밀번호</label>
                 <input type="password" id="newPassword" name="newPassword" required placeholder="비밀번호(8~20자 이내, 영문/숫자/기호 사용가능)">
+                <div class="newStrongPasswordMessage hide">8~20자 이내, 영문/숫자/기호 사용해주세요!</div>
             </div>
             <div class="changePasswordInput">
                 <label for="confirmNewPassword">새로운 비밀번호 확인</label>
                 <input type="password" id="confirmNewPassword" name="confirmNewPassword" required placeholder="비밀번호(8~20자 이내, 영문/숫자/기호 사용가능)">
+                <div class="newPasswordMismatchMessage hide">새로운 비밀번호가 일치하지 않습니다</div>
             </div>
             <div class="user-actions">
                 <button class="btn btn-primary" type="submit">변경</button>
