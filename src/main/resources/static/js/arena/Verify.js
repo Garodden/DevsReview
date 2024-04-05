@@ -66,6 +66,24 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
+const deleteArenaButton = document.getElementById('delete-arena-button');
+if(deleteArenaButton) {
+    deleteArenaButton.addEventListener('click', () => {
+        let boardId = document.getElementById("board-id").value;
+        fetch(`/arenas/${boardId}`, {method: 'DELETE'})
+            .then(() => {
+                alert('삭제가 완료되었습니다.');
+                if (!document.referrer) {
+                    window.location.href = '/arenas';
+                }
+                else {
+                    window.history.back();
+                }
+
+            });
+    });
+}
+
 document.addEventListener('copy', function(e) {
     e.preventDefault(); // 복사 이벤트를 막음
 });

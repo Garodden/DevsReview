@@ -138,7 +138,7 @@ public class FreeBoardController {
         model.addAttribute("freeboard",freeboardList);
         model.addAttribute("loginedUserRank",userService.getCurrentUserInfo().getUserRank());
         model.addAttribute("isShowTop",true);
-        return "freeboardList";
+        return "freeBoardList";
     }
 
     @GetMapping("/board/sort=2")
@@ -147,7 +147,7 @@ public class FreeBoardController {
         List<Board> freeboardList = commonBoardService.findAllCreatedSortedBoard();
         model.addAttribute("freeboard",freeboardList);
         model.addAttribute("loginedUserRank",userService.getCurrentUserInfo().getUserRank());
-        return "freeboardList";
+        return "freeBoardList";
     }
 
     @GetMapping("/board/{boardId}")
@@ -179,7 +179,7 @@ public class FreeBoardController {
             }
         }
 
-//
+// chanhyuk
         List<Comment> comments = commentService.findCommentsByBoardId(boardId);
         model.addAttribute("writer",commonBoardService.findWriter(boardId));
         model.addAttribute("comments", comments);
@@ -187,14 +187,12 @@ public class FreeBoardController {
 
         //유저탑바
         model.addAttribute("userTopBarInfo", UserTopBarInfoUtil.getUserTopBarInfo());
-
+//
 
         if(!authentication.getPrincipal().equals("anonymousUser")) {
-            model.addAttribute("loginedUserId",userService.getCurrentUserId());
-            model.addAttribute("loginedId",userService.getCurrentUserInfo().getId());
+            model.addAttribute("loggedInId",userService.getCurrentUserInfo().getId());
         }else{
-            model.addAttribute("loginedUserId","");
-            model.addAttribute("loginedId","");
+            model.addAttribute("loggedInId","");
         }
 
         //좋아요를 눌렀는지 검증
