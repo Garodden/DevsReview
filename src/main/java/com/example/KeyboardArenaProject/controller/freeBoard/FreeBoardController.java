@@ -179,11 +179,6 @@ public class FreeBoardController {
             }
         }
 
-        //잠시
-        List<Comment> comments = commentService.findCommentsByBoardId(boardId);
-        model.addAttribute("writer",commonBoardService.findWriter(boardId));
-        model.addAttribute("comments", comments);
-
 
         if(!authentication.getPrincipal().equals("anonymousUser")) {
             model.addAttribute("loggedInId",userService.getCurrentUserInfo().getId());
@@ -191,7 +186,6 @@ public class FreeBoardController {
             model.addAttribute("loggedInId","");
         }
 
-        //좋아요를 눌렀는지 검증
         boolean ifLike;
         Like like = likeService.findById(
                 UserBoardCompositeKey.builder()
