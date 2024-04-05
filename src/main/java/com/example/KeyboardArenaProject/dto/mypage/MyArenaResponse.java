@@ -17,7 +17,7 @@ public class MyArenaResponse {
 	int participates;
 	int comments;
 	int likes;
-	double percentage;
+	String percentage;
 
 	@Builder
 	MyArenaResponse(Board board, int participates, double percentage) {
@@ -29,6 +29,6 @@ public class MyArenaResponse {
 		this.participates = participates;
 		this.comments =board.getComments();
 		this.likes = board.getLikes();
-		this.percentage = percentage;
+		this.percentage = "상위 "+String.format("%.2f", percentage);
 	}
 }

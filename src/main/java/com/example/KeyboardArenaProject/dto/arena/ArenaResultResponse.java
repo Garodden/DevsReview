@@ -32,7 +32,7 @@ public class ArenaResultResponse {
                     title + " 아레나를" +
                     time.toString() + "에 클리어 하셨군요!\n" +
                     participants.toString() + "명 중 "+nthPlace.toString()+"+ 등으로\n" +
-                    "상위 " +percentage+"%입니다!";
+                    "상위 " + String.format("%.2f", percentage*100)+"%입니다!";
         }
         else{
             return title + " 아레나 클리어에 실패했습니다. 다시 시도해보세요!";
