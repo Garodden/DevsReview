@@ -14,11 +14,8 @@ import com.example.KeyboardArenaProject.repository.LikeRepository;
 import com.example.KeyboardArenaProject.repository.MyPageRepository;
 import com.example.KeyboardArenaProject.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
-
-import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;

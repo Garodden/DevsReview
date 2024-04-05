@@ -94,3 +94,99 @@ thead, tbody, tfoot {
     content: "top3 ";
     color: green;
 }
+/*******/
+.main-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.first-line{
+    flex-direction: row;
+}
+.new-freeboard-title-input{
+    width: 450px;
+    height: 36px;
+    font-size: 24px;
+    display: inline-block;
+}
+
+.set-board-rank{
+    margin-left: 67px;
+    font-size: 24px;
+}
+
+#free-content{
+    height: 600px;
+}
+
+.main-container-content{
+    width: 1042px;
+}
+
+.main-container-content h2{
+    font-size: 40px;
+}
+
+.main-container-content p:nth-of-type(1){
+    font-size: 25px;
+    display: inline-block;
+}
+.main-container-content p:nth-of-type(2){
+    font-size: 25px;
+    margin-left: 35px;
+    display: inline-block;
+}
+.main-container-content p:nth-of-type(3){
+    font-size: 25px;
+    margin-left: 35px;
+    display: inline-block;
+}
+
+.main-container-content p:nth-of-type(1)::before{
+    content: '작성자 : ';
+    color: gray;
+}
+
+.main-container-content p:nth-of-type(2)::before{
+    content: '작성자 랭크 : ';
+    color: gray;
+}
+.main-container-content p:nth-of-type(3)::before{
+    content: '게시판 랭크 : ';
+    color: gray;
+}
+
+.edited{
+    color: #777777;
+    font-size: 24px;
+    display: inline-block;
+}
+
+.updated-date, .created-date{
+    font-size: 25px;
+    display: inline-block;
+}
+.updated-date::before, .created-date::before{
+    content: 'Date : ';
+    color: gray;
+}
+
+.edit-buttons{
+    margin-left: 398px;
+    display: inline;
+}
+
+.white-btn{
+    width: 92px;
+    height: 36px;
+    margin-left: 36px;
+    vertical-align: top;
+    border: 1px solid;
+    background-color: #fff;
+}
+
+.main-container-content textarea{
+    width: 1046px;
+    height: 599px;
+}
+

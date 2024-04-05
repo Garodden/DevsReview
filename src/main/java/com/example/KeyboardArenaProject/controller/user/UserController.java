@@ -1,5 +1,6 @@
 package com.example.KeyboardArenaProject.controller.user;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -45,7 +46,7 @@ public class UserController {
 			User user = userService.save(request);
 			return ResponseEntity.status(HttpStatus.CREATED)
 				.body(user.toResponse());
-		} catch(IllegalArgumentException ex) {
+		} catch(IllegalArgumentException | DataIntegrityViolationException ex) {
 			return ResponseEntity.badRequest().body(ex.getMessage());
 		}
 
