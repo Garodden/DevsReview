@@ -22,11 +22,16 @@
 
 /* =======> 헤더 적용에 필요한 css end */
 
-.main-container{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+/*.main-container{*/
+/*    display: flex;*/
+/*    flex-direction: column;*/
+/*    align-items: center;*/
+/*}*/
+
+#main-container-title {
+    margin-bottom: 10px;
 }
+
 .first-line{
     /*제목 input을 하나의 div로, select와 두 개의 버튼을 하나의 div로 묶어
     flex 내부에서 space-between에 의해 textarea의 width 양 끝에
@@ -118,6 +123,6 @@
 }
 
 .main-container-content textarea{
-    width: 1046px;
+    /*width: 1046px;*/
     height: 599px;
 }
