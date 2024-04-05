@@ -58,6 +58,7 @@ public class CommonBoardService {
         board.updateToActive();
     }
 
+    @Transactional
     public void deleteBy(String boardId) {
         boardRepository.deleteByBoardId(boardId);
     }
