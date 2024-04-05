@@ -75,14 +75,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
 //post 작동 로직
 document.addEventListener('DOMContentLoaded', function() {
-    const form = document.getElementById('user-typed-content'); // 폼의 ID를 사용합니다.
+    const form = document.getElementById('user-typed-content'); // 폼의 ID를 사용
     const contentInput = document.getElementById('content-input'); // 사용자가 입력한 텍스트를 가져올 요소의 ID입니다.
     let boardId = document.getElementById("board-id").value;
     form.addEventListener('submit', function(event) {
-        event.preventDefault(); // 폼의 기본 제출 동작을 방지합니다.
+        event.preventDefault(); // 폼의 기본 제출 동작을 방지
 
         const formData = new FormData();
-        formData.append('userTypedText', contentInput.value); // key-value 쌍을 FormData 객체에 추가합니다.
+        formData.append('userTypedText', contentInput.value); // key-value 쌍을 FormData 객체에 추가
 
         fetch(`/arenas/${boardId}`, {
             method: 'POST',
