@@ -4,9 +4,11 @@ import com.example.KeyboardArenaProject.dto.arena.*;
 import com.example.KeyboardArenaProject.dto.user.UserTopBarInfo;
 import com.example.KeyboardArenaProject.entity.Board;
 import com.example.KeyboardArenaProject.entity.Cleared;
+import com.example.KeyboardArenaProject.entity.Like;
 import com.example.KeyboardArenaProject.entity.User;
 import com.example.KeyboardArenaProject.entity.compositeKey.UserBoardCompositeKey;
 import com.example.KeyboardArenaProject.service.CommentService;
+import com.example.KeyboardArenaProject.service.LikeService;
 import com.example.KeyboardArenaProject.service.board.CommonBoardService;
 import com.example.KeyboardArenaProject.service.user.ClearedService;
 import com.example.KeyboardArenaProject.service.user.UserService;
@@ -32,11 +34,13 @@ public class ArenaController {
     private final ClearedService clearedService;
     private final CommentService commentService;
     private final UserService userService;
-    public ArenaController(CommonBoardService commonBoardService, ClearedService cleardService, CommentService commentService, UserService userService){
+    private final LikeService likeService;
+    public ArenaController(CommonBoardService commonBoardService, ClearedService cleardService, CommentService commentService, UserService userService, LikeService likeService){
         this.commonBoardService = commonBoardService;
         this.clearedService = cleardService;
         this.commentService =commentService;
         this.userService = userService;
+        this.likeService = likeService;
     }
 
     @Operation(summary = "아레나 전체 보기", description = "주간 랭킹 아레나, 좋아요 top 3 아레나, 그리고 나머지 일반 아레나들을 순서대로 보여주는 API")
@@ -119,6 +123,21 @@ public class ArenaController {
 
         model.addAttribute("arena", arenaDetails);
         model.addAttribute("bestUsers", top5Users);
+
+        //좋아요를 눌렀는지 검증
+        boolean ifLike;
+        Like like = likeService.findById(
+                UserBoardCompositeKey.builder()
+                        .id(userService.getCurrentUserInfo().getId())
+                        .boardId(boardId)
+                        .build()
+        );
+        if(like!=null){
+            ifLike = like.isIfLike();
+        }else{
+            ifLike=false;
+        }
+        model.addAttribute("ifLike",ifLike);
 
         return "arenaDetail";
 

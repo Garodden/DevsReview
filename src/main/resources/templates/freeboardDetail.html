@@ -53,8 +53,29 @@
 
         <textarea name="content" id="" cols="100" rows="5" th:text="${post.content}" readonly></textarea>
     </div>
-    <button class="like-button"><img src="/media/like.svg" alt="좋아요 클릭" width="42"></button>
-
+    <input type="hidden" id="ifLike" th:value="${ifLike}">
+    <button class="like-button">
+        <span class="blind">좋아요 클릭</span>
+        <svg version="1.0" xmlns="http://www.w3.org/2000/svg"
+                 viewBox="0 0 2600.000000 2600.000000"
+                 preserveAspectRatio="xMidYMid meet" width="46" height="46">
+                <metadata>
+                    Created by potrace 1.15, written by Peter Selinger 2001-2017
+                </metadata>
+                <g transform="translate(0.000000,2600.000000) scale(0.100000,-0.100000)"
+                   fill="#000000" stroke="none">
+                    <path d="M8270 18939 c-363 -28 -761 -106 -1062 -208 -517 -177 -924 -434
+         -1314 -832 -660 -675 -1050 -1630 -1134 -2779 -13 -175 -13 -644 0 -830 118
+         -1675 831 -3420 2079 -5085 1354 -1808 3297 -3460 5713 -4860 l178 -103 222
+        130 c2108 1230 3864 2664 5169 4223 1343 1605 2194 3326 2468 4995 71 427 96
+        775 88 1215 -6 340 -13 438 -53 712 -243 1701 -1233 2916 -2669 3277 -229 57
+         -540 107 -788 127 -191 15 -630 7 -797 -15 -1000 -131 -1836 -603 -2560 -1446
+         -420 -490 -831 -1192 -1050 -1795 -18 -49 -36 -93 -39 -98 -4 -4 -27 45 -50
+        110 -100 274 -286 664 -451 948 -442 756 -1013 1371 -1633 1756 -522 325
+         -1089 510 -1706 559 -152 11 -454 11 -611 -1z"/>
+                </g>
+            </svg>
+    </button>
     <span th:text="${post.likes}"></span>
 
     <a href="/board">뒤로가기</a>
@@ -71,6 +92,7 @@
         <li th:if="${comment.commentId != null}" class="list-group-item">
             <span th:text = "${comment.nickname}" class ="comment-writer"></span>
             <span th:text = "'Rank '+${comment.writerRank}" class ="comment-writer-rank"></span>
+
             <button th:if="${post.userTopBarInfo.id}==${comment.writerId}" class="delete-comment" th:attr="comment-id=${comment.commentId}">댓글삭제</button>
             <br>
             <span th:text = " ${comment.content}" class ="comment-content"></span>
