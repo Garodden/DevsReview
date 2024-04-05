@@ -127,6 +127,9 @@ public class UserService {
 		Optional<User> userOptional = userRepository.findByUserIdAndFindPwQuestionAndFindPw(userId, question, answer);
 		if(userOptional.isPresent()) {
 			User user = userOptional.get();
+			if (!user.getIsActive()) {
+				throw new UserNotFoundException("User account is disabled");
+			}
 			log.info("service - resetPassword 찾은 userId: {}", user.getUserId());
 			String newPassword = GeneratePwUtils.generateNewPassword();
 
@@ -148,7 +151,6 @@ public class UserService {
 		User currentUser = getCurrentUserInfo();
 		Optional<User> userOptional = userRepository.findById(currentUser.getId());
 		List<Comment> myComments = commentRepository.findAllByIdOrderByCreatedDateDesc(currentUser.getId());
-		log.info("조회된 코멘트 목록: {}", myComments);
 
 		if (userOptional.isPresent()) {
 			User user = userOptional.get();
@@ -165,8 +167,8 @@ public class UserService {
 
 			log.info("사용자 {}의 계정을 비활성화합니다.", user.getUserId());
 			user.setIsActive(false);
-			user.setUserId(user.getUserId() + "(탈퇴)");
 			user.setNickname(user.getNickname() + "(탈퇴)");
+			user.setPassword(encoder.encode(GeneratePwUtils.generateNewPassword()));
 			// Comment 테이블의 nickname 변경
 			for (Comment comment : myComments) {
 				log.info("댓글 작성자: {}",comment.getNickName());
