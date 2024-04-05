@@ -19,6 +19,24 @@
     justify-content: space-between;
 }
 
+.like-btn-container{
+    display:flex;
+    flex-direction: column;
+    align-content: center;
+    margin:20px;
+}
+
+.like-btn-container>span{
+    display: flex;
+    justify-content: center;
+}
+
+.comment-and-rank-container{
+    display:flex;
+    gap: 20px;
+    justify-content:center;
+}
+
 .reference-text-container{
     font-size: large;
     font-weight: bold;
@@ -29,22 +47,5 @@
     border-radius: 10px; /* 코너를 둥글게 처리 */
 }
 
-.like-btn-container{
-    display:flex;
-    justify-content: center;
-    margin:20px;
-}
-.like-button{
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    background-color: transparent;
-    border: none;
-}
 
-.comment-and-rank-container{
-    display:flex;
-    gap: 20px;
-    justify-content:center;
-}
 

@@ -205,6 +205,7 @@ public class FreeBoardController {
                 .toList();
         model.addAttribute("commentResponses",commentResponseList);
 
+        //좋아요를 눌렀는지 검증
         boolean ifLike;
         Like like = likeService.findById(
                 UserBoardCompositeKey.builder()
