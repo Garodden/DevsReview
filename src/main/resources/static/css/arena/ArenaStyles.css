@@ -1,0 +1,50 @@
+.writer-info-container{
+    display:flex;
+    gap: 20px;
+}
+
+.sub-board-info{
+    color : #a2a2a2;
+}
+.start-element-container{
+    display:flex;
+    gap: 20px;
+    font-weight: lighter;
+    color: #4644e5
+}
+
+.board-rank-and-del-btn{
+    display:flex;
+    gap: 20px;
+    justify-content: space-between;
+}
+
+.reference-text-container{
+    font-size: large;
+    font-weight: bold;
+    padding: 30px;
+    margin-top: 50px;
+    margin-bottom:50px;
+    border: 1px solid darkgrey;
+    border-radius: 10px; /* 코너를 둥글게 처리 */
+}
+
+.like-btn-container{
+    display:flex;
+    justify-content: center;
+    margin:20px;
+}
+.like-button{
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-color: transparent;
+    border: none;
+}
+
+.comment-and-rank-container{
+    display:flex;
+    gap: 20px;
+    justify-content:center;
+}
+

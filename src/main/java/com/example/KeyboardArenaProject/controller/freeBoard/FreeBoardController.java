@@ -8,34 +8,26 @@ import com.example.KeyboardArenaProject.dto.freeBoard.FreeBoardRecieveForm;
 import com.example.KeyboardArenaProject.dto.freeBoard.FreeBoardResponse;
 import com.example.KeyboardArenaProject.dto.freeBoard.FreeBoardWriteRequest;
 import com.example.KeyboardArenaProject.dto.user.AnonymousUser;
-import com.example.KeyboardArenaProject.dto.user.UserTopBarInfo;
 import com.example.KeyboardArenaProject.entity.Board;
 import com.example.KeyboardArenaProject.entity.Comment;
 import com.example.KeyboardArenaProject.entity.User;
 import com.example.KeyboardArenaProject.service.CommentService;
-import com.example.KeyboardArenaProject.service.arena.ArenaService;
-import com.example.KeyboardArenaProject.service.freeBoard.FreeBoardService;
+import com.example.KeyboardArenaProject.service.board.CommonBoardService;
 
-import com.example.KeyboardArenaProject.service.user.MyPageService;
 import com.example.KeyboardArenaProject.service.user.UserService;
 import com.example.KeyboardArenaProject.utils.user.UserTopBarInfoUtil;
 
 import jakarta.servlet.http.HttpServletRequest;
-import jdk.jshell.spi.ExecutionControl;
 import lombok.RequiredArgsConstructor;
 
 import lombok.extern.slf4j.Slf4j;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.http.HttpResponse;
-import java.util.ArrayList;
 import java.util.List;
 
 import java.util.stream.Collectors;
@@ -45,8 +37,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Controller
 public class FreeBoardController {
-    private final ArenaService arenaService;
-    private final FreeBoardService freeBoardService;
+    private final CommonBoardService commonBoardService;
     private final UserService userService;
     private final CommentService commentService;
 
@@ -55,13 +46,13 @@ public class FreeBoardController {
         model.addAttribute("userTopBarInfo", UserTopBarInfoUtil.getUserTopBarInfo());
 
         // 전체 랭크전 아레나
-        List<Board> arenaList = arenaService.findAllRankArena();
+        List<Board> arenaList = commonBoardService.findAllRankArena();
         List<ArenaResponse> rankArenas = arenaList.stream()
             .map(ArenaResponse::new)
             .toList();
 
         // 일반 아레나 상위 3개
-        List<Board> top3ArenaList = arenaService.findTop3ArenaOrderByLikes();
+        List<Board> top3ArenaList = commonBoardService.findTop3ArenaOrderByLikes();
         List<ArenaResponse> top3NormalArenas = top3ArenaList.stream()
             .map(ArenaResponse::new)
             .toList();
@@ -71,7 +62,7 @@ public class FreeBoardController {
             .toList();
 
         // 나머지 일반 아레나 생성일자 내림차순
-        List<Board> otherNormalArenaList = arenaService.findNormalArenaOrderByCreatedDate(top3BoardIds);
+        List<Board> otherNormalArenaList = commonBoardService.findNormalArenaOrderByCreatedDate(top3BoardIds);
         List<ArenaResponse> otherNormalArenas = otherNormalArenaList.stream()
             .map(ArenaResponse::new)
             .toList();
@@ -97,7 +88,7 @@ public class FreeBoardController {
             request = new FreeBoardWriteRequest(user.getId(),recieveForm.getTitle(),recieveForm.getContent(),recieveForm.getBoardRank());
         }
         board = request.toEntity();
-        freeBoardService.writeFreeBoard(board);
+        commonBoardService.writeFreeBoard(board);
         log.info("board is created id = {}",board.getBoardId());
         return "redirect:/board";
 
@@ -125,21 +116,21 @@ public class FreeBoardController {
     @PutMapping("/board/{board_id}")
     public String updateFreeBoard(@PathVariable String board_id,@ModelAttribute FreeBoardRecieveForm recieveForm){
 
-        freeBoardService.updateBoard(recieveForm.getTitle(),recieveForm.getContent(), recieveForm.getBoardRank(), board_id);
-        FreeBoardResponse response = freeBoardService.findByBoardId(board_id).toResponse();
+        commonBoardService.updateBoard(recieveForm.getTitle(),recieveForm.getContent(), recieveForm.getBoardRank(), board_id);
+        FreeBoardResponse response = commonBoardService.findByBoardId(board_id).toResponse();
         log.info("/board/{board_id} response {}",response);
         return "redirect:/board/"+board_id;
     }
 
     @DeleteMapping("/board/{board_id}")
     public void deleteFreeBoard(@PathVariable String board_id){
-        freeBoardService.deleteBoard(board_id);
+        commonBoardService.deleteBoard(board_id);
     }
 
     @GetMapping("/board")
     public String viewAllFreeBoard(Model model){
         model.addAttribute("userTopBarInfo", UserTopBarInfoUtil.getUserTopBarInfo());
-        List<Board> freeboardList = freeBoardService.findAllLikeSortedFreeBoard();
+        List<Board> freeboardList = commonBoardService.findAllLikeSortedFreeBoard();
         model.addAttribute("freeboard",freeboardList);
         model.addAttribute("loginedUserRank",userService.getCurrentUserInfo().getUserRank());
         model.addAttribute("isShowTop",true);
@@ -149,7 +140,7 @@ public class FreeBoardController {
     @GetMapping("/board/sort=2")
     public String viewAllFreeBoardSortedByCreated(Model model){
         model.addAttribute("userTopBarInfo", UserTopBarInfoUtil.getUserTopBarInfo());
-        List<Board> freeboardList = freeBoardService.findAllCreatedSortedBoard();
+        List<Board> freeboardList = commonBoardService.findAllCreatedSortedBoard();
         model.addAttribute("freeboard",freeboardList);
         model.addAttribute("loginedUserRank",userService.getCurrentUserInfo().getUserRank());
         return "freeboardList";
@@ -164,7 +155,7 @@ public class FreeBoardController {
             clientIp = request.getRemoteAddr();
         }
         //현재 보드, 유저 정보
-        Board curFreeBoardInfo = freeBoardService.findByBoardId(boardId);
+        Board curFreeBoardInfo = commonBoardService.findByBoardId(boardId);
 
         User curUser = userService.getCurrentUserInfo();
 
@@ -173,21 +164,21 @@ public class FreeBoardController {
         //조회수 증가
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(!authentication.getPrincipal().equals("anonymousUser")){
-            if(!freeBoardService.isContainsIpAndId(clientIp, boardId, userService.getCurrentUserId())){
-                freeBoardService.saveIpAndId(clientIp, boardId,userService.getCurrentUserId());
-                freeBoardService.plusView(boardId);
+            if(!commonBoardService.isContainsIpAndId(clientIp, boardId, userService.getCurrentUserId())){
+                commonBoardService.saveIpAndId(clientIp, boardId,userService.getCurrentUserId());
+                commonBoardService.plusView(boardId);
             }
         }else{
-            if(!freeBoardService.isContainsIpAndId(clientIp, boardId, "")){
-                freeBoardService.saveIpAndId(clientIp, boardId,"");
-                freeBoardService.plusView(boardId);
+            if(!commonBoardService.isContainsIpAndId(clientIp, boardId, "")){
+                commonBoardService.saveIpAndId(clientIp, boardId,"");
+                commonBoardService.plusView(boardId);
             }
         }
 
 //
         List<Comment> comments = commentService.findCommentsByBoardId(boardId);
-        model.addAttribute("writer",freeBoardService.findWriter(boardId));
-        model.addAttribute("post",freeBoardService.findByBoardId(boardId));
+        model.addAttribute("writer",commonBoardService.findWriter(boardId));
+        model.addAttribute("post",commonBoardService.findByBoardId(boardId));
         model.addAttribute("comments", comments);
 
 
@@ -221,9 +212,9 @@ public class FreeBoardController {
                 .comment(commentService.findCommentsByBoardId(boardId))
                 .participates(curFreeBoardInfo.getViews())
 //                .writerNickname(writer.getNickname())
-                .writerNickname(freeBoardService.findWriter(boardId).getNickname())
+                .writerNickname(commonBoardService.findWriter(boardId).getNickname())
 //                .writerRank(writer.getUserRank())
-                .writerRank(freeBoardService.findWriter(boardId).getUserRank())
+                .writerRank(commonBoardService.findWriter(boardId).getUserRank())
                 .build();
 
         postDetails.setCommentResponses(postDetails.getCommentResponses().stream()
@@ -238,7 +229,7 @@ public class FreeBoardController {
         //탈퇴유저 들어갈 수 없게하기 자기가 쓴 게시글에는 접근 가능하게 하기
         if(!authentication.getPrincipal().equals("anonymousUser")) {
             if (userService.getCurrentUserInfo().getUserId().contains("(탈퇴)") || !userService.getCurrentUserInfo().getIsActive()) {
-                if (!freeBoardService.getMyBoards(curUser.getId()).contains(freeBoardService.findByBoardId(boardId))) {
+                if (!commonBoardService.getMyBoards(curUser.getId()).contains(commonBoardService.findByBoardId(boardId))) {
                     return "signoutUserError";
                 }
             }
@@ -250,7 +241,7 @@ public class FreeBoardController {
     @GetMapping("/board/{board_id}/update")
     public String updateOneFreeBoard(@PathVariable String board_id,Model model){
         model.addAttribute("user",userService.getCurrentUserInfo());
-        model.addAttribute("post", freeBoardService.findByBoardId(board_id));
+        model.addAttribute("post", commonBoardService.findByBoardId(board_id));
         return "updateFreeboard";
     }
 }

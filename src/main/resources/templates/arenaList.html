@@ -7,6 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Keyboard Arena</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/common/Header.css" th:href="@{/css/common/Header.css}">
     <link rel="stylesheet" type="text/css" href="/css/arena/ArenaList.css" th:href="@{/css/arena/ArenaList.css}">
     <script defer src="/js/common/LogoutBtn.js"></script>
     <script src="/js/arena/Arena.js"></script>
@@ -89,8 +90,9 @@
                 <td th:text="${arena.comments}"></td>
                 <td th:text="${arena.likes}"></td>
                 <td>
-                    <a th:href="@{/arenas/{boardId}(boardId=${arena.boardId})}" class="btn btn-primary">참전하기</a>
-
+                    <a th:href="@{/arenas/{boardId}(boardId=${arena.boardId})}"
+                       th:if="${userTopBarInfo.rank} >= ${arena.boardRank}"  class="btn btn-primary">참전하기</a>
+                    <a th:if="${userTopBarInfo.rank} < ${arena.boardRank}" class="btn btn-secondary deactivated">참전하기</a>
                 </td>
             </tr>
             </tbody>
