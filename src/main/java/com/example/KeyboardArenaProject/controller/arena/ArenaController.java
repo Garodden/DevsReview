@@ -7,7 +7,7 @@ import com.example.KeyboardArenaProject.entity.Cleared;
 import com.example.KeyboardArenaProject.entity.User;
 import com.example.KeyboardArenaProject.entity.compositeKey.UserBoardCompositeKey;
 import com.example.KeyboardArenaProject.service.CommentService;
-import com.example.KeyboardArenaProject.service.arena.ArenaService;
+import com.example.KeyboardArenaProject.service.board.CommonBoardService;
 import com.example.KeyboardArenaProject.service.user.ClearedService;
 import com.example.KeyboardArenaProject.service.user.UserService;
 import com.example.KeyboardArenaProject.utils.user.UserTopBarInfoUtil;
@@ -28,12 +28,12 @@ import java.util.stream.Collectors;
 @Tag(name = "아레나 CRUD")
 @Controller
 public class ArenaController {
-    private final ArenaService arenaService;
+    private final CommonBoardService commonBoardService;
     private final ClearedService clearedService;
     private final CommentService commentService;
     private final UserService userService;
-    public ArenaController(ArenaService arenaService, ClearedService cleardService, CommentService commentService, UserService userService){
-        this.arenaService = arenaService;
+    public ArenaController(CommonBoardService commonBoardService, ClearedService cleardService, CommentService commentService, UserService userService){
+        this.commonBoardService = commonBoardService;
         this.clearedService = cleardService;
         this.commentService =commentService;
         this.userService = userService;
@@ -46,14 +46,14 @@ public class ArenaController {
         model.addAttribute("userTopBarInfo", UserTopBarInfoUtil.getUserTopBarInfo());
 
         // 전체 랭크전 아레나
-        List<Board> arenaList = arenaService.findAllRankArena();
+        List<Board> arenaList = commonBoardService.findAllRankArena();
 
         List<ArenaResponse> rankArenas = arenaList.stream()
             .map(ArenaResponse::new)
             .toList();
 
         // 일반 아레나 상위 3개
-        List<Board> top3ArenaList = arenaService.findTop3ArenaOrderByLikes();
+        List<Board> top3ArenaList = commonBoardService.findTop3ArenaOrderByLikes();
         List<ArenaResponse> top3NormalArenas = top3ArenaList.stream()
             .map(ArenaResponse::new)
             .toList();
@@ -63,7 +63,7 @@ public class ArenaController {
             .toList();
 
         // 나머지 일반 아레나 생성일자 내림차순
-        List<Board> otherNormalArenaList = arenaService.findNormalArenaOrderByCreatedDate(top3BoardIds);
+        List<Board> otherNormalArenaList = commonBoardService.findNormalArenaOrderByCreatedDate(top3BoardIds);
         List<ArenaResponse> otherNormalArenas = otherNormalArenaList.stream()
             .map(ArenaResponse::new)
             .toList();
@@ -80,7 +80,7 @@ public class ArenaController {
     @GetMapping("/arenas/{boardId}")
     public String showArenaDetails(@PathVariable String boardId, Model model) throws JsonProcessingException {
 
-        Board arenaRawInfo = arenaService.findByBoardId(boardId);
+        Board arenaRawInfo = commonBoardService.findByBoardId(boardId);
 
         if(!arenaRawInfo.getIfActive()){
             return "redirect:/arena/"+boardId+"/verify";
@@ -148,7 +148,7 @@ public class ArenaController {
     @ResponseBody
     public String checkArenaResult(@PathVariable String boardId, @RequestParam String userTypedText){
 
-        Board curBoard = arenaService.findByBoardId(boardId);
+        Board curBoard = commonBoardService.findByBoardId(boardId);
         User curUser = userService.getCurrentUserInfo();
         UserBoardCompositeKey curKey = UserBoardCompositeKey.builder()
                 .id(curUser.getId())
@@ -169,7 +169,7 @@ public class ArenaController {
                 userService.givePoints(curUser.getId(), 1000);
             }
             if(!clearedService.findIfUserClearDataExists(curKey)) {
-                arenaService.updateParticipates(curBoard.getBoardId());
+                commonBoardService.updateParticipates(curBoard.getBoardId());
             }
 
             List<Cleared> participantList = clearedService.findAllByBoardId(boardId);
@@ -192,7 +192,7 @@ public class ArenaController {
     @DeleteMapping("/arenas/{boardId}")
     @ResponseBody
     public ResponseEntity<Void> deleteArena(@PathVariable String boardId){
-        arenaService.deleteBy(boardId);
+        commonBoardService.deleteBy(boardId);
         return ResponseEntity.ok().build();
 
     }
@@ -224,7 +224,7 @@ public class ArenaController {
                 .active(false)
                 .build();
 
-        arenaService.saveArena(arena);
+        commonBoardService.saveArena(arena);
         return arena.getBoardId();
     }
 
@@ -233,7 +233,7 @@ public class ArenaController {
     @GetMapping("/arena/{boardId}/verify")
     public String addNewArena(@PathVariable String boardId, Model model ) {
         User currentUser = userService.getCurrentUserInfo();
-        Board currentBoard = arenaService.findByBoardId(boardId);
+        Board currentBoard = commonBoardService.findByBoardId(boardId);
 
         ArenaVerifyResponse verifyResponse = ArenaVerifyResponse
                 .builder()
@@ -274,7 +274,7 @@ public class ArenaController {
     @ResponseBody
     public String addNewArenaverify(@PathVariable String boardId, @RequestParam String userTypedText) {
 
-        Board curBoard = arenaService.findByBoardId(boardId);
+        Board curBoard = commonBoardService.findByBoardId(boardId);
         User curUser = userService.getCurrentUserInfo();
 
         UserBoardCompositeKey curKey = UserBoardCompositeKey.builder()
@@ -296,7 +296,7 @@ public class ArenaController {
         if(originalContent.equals(userTypedContent)&&
                 result.getClearTimeBySeconds()<=120){
             clearedService.updateClearTime(curKey);
-            arenaService.updateActive(curBoard.getBoardId());
+            commonBoardService.updateActive(curBoard.getBoardId());
             return result.resultPopupText(true);
         }
         else {

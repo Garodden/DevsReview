@@ -2,10 +2,8 @@ package com.example.KeyboardArenaProject.service;
 
 import com.example.KeyboardArenaProject.entity.Like;
 import com.example.KeyboardArenaProject.entity.compositeKey.UserBoardCompositeKey;
-import com.example.KeyboardArenaProject.repository.FreeBoardRepository;
 import com.example.KeyboardArenaProject.repository.LikeRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 
 @Service

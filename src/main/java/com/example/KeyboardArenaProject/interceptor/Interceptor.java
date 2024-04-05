@@ -1,11 +1,7 @@
 package com.example.KeyboardArenaProject.interceptor;
 
-import com.example.KeyboardArenaProject.service.freeBoard.FreeBoardService;
-import com.example.KeyboardArenaProject.service.user.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
