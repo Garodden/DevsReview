@@ -24,7 +24,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.server.ResponseStatusException;
 
 @Slf4j
 @Controller
@@ -130,11 +129,11 @@ public class MyPageController {
             }
             List<MyLikedBoardsResponse> likedBoards = myPageService.getMyLikedBoards(likes);
             model.addAttribute("likedBoards", likedBoards);
-            return "likedboards";
+            return "likedBoards";
         } catch (MyPageService.MyLikeNotFoundExcpetion e) {
             String errorMessage = "좋아요를 누른 게시글이 없습니다";
             model.addAttribute("errorMessage", errorMessage);
-            return "likedboards";
+            return "likedBoards";
         }
     }
 
