@@ -9,6 +9,14 @@
 .like-button:hover{
     cursor: pointer;
 }
+.like-button svg path:hover{
+    fill: red;
+}
+
+.like-svg{
+    fill: red;
+}
+
 
 details{
     display: inline-block;

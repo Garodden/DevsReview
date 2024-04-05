@@ -10,8 +10,11 @@ import com.example.KeyboardArenaProject.dto.freeBoard.FreeBoardWriteRequest;
 import com.example.KeyboardArenaProject.dto.user.AnonymousUser;
 import com.example.KeyboardArenaProject.entity.Board;
 import com.example.KeyboardArenaProject.entity.Comment;
+import com.example.KeyboardArenaProject.entity.Like;
 import com.example.KeyboardArenaProject.entity.User;
+import com.example.KeyboardArenaProject.entity.compositeKey.UserBoardCompositeKey;
 import com.example.KeyboardArenaProject.service.CommentService;
+import com.example.KeyboardArenaProject.service.LikeService;
 import com.example.KeyboardArenaProject.service.board.CommonBoardService;
 
 import com.example.KeyboardArenaProject.service.user.UserService;
@@ -40,6 +43,7 @@ public class FreeBoardController {
     private final CommonBoardService commonBoardService;
     private final UserService userService;
     private final CommentService commentService;
+    private final LikeService likeService;
 
     @GetMapping("/")
     public String indexPage(Model model){
@@ -200,6 +204,20 @@ public class FreeBoardController {
                 userService.findById(comment.getId()).getUserRank(),comment.getContent(),comment.getCreatedDate()))
                 .toList();
         model.addAttribute("commentResponses",commentResponseList);
+
+        boolean ifLike;
+        Like like = likeService.findById(
+                UserBoardCompositeKey.builder()
+                        .id(userService.getCurrentUserInfo().getId())
+                        .boardId(boardId)
+                        .build()
+        );
+        if(like!=null){
+            ifLike = like.isIfLike();
+        }else{
+            ifLike=false;
+        }
+        model.addAttribute("ifLike",ifLike);
 //
 
         //여기부터 내 코드

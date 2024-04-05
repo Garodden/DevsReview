@@ -1,7 +1,18 @@
 const likeButton = document.querySelector('.like-button');
+const svgImg = document.querySelector('.like-button svg path');
+let ifLike= document.getElementById('ifLike');
+
+if(ifLike.value==='true'){
+    svgImg.classList.add("like-svg");
+}
+if(ifLike.value==='false'){
+    svgImg.classList.remove("like-svg");
+}
+
 
 if(likeButton) {
     likeButton.addEventListener('click', () => {
+        svgImg.classList.toggle("like-svg");
         let boardId = document.getElementById('board-id').value;
         let id = document.getElementById('logged-in-id').value;
         if (id !== "") {
@@ -15,6 +26,7 @@ if(likeButton) {
 else{
     console.log("there's no like button! the value is null")
 }
+
 
 const commitCommentButton = document.getElementById('commit-comment');
 if(commitCommentButton) {
