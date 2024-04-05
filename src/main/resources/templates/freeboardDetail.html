@@ -86,9 +86,9 @@
 <details open>
     <input type="hidden" id="logged-in-id" th:value="${loginedId}">
     <summary>댓글</summary>
-    <ul th:each="comment,commentStat : ${commentResponses}">
+    <ul th:each="comment,commentStat : ${post.getCommentResponses()}">
         <li>
-            <span th:text = "${comment.nickname }" class ="comment-box-element"></span>
+            <span th:text = "${comment.nickname}" class ="comment-box-element"></span>
             <span th:text = "${comment.writerRank}" class ="comment-box-element"></span>
             <span th:text = " ${comment.createdDate}" class ="comment-box-element"></span>
             <span th:text = " ${comment.content}" class ="comment-box-element"></span>

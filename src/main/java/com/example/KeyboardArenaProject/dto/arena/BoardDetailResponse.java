@@ -57,5 +57,7 @@ public class BoardDetailResponse {
                 .stream()
                 .map(CommentResponse::new)
                 .collect(Collectors.toList());
+
+
     }
 }

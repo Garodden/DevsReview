@@ -182,7 +182,6 @@ public class FreeBoardController {
 //
         List<Comment> comments = commentService.findCommentsByBoardId(boardId);
         model.addAttribute("writer",commonBoardService.findWriter(boardId));
-        model.addAttribute("post",commonBoardService.findByBoardId(boardId));
         model.addAttribute("comments", comments);
 
 
@@ -198,13 +197,6 @@ public class FreeBoardController {
             model.addAttribute("loginedId","");
         }
 
-        //CommentResponse DTO
-        List<CommentResponse> commentResponseList = comments.stream()
-                .map(comment->new CommentResponse(comment.getNickName(),comment.getCommentId(),comment.getId(),
-                userService.findById(comment.getId()).getUserRank(),comment.getContent(),comment.getCreatedDate()))
-                .toList();
-        model.addAttribute("commentResponses",commentResponseList);
-
         //좋아요를 눌렀는지 검증
         boolean ifLike;
         Like like = likeService.findById(
@@ -219,7 +211,7 @@ public class FreeBoardController {
             ifLike=false;
         }
         model.addAttribute("ifLike",ifLike);
-//
+
 
         //여기부터 내 코드
 
