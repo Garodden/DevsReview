@@ -25,7 +25,7 @@ import com.example.KeyboardArenaProject.utils.user.GenerateIdUtils;
 public class User implements UserDetails {
 	@Getter
 	@Id
-	@Column(name="id", updatable = false)
+	@Column(name="id", updatable = false, unique = true)
 	private String id;
 
 	@Column(name="user_id", nullable = false)
