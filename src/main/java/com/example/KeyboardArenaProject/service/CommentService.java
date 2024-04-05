@@ -4,6 +4,7 @@ package com.example.KeyboardArenaProject.service;
 import com.example.KeyboardArenaProject.dto.CommentResponse;
 import com.example.KeyboardArenaProject.entity.Comment;
 import com.example.KeyboardArenaProject.repository.CommentRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,6 +24,7 @@ public class CommentService {
         commentRepository.save(comment);
     }
 
+    @Transactional
     public void deleteComment(String commentId) {
         commentRepository.deleteById(commentId);
     }

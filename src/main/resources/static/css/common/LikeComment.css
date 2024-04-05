@@ -1,3 +1,4 @@
+
 .blind{
     width:1px;
     height: 1px;
@@ -5,6 +6,12 @@
     clip-path: inset(50%);
     overflow: hidden;
     display: inline-block;
+  
+.like-btn-container{
+    display:flex;
+    justify-content: center;
+    margin:20px;
+
 }
 
 .like-button{
@@ -27,6 +34,35 @@
 }
 
 
+.comment-writer{
+    font-weight: bolder;
+}
+
+.delete-comment{
+    background-color: transparent;
+    border: none;
+    color: #9a9a9a;
+}
+
+.delete-comment:hover{
+    background-color: transparent;
+    border: none;
+    color: #9a9a9a;
+}
+
+.comment-nav-bar{
+    display:flex;
+    justify-content: space-between;
+}
+
+.comment-created-date{
+    font-weight: lighter;
+    color: #777777;
+}
+.comment-content{
+    font-size: larger;
+}
+/*
 details{
     display: inline-block;
     margin-left: 164px;
@@ -35,3 +71,7 @@ details{
 details ul{
     list-style: none;
 }
+
+
+
+*/

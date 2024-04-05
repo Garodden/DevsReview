@@ -18,7 +18,8 @@ public class MyArenaResponse {
 	int comments;
 	int likes;
 	Boolean ifActive;
-	double percentage;
+	String percentage;
+
 
 	@Builder
 	MyArenaResponse(Board board, int participates, double percentage) {
@@ -30,7 +31,8 @@ public class MyArenaResponse {
 		this.participates = participates;
 		this.comments =board.getComments();
 		this.likes = board.getLikes();
-		this.ifActive = board.getIfActive();
-		this.percentage = percentage;
+    this.ifActive = board.getIfActive();
+		this.percentage = "상위 "+String.format("%.2f", percentage);
+
 	}
 }

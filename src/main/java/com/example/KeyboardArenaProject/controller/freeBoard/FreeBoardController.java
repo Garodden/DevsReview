@@ -138,7 +138,7 @@ public class FreeBoardController {
         model.addAttribute("freeboard",freeboardList);
         model.addAttribute("loginedUserRank",userService.getCurrentUserInfo().getUserRank());
         model.addAttribute("isShowTop",true);
-        return "freeboardList";
+        return "freeBoardList";
     }
 
     @GetMapping("/board/sort=2")
@@ -147,7 +147,7 @@ public class FreeBoardController {
         List<Board> freeboardList = commonBoardService.findAllCreatedSortedBoard();
         model.addAttribute("freeboard",freeboardList);
         model.addAttribute("loginedUserRank",userService.getCurrentUserInfo().getUserRank());
-        return "freeboardList";
+        return "freeBoardList";
     }
 
     @GetMapping("/board/{boardId}")
@@ -179,25 +179,12 @@ public class FreeBoardController {
             }
         }
 
-//
-        List<Comment> comments = commentService.findCommentsByBoardId(boardId);
-        model.addAttribute("writer",commonBoardService.findWriter(boardId));
-        model.addAttribute("comments", comments);
-
-
-        //유저탑바
-        model.addAttribute("userTopBarInfo", UserTopBarInfoUtil.getUserTopBarInfo());
-
-
         if(!authentication.getPrincipal().equals("anonymousUser")) {
-            model.addAttribute("loginedUserId",userService.getCurrentUserId());
-            model.addAttribute("loginedId",userService.getCurrentUserInfo().getId());
+            model.addAttribute("loggedInId",userService.getCurrentUserInfo().getId());
         }else{
-            model.addAttribute("loginedUserId","");
-            model.addAttribute("loginedId","");
+            model.addAttribute("loggedInId","");
         }
 
-        //좋아요를 눌렀는지 검증
         boolean ifLike;
         Like like = likeService.findById(
                 UserBoardCompositeKey.builder()
@@ -213,8 +200,6 @@ public class FreeBoardController {
         model.addAttribute("ifLike",ifLike);
 
 
-        //여기부터 내 코드
-
         BoardDetailResponse postDetails = BoardDetailResponse
                 .builder()
                 .user(curUser)
@@ -222,9 +207,9 @@ public class FreeBoardController {
                 .ifFirstTry(true)
                 .comment(commentService.findCommentsByBoardId(boardId))
                 .participates(curFreeBoardInfo.getViews())
-//                .writerNickname(writer.getNickname())
+                .writerNickname(writer.getNickname())
                 .writerNickname(commonBoardService.findWriter(boardId).getNickname())
-//                .writerRank(writer.getUserRank())
+                .writerRank(writer.getUserRank())
                 .writerRank(commonBoardService.findWriter(boardId).getUserRank())
                 .build();
 

@@ -13,11 +13,29 @@
     color: #4644e5
 }
 
+.arena-header{
+    display:flex;
+    justify-content: space-between;
+}
+
+.top-users-rank{
+    font-weight: bolder;
+    font-size: larger;
+    color: #4644e5;
+}
+.top-users-nickname{
+    font-weight: bolder;
+
+}
+.top-users-clear-time{
+    color: #676767;
+}
 .board-rank-and-del-btn{
     display:flex;
     gap: 20px;
     justify-content: space-between;
 }
+
 
 .like-btn-container{
     display:flex;
@@ -46,6 +64,4 @@
     border: 1px solid darkgrey;
     border-radius: 10px; /* 코너를 둥글게 처리 */
 }
-
-
 

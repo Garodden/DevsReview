@@ -97,6 +97,15 @@
     box-sizing: border-box;
 }
 
+.hide {
+    display: none;
+}
+
+.newStrongPasswordMessage, .newPasswordMismatchMessage {
+    color: red;
+    font-weight: bold;
+}
+
 .user-actions {
     margin-left: 60vh;
 }
