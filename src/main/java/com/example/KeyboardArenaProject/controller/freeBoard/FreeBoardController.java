@@ -175,6 +175,9 @@ public class FreeBoardController {
         }
         //현재 보드, 유저 정보
         Board curFreeBoardInfo = commonBoardService.findByBoardId(boardId);
+        if(curFreeBoardInfo==null){
+            return "errorpage404";
+        }
 
         User curUser = userService.getCurrentUserInfo();
 
