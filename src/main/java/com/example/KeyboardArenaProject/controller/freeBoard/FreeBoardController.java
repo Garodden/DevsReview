@@ -25,12 +25,14 @@ import lombok.RequiredArgsConstructor;
 
 import lombok.extern.slf4j.Slf4j;
 
+import org.aspectj.lang.annotation.Aspect;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
 
 import java.util.stream.Collectors;
@@ -131,22 +133,35 @@ public class FreeBoardController {
         commonBoardService.deleteBoard(board_id);
     }
 
+
     @GetMapping("/board")
-    public String viewAllFreeBoard(Model model){
+    public String showAllFreeBoard(Model model){
         model.addAttribute("userTopBarInfo", UserTopBarInfoUtil.getUserTopBarInfo());
         List<Board> freeboardList = commonBoardService.findAllLikeSortedFreeBoard();
         model.addAttribute("freeboard",freeboardList);
         model.addAttribute("loginedUserRank",userService.getCurrentUserInfo().getUserRank());
         model.addAttribute("isShowTop",true);
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(!authentication.getPrincipal().equals("anonymousUser")){
+            User loggedinUser = (User)authentication.getPrincipal();
+            Integer userRank = loggedinUser.getUserRank();
+            commonBoardService.getMyBoards(loggedinUser.getId()).stream()
+                    .filter(x->x.getBoardRank()>userRank)
+                    .forEach(x->commonBoardService.setBoardRankMax(x,userRank));
+        }
+
         return "freeBoardList";
     }
 
     @GetMapping("/board/sort=2")
-    public String viewAllFreeBoardSortedByCreated(Model model){
+    public String showAllFreeBoardSortedByCreated(Model model){
         model.addAttribute("userTopBarInfo", UserTopBarInfoUtil.getUserTopBarInfo());
         List<Board> freeboardList = commonBoardService.findAllCreatedSortedBoard();
         model.addAttribute("freeboard",freeboardList);
         model.addAttribute("loginedUserRank",userService.getCurrentUserInfo().getUserRank());
+
+
         return "freeBoardList";
     }
 
