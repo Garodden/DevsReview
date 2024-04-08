@@ -33,7 +33,7 @@
         <!-- flex 적용을 위한 컨테이너 -->
         <div class="title-navbar-container">
             <!--서비스 이름-->
-            <h1 class="mb-3" onclick="location.href='/arenas'">Keyboard Arena</h1>
+            <h1 class="mb-3" id="navbar-service-title" onclick="location.href='/arenas'">Keyboard Arena</h1>
             <!-- 탑 네비게이션 바 -->
             <div class="navbar navbar-expand-lg navbar-light bg-light">
                 <div class="navbar-text" id="navbar-nickname" th:text="${arena.userTopBarInfo.nickname} + '&nbsp;&nbsp;'"></div>
