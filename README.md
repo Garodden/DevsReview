@@ -43,6 +43,9 @@ ESTsoft 백엔드 개발자 과정 '오르미' 4기 Java/Spring 프로젝트의 
 ## ⛏ ERD
 <img alt="erd 이미지" src="https://github.com/Garodden/keyboard-arena/assets/82032418/c5abc898-2dbf-4495-8292-ff1500efe5cd">
 
+## 📈 Service Flow
+<img alt="순서도 이미지" src="https://github.com/Garodden/keyboard-arena/assets/155498542/a8fcf414-5030-4a23-9bbf-70a63ce619dc">
+
 
 [//]: # (- 시간 날때 기술 스택 아이콘 첨부하려고 냅둔 주석 ...https://camo.githubusercontent.com/b0648ef7a9b6980ea27c1caaeb06d5c8503dbb4f9b4d9d7ca1df60a5edc14340/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f6a6176612d2532334544384230302e7376673f7374796c653d666f722d7468652d6261646765266c6f676f3d6f70656e6a646b266c6f676f436f6c6f723d7768697465)
 
