@@ -1,7 +1,6 @@
 package com.example.KeyboardArenaProject.controller.freeBoard;
 
 
-import com.example.KeyboardArenaProject.dto.CommentResponse;
 import com.example.KeyboardArenaProject.dto.arena.BoardDetailResponse;
 import com.example.KeyboardArenaProject.dto.arena.ArenaResponse;
 import com.example.KeyboardArenaProject.dto.freeBoard.FreeBoardRecieveForm;
@@ -9,7 +8,6 @@ import com.example.KeyboardArenaProject.dto.freeBoard.FreeBoardResponse;
 import com.example.KeyboardArenaProject.dto.freeBoard.FreeBoardWriteRequest;
 import com.example.KeyboardArenaProject.dto.user.AnonymousUser;
 import com.example.KeyboardArenaProject.entity.Board;
-import com.example.KeyboardArenaProject.entity.Comment;
 import com.example.KeyboardArenaProject.entity.Like;
 import com.example.KeyboardArenaProject.entity.User;
 import com.example.KeyboardArenaProject.entity.compositeKey.UserBoardCompositeKey;
@@ -25,14 +23,12 @@ import lombok.RequiredArgsConstructor;
 
 import lombok.extern.slf4j.Slf4j;
 
-import org.aspectj.lang.annotation.Aspect;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
 import java.util.List;
 
 import java.util.stream.Collectors;
@@ -176,7 +172,7 @@ public class FreeBoardController {
         //현재 보드, 유저 정보
         Board curFreeBoardInfo = commonBoardService.findByBoardId(boardId);
         if(curFreeBoardInfo==null){
-            return "errorpage404";
+            return "error/404";
         }
 
         User curUser = userService.getCurrentUserInfo();
