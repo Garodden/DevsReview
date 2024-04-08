@@ -88,4 +88,8 @@ public class Board {
         this.ifActive = true;
     }
     public void updateParticipates() {this.views+=1;}
+
+    public void setBoardRankMax(Integer boardRank){
+        this.boardRank=boardRank;
+    }
 }

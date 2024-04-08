@@ -1,7 +1,6 @@
 package com.example.KeyboardArenaProject.controller.freeBoard;
 
 
-import com.example.KeyboardArenaProject.dto.CommentResponse;
 import com.example.KeyboardArenaProject.dto.arena.BoardDetailResponse;
 import com.example.KeyboardArenaProject.dto.arena.ArenaResponse;
 import com.example.KeyboardArenaProject.dto.freeBoard.FreeBoardRecieveForm;
@@ -9,9 +8,11 @@ import com.example.KeyboardArenaProject.dto.freeBoard.FreeBoardResponse;
 import com.example.KeyboardArenaProject.dto.freeBoard.FreeBoardWriteRequest;
 import com.example.KeyboardArenaProject.dto.user.AnonymousUser;
 import com.example.KeyboardArenaProject.entity.Board;
-import com.example.KeyboardArenaProject.entity.Comment;
+import com.example.KeyboardArenaProject.entity.Like;
 import com.example.KeyboardArenaProject.entity.User;
+import com.example.KeyboardArenaProject.entity.compositeKey.UserBoardCompositeKey;
 import com.example.KeyboardArenaProject.service.CommentService;
+import com.example.KeyboardArenaProject.service.LikeService;
 import com.example.KeyboardArenaProject.service.board.CommonBoardService;
 
 import com.example.KeyboardArenaProject.service.user.UserService;
@@ -40,6 +41,7 @@ public class FreeBoardController {
     private final CommonBoardService commonBoardService;
     private final UserService userService;
     private final CommentService commentService;
+    private final LikeService likeService;
 
     @GetMapping("/")
     public String indexPage(Model model){
@@ -127,22 +129,35 @@ public class FreeBoardController {
         commonBoardService.deleteBoard(board_id);
     }
 
+
     @GetMapping("/board")
-    public String viewAllFreeBoard(Model model){
+    public String showAllFreeBoard(Model model){
         model.addAttribute("userTopBarInfo", UserTopBarInfoUtil.getUserTopBarInfo());
         List<Board> freeboardList = commonBoardService.findAllLikeSortedFreeBoard();
         model.addAttribute("freeboard",freeboardList);
         model.addAttribute("loginedUserRank",userService.getCurrentUserInfo().getUserRank());
         model.addAttribute("isShowTop",true);
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(!authentication.getPrincipal().equals("anonymousUser")){
+            User loggedinUser = (User)authentication.getPrincipal();
+            Integer userRank = loggedinUser.getUserRank();
+            commonBoardService.getMyBoards(loggedinUser.getId()).stream()
+                    .filter(x->x.getBoardRank()>userRank)
+                    .forEach(x->commonBoardService.setBoardRankMax(x,userRank));
+        }
+
         return "freeBoardList";
     }
 
     @GetMapping("/board/sort=2")
-    public String viewAllFreeBoardSortedByCreated(Model model){
+    public String showAllFreeBoardSortedByCreated(Model model){
         model.addAttribute("userTopBarInfo", UserTopBarInfoUtil.getUserTopBarInfo());
         List<Board> freeboardList = commonBoardService.findAllCreatedSortedBoard();
         model.addAttribute("freeboard",freeboardList);
         model.addAttribute("loginedUserRank",userService.getCurrentUserInfo().getUserRank());
+
+
         return "freeBoardList";
     }
 
@@ -156,6 +171,9 @@ public class FreeBoardController {
         }
         //현재 보드, 유저 정보
         Board curFreeBoardInfo = commonBoardService.findByBoardId(boardId);
+        if(curFreeBoardInfo==null){
+            return "error/404";
+        }
 
         User curUser = userService.getCurrentUserInfo();
 
@@ -174,11 +192,27 @@ public class FreeBoardController {
                 commonBoardService.plusView(boardId);
             }
         }
+
+
         if(!authentication.getPrincipal().equals("anonymousUser")) {
             model.addAttribute("loggedInId",userService.getCurrentUserInfo().getId());
         }else{
             model.addAttribute("loggedInId","");
         }
+
+        boolean ifLike;
+        Like like = likeService.findById(
+                UserBoardCompositeKey.builder()
+                        .id(userService.getCurrentUserInfo().getId())
+                        .boardId(boardId)
+                        .build()
+        );
+        if(like!=null){
+            ifLike = like.isIfLike();
+        }else{
+            ifLike=false;
+        }
+        model.addAttribute("ifLike",ifLike);
 
 
         BoardDetailResponse postDetails = BoardDetailResponse
@@ -188,9 +222,7 @@ public class FreeBoardController {
                 .ifFirstTry(true)
                 .comment(commentService.findCommentsByBoardId(boardId))
                 .participates(curFreeBoardInfo.getViews())
-                .writerNickname(writer.getNickname())
                 .writerNickname(commonBoardService.findWriter(boardId).getNickname())
-                .writerRank(writer.getUserRank())
                 .writerRank(commonBoardService.findWriter(boardId).getUserRank())
                 .build();
 
