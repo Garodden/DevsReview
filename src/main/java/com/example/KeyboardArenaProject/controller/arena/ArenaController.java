@@ -324,7 +324,10 @@ public class ArenaController {
         }
     }
 
-
+    @GetMapping("/unAuthorized")
+    public String gotoAuthorityError(){
+        return "authorityError";
+    }
 
 }
 
