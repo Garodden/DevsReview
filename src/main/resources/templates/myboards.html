@@ -93,11 +93,11 @@
                 </td>
                 <td th:text="${#temporals.format(board.createdDate, 'yyyy.MM.dd')}"></td>
                 <td th:text="${board.likes}"></td>
-                <td><a th:href="@{'/board/' + ${board.getBoardId()} + '/update'}"
+                <td>
+                    <a th:if="${board.boardType == 1}" th:href="@{'/board/' + ${board.getBoardId()} + '/update'}"
                        th:unless="${userTopBarInfo.userId.contains('(탈퇴)')}">
-                    수정
-                </a>
-
+                        수정
+                    </a>
                 </td>
             </tr>
             </tbody>
