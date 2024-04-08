@@ -3,6 +3,7 @@
 <img src="https://github.com/Garodden/keyboard-arena/assets/82032418/9cc76a2e-ac2b-4f95-a77d-7bbd2c8ddcf3"><br>
 Keyboard Arena는 경쟁 기반 타자 연습을 위한 회원제 커뮤니티 서비스입니다.<br>
 ESTsoft 백엔드 개발자 과정 '오르미' 4기 Java/Spring 프로젝트의 일환으로 제작되었습니다.<br>
+[배포 주소](http://3.36.79.208:8082/)
 
 ## 🕹 주요 기능
 - `주간 랭크전 타자연습 아레나 참전 `
