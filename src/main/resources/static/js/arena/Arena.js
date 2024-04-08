@@ -93,7 +93,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 alert(data); // 서버로부터 받은 텍스트 표사
                 location.replace(`/arenas/${boardId}`); // 지정된 페이지로 리다이렉트
             })
-            .catch(error => console.error('Error:', error));
+            .catch(error => {
+                console.error('Error:', error);
+                location.replace('/unAuthorize');
+            });
     });
 });
 

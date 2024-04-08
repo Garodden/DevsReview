@@ -1,7 +1,6 @@
 package com.example.KeyboardArenaProject.controller.freeBoard;
 
 
-import com.example.KeyboardArenaProject.dto.CommentResponse;
 import com.example.KeyboardArenaProject.dto.arena.BoardDetailResponse;
 import com.example.KeyboardArenaProject.dto.arena.ArenaResponse;
 import com.example.KeyboardArenaProject.dto.freeBoard.FreeBoardRecieveForm;
@@ -9,7 +8,6 @@ import com.example.KeyboardArenaProject.dto.freeBoard.FreeBoardResponse;
 import com.example.KeyboardArenaProject.dto.freeBoard.FreeBoardWriteRequest;
 import com.example.KeyboardArenaProject.dto.user.AnonymousUser;
 import com.example.KeyboardArenaProject.entity.Board;
-import com.example.KeyboardArenaProject.entity.Comment;
 import com.example.KeyboardArenaProject.entity.Like;
 import com.example.KeyboardArenaProject.entity.User;
 import com.example.KeyboardArenaProject.entity.compositeKey.UserBoardCompositeKey;
@@ -131,22 +129,35 @@ public class FreeBoardController {
         commonBoardService.deleteBoard(board_id);
     }
 
+
     @GetMapping("/board")
-    public String viewAllFreeBoard(Model model){
+    public String showAllFreeBoard(Model model){
         model.addAttribute("userTopBarInfo", UserTopBarInfoUtil.getUserTopBarInfo());
         List<Board> freeboardList = commonBoardService.findAllLikeSortedFreeBoard();
         model.addAttribute("freeboard",freeboardList);
         model.addAttribute("loginedUserRank",userService.getCurrentUserInfo().getUserRank());
         model.addAttribute("isShowTop",true);
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(!authentication.getPrincipal().equals("anonymousUser")){
+            User loggedinUser = (User)authentication.getPrincipal();
+            Integer userRank = loggedinUser.getUserRank();
+            commonBoardService.getMyBoards(loggedinUser.getId()).stream()
+                    .filter(x->x.getBoardRank()>userRank)
+                    .forEach(x->commonBoardService.setBoardRankMax(x,userRank));
+        }
+
         return "freeBoardList";
     }
 
     @GetMapping("/board/sort=2")
-    public String viewAllFreeBoardSortedByCreated(Model model){
+    public String showAllFreeBoardSortedByCreated(Model model){
         model.addAttribute("userTopBarInfo", UserTopBarInfoUtil.getUserTopBarInfo());
         List<Board> freeboardList = commonBoardService.findAllCreatedSortedBoard();
         model.addAttribute("freeboard",freeboardList);
         model.addAttribute("loginedUserRank",userService.getCurrentUserInfo().getUserRank());
+
+
         return "freeBoardList";
     }
 
@@ -160,6 +171,9 @@ public class FreeBoardController {
         }
         //현재 보드, 유저 정보
         Board curFreeBoardInfo = commonBoardService.findByBoardId(boardId);
+        if(curFreeBoardInfo==null){
+            return "error/404";
+        }
 
         User curUser = userService.getCurrentUserInfo();
 

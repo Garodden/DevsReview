@@ -135,5 +135,10 @@ public class CommonBoardService {
         return myPageRepository.findAllByIdOrderByCreatedDateDesc(id);
     }
 
+    @Transactional
+    public void setBoardRankMax(Board board,Integer max){
+        board.setBoardRankMax(max);
+    }
+
 
 }
