@@ -15,6 +15,6 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(NullPointerException.class)
     public String NullPointerException(NullPointerException n) {
 
-        return "authorityError";
+        return "deleteError";
     }
 }
