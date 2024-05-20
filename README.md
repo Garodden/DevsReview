@@ -13,7 +13,71 @@ ESTsoft 백엔드 개발자 과정 '오르미' 4기 Java/Spring 프로젝트의 
   - 유저는 자격 검증을 마치고 정식으로 등록된 아레나를 자유로이 즐기고, 좋아요 및 댓글을 남길 수 있습니다. 
 - `유저 랭킹 기반 권한 부여 시스템`
     - 아레나 참전 및 자유게시판 게시글 조회에 있어 권한이 차등 부여됩니다.
- 
+      
+## ⚙️ 유저 랭크/가중치 랭크 산정 알고리즘
+### 유저 랭크 산정 알고리즘
+랭크 아레나 기록을 기반으로 유저 랭크를 일정 시간마다 산정해주는 기능이다.<br>
+랭크 산정 알고리즘 후보군
+- 랭크 아레나 4개의 등수의 평균값을 내고, 그 값을 기반으로 1/5씩 나눠 랭크 1~5까지 산정해주는 시스템
+  - 문제점: 랭크 아레나 하나만 1등으로 클리어한 사람이 랭크 아레나 4개를 모두 2등으로 클리어한 사람보다 높은 랭크를 차지하게돼 불공정해진다.
+  - 그럼 모든 랭크 아레나를 클리어한 사람들을 기준으로 랭크를 산정하면 안되나?
+      - 랭크 아레나를 모두 플레이 하지 않았어도 랭크 산정에 포함하고 싶었음
+#### 그래서 고안해낸 방법이 가중치 랭크 산정 알고리즘이다.
+- 유저의 랭크는 가장 낮은 1부터 가장 높은 5까지 존재한다.
+- 경쟁 아레나는 총 4개이다.
+- 한명의 유저가 하나의 랭크 아레나를 클리어 해서 얻을 수 있는 가중치는 최대 1, 최소 0이다.
+  - 단순하게 1등이면 가중치 1, 꼴찌면 가중치 0, 그 중간 등수 어딘가라면 경쟁 아레나에서 참여한 사람 수에 맞춰 1을 나눠 가중치를 부여한다. 이걸 공식으로 적용하면
+  - (유저1이 랭크아레나 1에서 얻은 가중치) = (랭크아레나1을 클리어한 사람의 수 – 유저의 등수)/(랭크아레나1을 클리어한 사람 수-1)
+  - 1+(유저 한명의 각 아레나에 대한 가중치들의 합) 값을 반올림하여 유저의 랭크를 산정한다.
+ ![image](https://github.com/Garodden/keyboard-arena/assets/44630705/ca513c2c-c37f-43b9-b9a7-e4e2e1c51c10)
+- 가중치 랭크 산정 알고리즘의 장점
+  - 랭크 아레나를 클리어한 사람의 수, 유저의 등수에 따라 평등하게 랭크를 산정해줄 수 있다.
+  - 랭크 아레나를 모두 클리어하지 않아도 랭킹 산정 시스템에 포함이 되며, 랭크 아레나를 많이 클리어 할수록 더 높은 랭크를 가져갈 수 있다.
+- 이 가중치 알고리즘은 SQL문 하나만으로 해결해 RDS와 EC2 인스턴스의 불필요한 네트워크 비용을 절감할 수 있었다.
+```SQL
+UPDATE user u
+    JOIN (
+        SELECT
+            uc.id,
+            SUM((uc.total_users - uc.board_rank) / (uc.total_users-1) )+1 AS rank_score
+        FROM (
+                 SELECT
+                     id,
+                     board_id,
+                     RANK() OVER (PARTITION BY board_id ORDER BY clear_time Asc) AS board_rank,
+                     COUNT(*) OVER (PARTITION BY board_id) AS total_users
+                 FROM user_cleared_board
+                 WHERE board_id IN (SELECT board_id FROM board WHERE board_type = 2)
+                 
+             ) AS uc
+        GROUP BY uc.id
+
+    ) AS scores
+    ON u.id = scores.id
+
+SET u.user_rank = ROUND(scores.rank_score)
+where u.user_rank!=10;
+```
+
+
+[//]: # (- 시간 날때 기술 스택 아이콘 첨부하려고 냅둔 주석 ...https://camo.githubusercontent.com/b0648ef7a9b6980ea27c1caaeb06d5c8503dbb4f9b4d9d7ca1df60a5edc14340/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f6a6176612d2532334544384230302e7376673f7374796c653d666f722d7468652d6261646765266c6f676f3d6f70656e6a646b266c6f676f436f6c6f723d7768697465)
+
+[//]: # (  https://camo.githubusercontent.com/42dd3f9f9345fb4a3e1a24d0483c62ac853b227b6bec314dbd09aa0d9edc9671/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f737072696e67626f6f742d3644423333463f7374796c653d666f722d7468652d6261646765266c6f676f3d737072696e67626f6f74266c6f676f436f6c6f723d7768697465)
+
+[//]: # (- <img src="https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=java&logoColor=white">)
+
+[//]: # (<img src="https://img.shields.io/badge/SpringBoot-6DB33F?style=flat-square&logo=Spring&logoColor=white">)
+
+[//]: # (<img src="https://img.shields.io/badge/HTML-E34F26?style=for-the-badge&logo=html&logoColor=white">)
+
+[//]: # (<img src="https://img.shields.io/badge/CSS-1572B6?style=for-the-badge&logo=css&logoColor=white">)
+
+[//]: # (<img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black">)
+
+[//]: # (<img src="https://shields.io/badge/MySQL-lightgrey?logo=mysql&style=plastic&logoColor=white&labelColor=blue">)
+
+[//]: # (<img src="">)
+
 ## 🤼‍♂️ Team
 - **서창덕** (팀장, [Github](https://github.com/Garodden))
   - 아레나 CRUD, 참전 api 및 UI 구현
@@ -160,69 +224,53 @@ ESTsoft 백엔드 개발자 과정 '오르미' 4기 Java/Spring 프로젝트의 
   </pre>
 </details>
 
-## ⚙️ Core Features
-### 유저 랭크 산정 알고리즘
-랭크 아레나 기록을 기반으로 유저 랭크를 일정 시간마다 산정해주는 기능이다.
-랭크 산정 알고리즘 후보군
-- 랭크 아레나 4개의 등수의 평균값을 내고, 그 값을 기반으로 1/5씩 나눠 랭크 1~5까지 산정해주는 시스템
-  - 문제점: 랭크 아레나 하나만 1등으로 클리어한 사람이 랭크 아레나 4개를 모두 2등으로 클리어한 사람보다 높은 랭크를 차지하게돼 불공정해진다.
-  - 그럼 모든 랭크 아레나를 클리어한 사람들을 기준으로 랭크를 산정하면 안되나?
-      - 랭크 아레나를 모두 플레이 하지 않았어도 랭크 산정에 포함하고 싶었음
-#### 그래서 고안해낸 방법이 가중치 랭크 산정 알고리즘이다.
-- 유저의 랭크는 가장 낮은 1부터 가장 높은 5까지 존재한다.
-- 경쟁 아레나는 총 4개이다.
-- 한명의 유저가 하나의 랭크 아레나를 클리어 해서 얻을 수 있는 가중치는 최대 1, 최소 0이다.
-  - 단순하게 1등이면 가중치 1, 꼴찌면 가중치 0, 그 중간 등수 어딘가라면 경쟁 아레나에서 참여한 사람 수에 맞춰 1을 나눠 가중치를 부여한다. 이걸 공식으로 적용하면
-  - (유저1이 랭크아레나 1에서 얻은 가중치) = (랭크아레나1을 클리어한 사람의 수 – 유저의 등수)/(랭크아레나1을 클리어한 사람 수-1)
-  - 1+(유저 한명의 각 아레나에 대한 가중치들의 합) 값을 반올림하여 유저의 랭크를 산정한다.
- ![image](https://github.com/Garodden/keyboard-arena/assets/44630705/ca513c2c-c37f-43b9-b9a7-e4e2e1c51c10)
-- 가중치 랭크 산정 알고리즘의 장점
-  - 랭크 아레나를 클리어한 사람의 수, 유저의 등수에 따라 평등하게 랭크를 산정해줄 수 있다.
-  - 랭크 아레나를 모두 클리어하지 않아도 랭킹 산정 시스템에 포함이 되며, 랭크 아레나를 많이 클리어 할수록 더 높은 랭크를 가져갈 수 있다.
-- 이 가중치 알고리즘은 SQL문 하나만으로 해결해 RDS와 EC2 인스턴스의 불필요한 네트워크 비용을 절감할 수 있었다.
-```SQL
-UPDATE user u
-    JOIN (
-        SELECT
-            uc.id,
-            SUM((uc.total_users - uc.board_rank) / (uc.total_users-1) )+1 AS rank_score
-        FROM (
-                 SELECT
-                     id,
-                     board_id,
-                     RANK() OVER (PARTITION BY board_id ORDER BY clear_time Asc) AS board_rank,
-                     COUNT(*) OVER (PARTITION BY board_id) AS total_users
-                 FROM user_cleared_board
-                 WHERE board_id IN (SELECT board_id FROM board WHERE board_type = 2)
-                 
-             ) AS uc
-        GROUP BY uc.id
+## 📜 API 명세서
+### 회원 API
+| 기능         | HTTP method | url         |
+|------------|-------------|-------------|
+| 회원가입       | POST        | `/user`   |
+| 로그인        | POST        | `/login`  |
+| 로그아웃       | GET     | `/logout` |
+| 아이디 중복 확인 | GET     | `/user/find/id` |
+| 이메일 중복 확인  | GET     | `/user/find/email` |
+| 아이디 찾기 | POST | `/user/find/id` |
+| 비밀번호 찾기 | POST | `/user/find/pw` |
 
-    ) AS scores
-    ON u.id = scores.id
+### 마이페이지 API
+| 기능         | HTTP method | url         |
+|------------|-------------|-------------|
+| 내 정보 조회    | GET         | `/mypage`   |
+| 비밀번호 수정    | POST         | `/mypage/changePassword`  |
+| 회원탈퇴    | POST        | `/mypage/signout`  |
+| 작성한 게시물 전체 조회    | GET         | `/mypage/boards`  |
+| 좋아요를 누른 게시물 전체 조회    | GET         | `/mypage/boards/liked`  |
+| 댓글을 작성한 게시물 전체 조회    | GET         | `/mypage/boards/commented`  |
+| 내가 참전한 아레나 전체 조회    | GET         | `/mypage/arenas`  |
 
-SET u.user_rank = ROUND(scores.rank_score)
-where u.user_rank!=10;
-```
+### 아레나 API
+| 기능         | HTTP method | url         |
+|------------|-------------|-------------|
+| 아레나 전체 조회    | GET        | `/arenas`   |
+| 아레나 개별 조회   | GET        | `/arenas/{boardId}`   |
+| 아레나 참전 시작 시간 기록    | GET        | `/arenas/{boardId}/start`   |
+| 아레나 참전    | POST         | `/arenas/{boardId}`   |
+| 아레나 제작    | POST     | `/newArena`   |
+| 아레나 제작 후 활성화 전 검증   | POST     | `/arena/{boardId}/verify`   |
+| 아레나 검증 시작 시간 기록   | GET     | `/arenas/{boardId}/verify/start`   |
+| 아레나 삭제    | DELETE      | `/arenas/{boardId}`   |
 
-
-[//]: # (- 시간 날때 기술 스택 아이콘 첨부하려고 냅둔 주석 ...https://camo.githubusercontent.com/b0648ef7a9b6980ea27c1caaeb06d5c8503dbb4f9b4d9d7ca1df60a5edc14340/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f6a6176612d2532334544384230302e7376673f7374796c653d666f722d7468652d6261646765266c6f676f3d6f70656e6a646b266c6f676f436f6c6f723d7768697465)
-
-[//]: # (  https://camo.githubusercontent.com/42dd3f9f9345fb4a3e1a24d0483c62ac853b227b6bec314dbd09aa0d9edc9671/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f737072696e67626f6f742d3644423333463f7374796c653d666f722d7468652d6261646765266c6f676f3d737072696e67626f6f74266c6f676f436f6c6f723d7768697465)
-
-[//]: # (- <img src="https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=java&logoColor=white">)
-
-[//]: # (<img src="https://img.shields.io/badge/SpringBoot-6DB33F?style=flat-square&logo=Spring&logoColor=white">)
-
-[//]: # (<img src="https://img.shields.io/badge/HTML-E34F26?style=for-the-badge&logo=html&logoColor=white">)
-
-[//]: # (<img src="https://img.shields.io/badge/CSS-1572B6?style=for-the-badge&logo=css&logoColor=white">)
-
-[//]: # (<img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black">)
-
-[//]: # (<img src="https://shields.io/badge/MySQL-lightgrey?logo=mysql&style=plastic&logoColor=white&labelColor=blue">)
-
-[//]: # (<img src="">)
+### 자유게시판 API
+| 기능         | HTTP method | url         |
+|------------|-------------|-------------|
+| 자유게시판 게시글 전체 조회    | GET        | `/board`   |
+| 자유게시판 게시글 전체 조회(작성일자 순 정렬)    | GET        | `/board/sort=2`   |
+| 자유게시판 게시글 개별 조회 | GET        | `/board/{boardId}`   |
+| 자유게시판 게시글 작성    | POST        | `/board`   |
+| 자유게시판 게시글 수정    | PUT         | `/board/{board_id}`   |
+| 자유게시판 게시글 삭제    | DELETE      | `/board/{board_id}`   |
+| 자유게시판 게시글 좋아요 누르기    | POST      | `/api/like`   |
+| 자유게시판 게시글 댓글 작성    | POST      | `/comments/{board_id}`   |
+| 자유게시판 게시글 댓글 삭제    | DELETE      | `/comments/{board_id}`   |
 
 ## 📑 요구사항 명세서
 [명세서 링크(Notion)](https://www.notion.so/oreumi/9f73ed77821149e78ba4073f7e315cd5)
